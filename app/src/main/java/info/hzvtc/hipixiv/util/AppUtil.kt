@@ -22,5 +22,7 @@ class AppUtil{
             }
             return false
         }
+
+        fun getNowTimestamp() = System.currentTimeMillis()/1000
     }
 }

@@ -6,5 +6,5 @@ import com.google.gson.annotations.SerializedName
 data class OAuthToken(
         @SerializedName("has_error") @Expose val hasError : Boolean = false,
         @SerializedName("response") @Expose val oAuthResponse: OAuthResponse,
-        @SerializedName("errors") @Expose val errors: Errors
+        @SerializedName("errors") @Expose val errors: Errors?
 )

@@ -14,6 +14,7 @@
     <string name="app_no_network_set">无可用网络,是否检查设置?</string>
 
     <string name="app_no_network">无可用网络!</string>
+    <string name="app_recovery_network">网络恢复!</string>
     <string name="app_dialog_cancel">取消</string>
     <string name="app_dialog_ok">确定</string>
     <string name="more">更多</string>

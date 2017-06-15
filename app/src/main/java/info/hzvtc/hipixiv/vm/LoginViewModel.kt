@@ -36,9 +36,9 @@ class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<L
                 .subscribe({
                     (hasError, oAuthResponse, errors) ->
                     if(hasError){
-                        showMaterialDialog(errors.errorSystem.message,ERR_SERVICE)
+                        showMaterialDialog(errors?.errorSystem?.message as String,ERR_SERVICE)
                     }else{
-                        //todo 登陆成功
+                        account.saveTokenResponse(oAuthResponse)
                     }
                 },{
                     _ -> progressDialog.dismiss()

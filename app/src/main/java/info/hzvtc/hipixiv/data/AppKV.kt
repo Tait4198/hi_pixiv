@@ -34,7 +34,8 @@ class AppKV{
 
         val CLIENT_ID = "MOBrBDS8blbauoSck0ZfDbtuzpyT"
         val CLIENT_SECRET = "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"
-        val GRANT_TYPE = "password"
+        val GRANT_TYPE_PASSWORD = "password"
+        val GRANT_TYPE_REFRESH = "refresh_token"
         val DEVICE_TOKEN = "pixiv"
     }
 }

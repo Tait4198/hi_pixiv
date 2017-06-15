@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import info.hzvtc.hipixiv.data.preferences.PreferenceDelegates
+import info.hzvtc.hipixiv.pojo.token.OAuthResponse
+import info.hzvtc.hipixiv.util.AppUtil
 
 class UserPreferences(val context: Context) {
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     var isLogin by PreferenceDelegates.boolean()
     var accessToken by PreferenceDelegates.string()
     var refreshToken by PreferenceDelegates.string()
+    var deviceToken by PreferenceDelegates.string()
     var expires by PreferenceDelegates.long()
     var profileUrl by PreferenceDelegates.string()
     var id by PreferenceDelegates.int()
