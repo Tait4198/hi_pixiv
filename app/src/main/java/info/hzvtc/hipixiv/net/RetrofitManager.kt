@@ -1,6 +1,7 @@
 package info.hzvtc.hipixiv.net
 
 import android.content.Context
+import com.google.gson.GsonBuilder
 import info.hzvtc.hipixiv.net.interceptor.ApiInterceptor
 import info.hzvtc.hipixiv.net.interceptor.LoggingInterceptor
 import info.hzvtc.hipixiv.net.interceptor.OAuthInterceptor
@@ -19,7 +20,7 @@ class RetrofitManager(context : Context){
     private val apiInterceptor = ApiInterceptor(context)
     private val loggingInterceptor = LoggingInterceptor()
     private val adapter = RxJava2CallAdapterFactory.create()
-    private val converter = GsonConverterFactory.create()
+    private val converter = GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create())
 
     private val oAuthClient: OkHttpClient by lazy {
         OkHttpClient.Builder()

@@ -7,6 +7,7 @@ import javax.inject.Inject
 import android.content.Intent
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.widget.TextView
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
@@ -18,8 +19,10 @@ import com.mikepenz.materialdrawer.model.ExpandableDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
+import info.hzvtc.hipixiv.net.ApiService
 import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.view.fragment.home.HomeIllustFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
@@ -30,6 +33,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     lateinit var account : Account
     @Inject
     lateinit var userPref : UserPreferences
+    @Inject
+    lateinit var apiService : ApiService
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
@@ -90,12 +95,14 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         drawer.setSelection(Identifier.HOME_ILLUSTRATIONS.value.toLong())
         initDrawerHeader(drawer)
 
-        account.obsToken(this).subscribe({
-            t ->
-            AppMessage.logInfo(t)
-            AppMessage.logInfo(userPref.expires.toString())
+        account.obsToken(this)
+                .flatMap({ token -> apiService.getRecommendedIllusts(token,true) })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ illustResponse -> AppMessage.toastMessageShort(illustResponse.content[22].title,this)
         })
 
+        Log.d("Main",userPref.accessToken.toString())
+        Log.d("Main",userPref.expires.toString())
         replaceFragment(HomeIllustFragment())
     }
 

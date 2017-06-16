@@ -63,6 +63,10 @@ class Account @Inject constructor(val userPref: UserPreferences, val oAuthServic
                         isFirst = true
                     }
                 })
+                .observeOn(Schedulers.io())
+                .map({
+                    token -> "Bearer $token"
+                })
         return obs
     }
 

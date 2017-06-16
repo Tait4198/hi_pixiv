@@ -23,7 +23,7 @@ class ApiInterceptor(val context : Context) : Interceptor{
                     .addHeader(AppKV.APP_OS_KEY, AppKV.APP_OS)
                     .addHeader(AppKV.APP_OS_VERSION_KEY, AppKV.APP_OS_VERSION)
                     .addHeader(AppKV.P_APP_VERSION_KEY, AppKV.P_APP_VERSION)
-                    .addHeader(AppKV.ACCEPT_ENCODING_KEY, AppKV.ACCEPT_ENCODING_GZIP)
+                    .addHeader(AppKV.ACCEPT_ENCODING_KEY, AppKV.ACCEPT_ENCODING_IDE)
                     .build()
         }
 

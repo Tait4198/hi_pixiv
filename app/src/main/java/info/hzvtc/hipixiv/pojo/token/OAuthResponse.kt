@@ -12,4 +12,4 @@ data class OAuthResponse(
         @SerializedName("refresh_token") @Expose val refreshToken : String,
         @SerializedName("user") @Expose val user : User,
         @SerializedName("device_token") @Expose val deviceToken : String
-        )
+)

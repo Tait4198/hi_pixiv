@@ -12,4 +12,4 @@ data class User(
         @SerializedName("is_premium") @Expose val isPremium : Boolean,
         @SerializedName("x_restrict") @Expose val xRestrict : Int,
         @SerializedName("is_mail_authorized") @Expose val isMailAuthorized : Boolean
-        )
+)

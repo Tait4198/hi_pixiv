@@ -13,7 +13,7 @@ class AppKV{
         val ACCEPT_LANGUAGE = AppUtil.getLocalLanguage()
 
         val P_APP_VERSION_KEY = "App-Version"
-        val P_APP_VERSION = "5.0.56"
+        val P_APP_VERSION = "5.0.60"
 
         val APP_OS_VERSION_KEY = "App-OS-Version"
         val APP_OS_VERSION = Build.VERSION.RELEASE!!
