@@ -5,6 +5,7 @@ import info.hzvtc.hipixiv.databinding.ActivityMainBinding
 import info.hzvtc.hipixiv.vm.MainViewModel
 import javax.inject.Inject
 import android.content.Intent
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.widget.TextView
 import com.facebook.drawee.generic.RoundingParams
@@ -18,6 +19,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.util.AppMessage
+import info.hzvtc.hipixiv.view.fragment.home.HomeIllustFragment
 
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
@@ -34,7 +36,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     override fun initView() {
         component.inject(this)
         viewModel.setView(this)
-        mBinding.layoutToolbar.toolbar.setTitle(R.string.app_name)
+
+        mBinding.layoutToolbar.toolbar.setTitle(R.string.home_illust)
         setSupportActionBar(mBinding.layoutToolbar.toolbar)
 
         val dividerItem = DividerDrawerItem()
@@ -48,46 +51,55 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         ExpandableDrawerItem().withName(R.string.home_name).withIcon(GoogleMaterial.Icon.gmd_home)
                                 .withSelectable(false).withIsExpanded(true).withSubItems(
                                 PrimaryDrawerItem().withName(R.string.home_illust).
-                                        withIdentifier(Identifier.HOME_ILLUSTRATIONS.value).withLevel(2),
+                                        withIdentifier(Identifier.HOME_ILLUSTRATIONS.value.toLong()).withLevel(2),
                                 PrimaryDrawerItem().withName(R.string.home_mange).
-                                        withIdentifier(Identifier.HOME_MANGA.value).withLevel(2),
+                                        withIdentifier(Identifier.HOME_MANGA.value.toLong()).withLevel(2),
                                 PrimaryDrawerItem().withName(R.string.home_novel).
-                                        withIdentifier(Identifier.HOME_NOVEL.value).withLevel(2)
+                                        withIdentifier(Identifier.HOME_NOVEL.value.toLong()).withLevel(2)
                         ),
                         ExpandableDrawerItem().withName(R.string.newest_name).withIcon(GoogleMaterial.Icon.gmd_fiber_new)
                                 .withSelectable(false).withSubItems(
                                 PrimaryDrawerItem().withName(R.string.newest_follow).
-                                        withIdentifier(Identifier.NEWEST_FOLLOW.value).withLevel(2),
+                                        withIdentifier(Identifier.NEWEST_FOLLOW.value.toLong()).withLevel(2),
                                 PrimaryDrawerItem().withName(R.string.newest_name).
-                                        withIdentifier(Identifier.NEWEST_NEW.value).withLevel(2),
+                                        withIdentifier(Identifier.NEWEST_NEW.value.toLong()).withLevel(2),
                                 PrimaryDrawerItem().withName(R.string.newest_my_pixiv).
-                                        withIdentifier(Identifier.NEWEST_MY_PIXIV.value).withLevel(2)
+                                        withIdentifier(Identifier.NEWEST_MY_PIXIV.value.toLong()).withLevel(2)
                         ),
                         PrimaryDrawerItem().withName(R.string.pixivision_name).withIcon(GoogleMaterial.Icon.gmd_highlight)
-                                .withIdentifier(Identifier.PIXIVISION.value),
+                                .withIdentifier(Identifier.PIXIVISION.value.toLong()),
                         dividerItem,
                         PrimaryDrawerItem().withName(R.string.collect_name).withIcon(GoogleMaterial.Icon.gmd_favorite)
-                                .withIdentifier(Identifier.COLLECT.value),
+                                .withIdentifier(Identifier.COLLECT.value.toLong()).withSelectable(false),
                         PrimaryDrawerItem().withName(R.string.browsing_name).withIcon(GoogleMaterial.Icon.gmd_history)
-                                .withIdentifier(Identifier.BROWSING_HISTORY.value),
+                                .withIdentifier(Identifier.BROWSING_HISTORY.value.toLong()).withSelectable(false),
                         PrimaryDrawerItem().withName(R.string.user_name).withIcon(GoogleMaterial.Icon.gmd_account_box)
-                                .withIdentifier(Identifier.USER.value),
+                                .withIdentifier(Identifier.USER.value.toLong()).withSelectable(false),
                         dividerItem,
                         PrimaryDrawerItem().withName(R.string.setting_name).withIcon(GoogleMaterial.Icon.gmd_settings)
-                                .withIdentifier(Identifier.SETTING.value)
+                                .withIdentifier(Identifier.SETTING.value.toLong()).withSelectable(false)
                 )
+                .withOnDrawerItemClickListener({
+                    _,_,drawerItem->
+                    if (drawerItem.identifier > Identifier.COLLECT.value && drawerItem is PrimaryDrawerItem) {
+                        mBinding.layoutToolbar.toolbar.title = getString(drawerItem.identifier.toInt())
+                    }
+                    false
+                })
                 .build()
-        drawer.setSelection(Identifier.HOME_ILLUSTRATIONS.value)
-        initDrawer(drawer)
+        drawer.setSelection(Identifier.HOME_ILLUSTRATIONS.value.toLong())
+        initDrawerHeader(drawer)
 
         account.obsToken(this).subscribe({
             t ->
             AppMessage.logInfo(t)
             AppMessage.logInfo(userPref.expires.toString())
         })
+
+        replaceFragment(HomeIllustFragment())
     }
 
-    fun initDrawer(drawer : Drawer){
+    fun initDrawerHeader(drawer : Drawer){
         val profile = drawer.header.findViewById(R.id.user_profile) as SimpleDraweeView
         val account = drawer.header.findViewById(R.id.account) as TextView
         val member = drawer.header.findViewById(R.id.member) as TextView
@@ -103,6 +115,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
     }
 
+    fun replaceFragment(fragment : Fragment){
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.contentFrame,fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
     override fun onBackPressed() {
         val intent = Intent(Intent.ACTION_MAIN)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -115,10 +134,17 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         viewModel.clear()
     }
 
-    enum class Identifier(val value : Long){
-        HOME_ILLUSTRATIONS(1001), HOME_MANGA(1002), HOME_NOVEL(1003),
-        NEWEST_FOLLOW(2001), NEWEST_NEW(2002), NEWEST_MY_PIXIV(2003),
-        PIXIVISION(3001), COLLECT(4001),
-        BROWSING_HISTORY(5001), USER(6001), SETTING(7001);
+    enum class Identifier(val value : Int){
+        HOME_ILLUSTRATIONS(R.string.home_illust),
+        HOME_MANGA(R.string.home_mange),
+        HOME_NOVEL(R.string.home_novel),
+        NEWEST_FOLLOW(R.string.newest_follow),
+        NEWEST_NEW(R.string.newest_new),
+        NEWEST_MY_PIXIV(R.string.newest_my_pixiv),
+        PIXIVISION(R.string.pixivision_name),
+        COLLECT(401),
+        BROWSING_HISTORY(301),
+        USER(201),
+        SETTING(101);
     }
 }

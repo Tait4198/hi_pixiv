@@ -9,7 +9,6 @@ import info.hzvtc.hipixiv.view.LauncherActivity
 import info.hzvtc.hipixiv.view.LoginActivity
 import info.hzvtc.hipixiv.view.MainActivity
 
-
 @Component(dependencies = arrayOf(ApplicationModule::class),modules = arrayOf(ActivityModule::class))
 interface ActivityComponent {
 
