@@ -10,6 +10,8 @@
     <string name="login_username_no_input">请输入 Pixiv ID!</string>
     <string name="login_password_no_input">请输入密码!</string>
     <string name="login_failed">登录失败</string>
+    <string name="login_canceled">登录已取消!</string>
+    <string name="login_cancel_failed">取消登录失败!</string>
     <string name="app_login_failed">登录失败,应用错误!</string>
     <string name="app_no_network_set">无可用网络,是否检查设置?</string>
 

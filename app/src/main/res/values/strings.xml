@@ -11,6 +11,8 @@
     <string name="login_username_no_input">Please enter Pixiv ID!</string>
     <string name="login_password_no_input">Please enter password!</string>
     <string name="login_failed">Login Failed</string>
+    <string name="login_canceled">Login is canceled!</string>
+    <string name="login_cancel_failed">Cancel login failed!</string>
     <string name="app_login_failed">Login failed, application errors!</string>
     <string name="app_no_network_set">No available network, check whether the set?</string>
 

@@ -5,9 +5,9 @@ import info.hzvtc.hipixiv.databinding.ActivityMainBinding
 import info.hzvtc.hipixiv.vm.MainViewModel
 import javax.inject.Inject
 import android.content.Intent
-import android.util.Log
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
+import info.hzvtc.hipixiv.util.AppMessage
 
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
@@ -24,12 +24,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     override fun initView() {
         component.inject(this)
         viewModel.setView(this)
+        mBinding.layoutToolbar.toolbar.setTitle(R.string.app_name)
+        AppMessage.logInfo(pref.accessToken?:"")
+        AppMessage.logInfo(pref.expires.toString())
         account.obsToken(this).subscribe({
             t ->
-            Log.d("accessToken",t.oAuthResponse.accessToken)
-            Log.d("refreshToken",t.oAuthResponse.refreshToken)
-            Log.d("deviceToken",t.oAuthResponse.deviceToken)
-            Log.d("deviceToken",pref.expires.toString())
+            AppMessage.logInfo(t)
+            AppMessage.logInfo(pref.expires.toString())
         })
     }
 
