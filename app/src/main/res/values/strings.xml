@@ -22,6 +22,56 @@
     <string name="app_dialog_ok">OK</string>
     <string name="more">More</string>
     <string name="help">Help</string>
+    <string name="senior_member">Pixiv Senior Member</string>
+    <string name="general_user">Pixiv General User</string>
+
+    <!-- Home -->
+    <string name="home_name">Home</string>
+    <string name="home_illust">Illustrations</string>
+    <string name="home_mange">Manga</string>
+    <string name="home_novel">Novels</string>
+    <!-- Newest -->
+    <string name="newest_name">Newest</string>
+    <string name="newest_follow">Following</string>
+    <string-array name="newest_follow_tab">
+        <item>Illust/Manga</item>
+        <item>Novels</item>
+        <item>Recommended User</item>
+    </string-array>
+    <string name="newest_new">Newest</string>
+    <string-array name="newest_new_tab">
+        <item>Illustrations</item>
+        <item>Manga</item>
+        <item>Novels</item>
+    </string-array>
+    <string name="newest_my_pixiv">My Pixiv</string>
+    <string-array name="newest_my_pixiv_tab">
+        <item>Illust/Manga</item>
+        <item>Novels</item>
+    </string-array>
+    <!-- Pixivision -->
+    <string name="pixivision_name">Pixivision</string>
+    <!-- collect -->
+    <string name="collect_name">Collection</string>
+    <string-array name="collect_tab">
+        <item>Illust/Manga</item>
+        <item>Novels</item>
+    </string-array>
+    <!-- Browsing History -->
+    <string name="browsing_name">Browsing History</string>
+    <string-array name="browsing_tab">
+        <item>Illust/Manga</item>
+        <item>Novels</item>
+    </string-array>
+    <!-- User -->
+    <string name="user_name">User</string>
+    <string-array name="user_tab">
+        <item>Following</item>
+        <item>Followers</item>
+        <item>My Pixiv</item>
+    </string-array>
+    <!-- Setting -->
+    <string name="setting_name">Setting</string>
 
     <string name="activity_login">info.hzvtc.hipixiv.login</string>
     <string name="activity_main">info.hzvtc.hipixiv.main</string>

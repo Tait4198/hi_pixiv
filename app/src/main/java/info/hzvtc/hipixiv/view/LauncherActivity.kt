@@ -18,7 +18,6 @@ class LauncherActivity : BaseActivity() {
         val intent : Intent
         if(userPreferences.isLogin?:false){
             intent = Intent(getString(R.string.activity_main))
-
         }else{
             intent = Intent(getString(R.string.activity_login))
         }

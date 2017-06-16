@@ -72,7 +72,8 @@ class Account @Inject constructor(val userPref: UserPreferences, val oAuthServic
         userPref.refreshToken = oAuthResponse.refreshToken
         userPref.deviceToken = oAuthResponse.deviceToken
         userPref.expires = oAuthResponse.expiresIn.plus(AppUtil.getNowTimestamp())
-        userPref.profileUrl = oAuthResponse.user.profiles.medium
+        userPref.profileUrlMedium = oAuthResponse.user.profiles.medium
+        userPref.profileUrlLarge = oAuthResponse.user.profiles.large
         userPref.id = oAuthResponse.user.id
         userPref.account = oAuthResponse.user.account
         userPref.mailAddress = oAuthResponse.user.mailAddress
