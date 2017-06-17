@@ -68,7 +68,7 @@
                 android:background="@drawable/selector_primary_button"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
-                android:text="@string/login_btn"
+                android:text="@string/login_btn"/>
                 android:onClick="@{viewModel::doLogin}"/>
 
             <RelativeLayout

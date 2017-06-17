@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:foreground="@drawable/dark_foreground"
+        android:clickable="true"
+        tools:ignore="KeyboardInaccessibleWidget">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cover"
+            android:background="@color/colorImageBg"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"/>
+
+    </FrameLayout>
+</layout>

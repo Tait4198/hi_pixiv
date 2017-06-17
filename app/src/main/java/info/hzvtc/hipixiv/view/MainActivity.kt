@@ -20,9 +20,8 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.net.ApiService
-import info.hzvtc.hipixiv.util.AppMessage
-import info.hzvtc.hipixiv.view.fragment.home.HomeIllustFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
+
+import info.hzvtc.hipixiv.view.fragment.IllustFragment
 
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
@@ -95,15 +94,11 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         drawer.setSelection(Identifier.HOME_ILLUSTRATIONS.value.toLong())
         initDrawerHeader(drawer)
 
-        account.obsToken(this)
-                .flatMap({ token -> apiService.getRecommendedIllusts(token,true) })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ illustResponse -> AppMessage.toastMessageShort(illustResponse.content[22].title,this)
-        })
+        replaceFragment(IllustFragment(account.obsToken(this)
+                .flatMap({ token -> apiService.getRecommendedIllusts(token,true) })))
 
         Log.d("Main",userPref.accessToken.toString())
         Log.d("Main",userPref.expires.toString())
-        replaceFragment(HomeIllustFragment())
     }
 
     fun initDrawerHeader(drawer : Drawer){
