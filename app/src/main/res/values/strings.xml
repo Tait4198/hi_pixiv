@@ -82,4 +82,5 @@
     <string name="icon_heart">{faw_heart}&#160;</string>
     <string name="icon_trophy">{faw_trophy}&#160;</string>
     <string name="icon_chevron_right">&#160;{faw_chevron_right}</string>
+    <string name="icon_page">{faw_clone}&#160;</string>
 </resources>

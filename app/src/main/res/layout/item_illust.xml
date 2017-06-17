@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
-    <data />
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="pageCountValue"
+            type="String" />
+        <variable
+            name="illust"
+            type="info.hzvtc.hipixiv.pojo.illust.Illust" />
+        <variable
+            name="illustItemClick"
+            type="info.hzvtc.hipixiv.adapter.IllustItemClick" />
+    </data>
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -9,13 +21,25 @@
         android:layout_margin="2dp"
         android:foreground="@drawable/dark_foreground"
         android:clickable="true"
-        tools:ignore="KeyboardInaccessibleWidget">
+        android:focusable="true"
+        android:onClick="@{() -> illustItemClick.click(illust)}">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/cover"
             android:background="@color/colorImageBg"
             android:layout_width="match_parent"
             android:layout_height="180dp"/>
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:id="@+id/page_count"
+            android:padding="3dp"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:background="@color/colorPageCountBg"
+            android:layout_gravity="end|top"
+            android:text="@{pageCountValue}"
+            android:visibility="@{illust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
 
     </FrameLayout>
 </layout>

@@ -7,8 +7,11 @@ import android.util.Log
 import android.view.View
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.IllustAdapter
+import info.hzvtc.hipixiv.adapter.IllustItemClick
 import info.hzvtc.hipixiv.databinding.FragmentIllustBinding
+import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
+import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.vm.fragment.IllustViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,6 +41,13 @@ class IllustFragment(val obs : Observable<IllustResponse>) : BindingFragment<Fra
                     if(adapter.getFull(pos)) 1 else layoutManger.spanCount
         }
         adapter = IllustAdapter(this.context)
+        adapter.setItemClick(
+                itemClick = object :IllustItemClick{
+                    override fun click(illust: Illust) {
+                        AppMessage.toastMessageShort(illust.title,context)
+                    }
+                }
+        )
 
         newData()
 

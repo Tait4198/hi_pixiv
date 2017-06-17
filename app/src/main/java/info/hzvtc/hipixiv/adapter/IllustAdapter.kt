@@ -6,16 +6,18 @@ import android.databinding.ViewDataBinding
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.facebook.drawee.view.SimpleDraweeView
+import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
 class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
     private lateinit var data : IllustResponse
+
+    private lateinit var itemClick : IllustItemClick
     private var relPosition = 0
+
 
     fun setNewData(data: IllustResponse) {
         typeList.clear()
@@ -35,6 +37,10 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
     }
 
     fun getFull(position: Int) = typeList[position] == ITEM_ILLUST
+
+    fun setItemClick(itemClick: IllustItemClick){
+        this.itemClick = itemClick
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         when((holder as BindingHolder).type) {
@@ -64,6 +70,7 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
         val recycler : RecyclerView = root.findViewById(R.id.illustRecycler) as RecyclerView
         val adapter = RankingAdapter(context)
         adapter.setNewData(data.ranking)
+        adapter.setItemClick(itemClick)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
     }
@@ -71,6 +78,10 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
     private fun showItemIllust(bind : ViewDataBinding,position: Int){
         val root = bind.root
         val cover: SimpleDraweeView = root.findViewById(R.id.cover) as SimpleDraweeView
-        cover.setImageURI(data.content[getRelPosition(position)].imageUrls.square)
+        val illust = data.content[getRelPosition(position)]
+        cover.setImageURI(illust.imageUrls.square)
+        bind.setVariable(BR.illust,illust)
+        bind.setVariable(BR.pageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
+        bind.setVariable(BR.illustItemClick,itemClick)
     }
 }

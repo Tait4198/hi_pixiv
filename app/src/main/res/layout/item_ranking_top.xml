@@ -13,7 +13,7 @@
         android:paddingBottom="12dp"
         android:foreground="@drawable/dark_foreground"
         android:clickable="true"
-        tools:ignore="KeyboardInaccessibleWidget">
+        android:focusable="true">
 
         <com.mikepenz.iconics.view.IconicsTextView
             android:text="@string/icon_trophy"
