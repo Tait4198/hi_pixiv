@@ -34,6 +34,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     @Inject
     lateinit var apiService : ApiService
 
+    private var nowIdentifier = -1
+
     override fun getLayoutId(): Int = R.layout.activity_main
 
     override fun initView() {
@@ -91,10 +93,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                 })
                 .build()
         drawer.setSelection(Identifier.HOME_ILLUSTRATIONS.value.toLong())
+        switchPage(Identifier.HOME_ILLUSTRATIONS.value)
         initDrawerHeader(drawer)
-
-        replaceFragment(IllustFragment(account.obsToken(this)
-                .flatMap({ token -> apiService.getRecommendedIllusts(token,true) })))
 
         Log.d("Main",userPref.accessToken.toString())
         Log.d("Main",userPref.expires.toString())
@@ -113,6 +113,23 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }else{
             member.text = getString(R.string.general_user)
             member.setTextColor(ContextCompat.getColor(this,R.color.md_yellow_500))
+        }
+    }
+
+    fun switchPage(identifier : Int){
+        if(identifier != nowIdentifier){
+            nowIdentifier = identifier
+            when(identifier){
+                Identifier.HOME_ILLUSTRATIONS.value -> {
+                    replaceFragment(IllustFragment(account.obsToken(this).flatMap({
+                        token ->
+                        apiService.getRecommendedIllusts(token, true)
+                    })))
+                }
+                Identifier.HOME_ILLUSTRATIONS.value -> {
+
+                }
+            }
         }
     }
 

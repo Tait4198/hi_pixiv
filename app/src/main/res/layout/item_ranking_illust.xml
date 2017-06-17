@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout >
 
     <data />
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
         android:foreground="@drawable/dark_foreground"
         android:clickable="true"
         tools:ignore="KeyboardInaccessibleWidget">
@@ -15,7 +17,7 @@
             android:id="@+id/cover"
             android:background="@color/colorImageBg"
             android:layout_width="match_parent"
-            android:layout_height="180dp"/>
+            android:layout_height="200dp"/>
 
     </FrameLayout>
 </layout>
