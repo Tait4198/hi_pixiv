@@ -20,7 +20,6 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.net.ApiService
-
 import info.hzvtc.hipixiv.view.fragment.IllustFragment
 
 

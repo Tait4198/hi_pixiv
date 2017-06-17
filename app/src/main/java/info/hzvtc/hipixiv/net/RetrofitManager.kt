@@ -3,6 +3,7 @@ package info.hzvtc.hipixiv.net
 import android.content.Context
 import com.google.gson.GsonBuilder
 import info.hzvtc.hipixiv.net.interceptor.ApiInterceptor
+import info.hzvtc.hipixiv.net.interceptor.CacheInterceptor
 import info.hzvtc.hipixiv.net.interceptor.LoggingInterceptor
 import info.hzvtc.hipixiv.net.interceptor.OAuthInterceptor
 import okhttp3.Cache
@@ -19,6 +20,7 @@ class RetrofitManager(context : Context){
     private val oAuthInterceptor = OAuthInterceptor(context)
     private val apiInterceptor = ApiInterceptor(context)
     private val loggingInterceptor = LoggingInterceptor()
+    private val cacheInterceptor = CacheInterceptor(context)
     private val adapter = RxJava2CallAdapterFactory.create()
     private val converter = GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create())
 
@@ -33,8 +35,9 @@ class RetrofitManager(context : Context){
     }
     private val apiClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
-                .addNetworkInterceptor(apiInterceptor)
                 .addInterceptor(apiInterceptor)
+                .addInterceptor(cacheInterceptor)
+                .addNetworkInterceptor(cacheInterceptor)
                 .addInterceptor(loggingInterceptor)
                 .cache(Cache(File(context.cacheDir.toString(), "cache"), 64 * 1024 * 1024))
                 .retryOnConnectionFailure(true)
