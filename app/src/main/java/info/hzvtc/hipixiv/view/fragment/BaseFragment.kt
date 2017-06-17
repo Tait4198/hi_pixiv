@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.view.fragment
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import info.hzvtc.hipixiv.App
 import info.hzvtc.hipixiv.inject.component.DaggerFragmentComponent
@@ -15,5 +16,10 @@ abstract class BaseFragment : Fragment() {
                 .activityModule(ActivityModule(this.activity))
                 .fragmentModule(FragmentModule(this))
                 .build()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 }

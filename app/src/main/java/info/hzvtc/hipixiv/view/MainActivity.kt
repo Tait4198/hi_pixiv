@@ -35,6 +35,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     lateinit var apiService : ApiService
 
     private var nowIdentifier = -1
+    private lateinit var nowFragment : Fragment
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
@@ -121,15 +122,14 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             nowIdentifier = identifier
             when(identifier){
                 Identifier.HOME_ILLUSTRATIONS.value -> {
-                    replaceFragment(IllustFragment(account.obsToken(this).flatMap({
-                        token ->
-                        apiService.getRecommendedIllusts(token, true)
-                    })))
+                    nowFragment = IllustFragment(account.obsToken(this).flatMap({token ->
+                        apiService.getRecommendedIllusts(token, true) }))
                 }
                 Identifier.HOME_ILLUSTRATIONS.value -> {
 
                 }
             }
+            replaceFragment(nowFragment)
         }
     }
 
