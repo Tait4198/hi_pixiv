@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+    <data />
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/root"
+        android:paddingTop="12dp"
+        android:paddingEnd="6dp"
+        android:paddingRight="6dp"
+        android:paddingLeft="6dp"
+        android:paddingBottom="12dp"
+        android:foreground="@drawable/dark_foreground"
+        android:clickable="true"
+        tools:ignore="KeyboardInaccessibleWidget">
+
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:text="@string/icon_trophy"
+            android:id="@+id/trophy_icon"
+            android:textSize="16sp"
+            android:textColor="@color/md_yellow_800"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:text="@string/ranking"
+            android:id="@+id/ranking_title"
+            android:textSize="16sp"
+            android:textColor="@color/colorTextSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/trophy_icon"
+            android:layout_toEndOf="@+id/trophy_icon"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:text="@string/see_more"
+            android:id="@+id/see_more"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/icon_chevron_right"
+            android:layout_toStartOf="@+id/icon_chevron_right"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            tools:ignore="RelativeOverlap" />
+
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:text="@string/icon_chevron_right"
+            android:id="@+id/icon_chevron_right"
+            android:textSize="12sp"
+            android:textColor="@color/primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="2dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+</layout>

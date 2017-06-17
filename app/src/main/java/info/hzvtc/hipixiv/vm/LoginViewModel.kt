@@ -65,6 +65,10 @@ class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<L
                         mBind.inputUsername.error = mView.getString(R.string.login_username_no_input)
                     if(password.isEmpty())
                         mBind.inputPassword.error = mView.getString(R.string.login_password_no_input)
+                    if(account.isLogin()?:false){
+                        val intent = Intent(mView.getString(R.string.activity_main))
+                        ActivityCompat.startActivity(mView, intent, null)
+                    }
                 },{
                     disposable -> compositeDisposable.add(disposable)
                 })

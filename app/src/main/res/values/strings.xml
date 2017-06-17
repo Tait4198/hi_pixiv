@@ -24,6 +24,9 @@
     <string name="help">Help</string>
     <string name="senior_member">Pixiv Senior Member</string>
     <string name="general_user">Pixiv General User</string>
+    <string name="recommended">Recommended for you</string>
+    <string name="ranking">Ranking</string>
+    <string name="see_more">See More</string>
 
     <!-- Home -->
     <string name="home_name">Home</string>
@@ -75,4 +78,8 @@
 
     <string name="activity_login">info.hzvtc.hipixiv.login</string>
     <string name="activity_main">info.hzvtc.hipixiv.main</string>
+
+    <string name="icon_heart">{faw_heart}&#160;</string>
+    <string name="icon_trophy">{faw_trophy}&#160;</string>
+    <string name="icon_chevron_right">&#160;{faw_chevron_right}</string>
 </resources>

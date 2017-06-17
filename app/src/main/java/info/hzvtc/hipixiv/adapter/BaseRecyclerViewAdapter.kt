@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 
 abstract class BaseRecyclerViewAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val ITEM_RANKING = 0
-    val ITEM_RANKING_ILLUST = 1
-    val ITEM_ILLUST = 2
+    val ITEM_RANKING_TOP = 0
+    val ITEM_RANKING = 1
+    val ITEM_RANKING_ILLUST = 2
+    val ITEM_ILLUST_TOP = 3
+    val ITEM_ILLUST = 4
 
     val mLayoutInflater : LayoutInflater = LayoutInflater.from(context)
     val typeList : MutableList<Int> = ArrayList()

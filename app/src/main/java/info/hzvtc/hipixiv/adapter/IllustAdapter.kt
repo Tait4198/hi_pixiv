@@ -19,11 +19,16 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
 
     fun setNewData(data: IllustResponse) {
         typeList.clear()
+        relPosition = 0
         this.data = data
         if(data.ranking.isNotEmpty()){
+            typeList.add(ITEM_RANKING_TOP)
+            relPosition++
             typeList.add(ITEM_RANKING)
             relPosition++
         }
+        typeList.add(ITEM_ILLUST_TOP)
+        relPosition++
         for(index in 0..data.content.size-1){
             typeList.add(ITEM_ILLUST)
         }
@@ -39,19 +44,17 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        val viewHolder : RecyclerView.ViewHolder?
+        var resId : Int = -1
         when(viewType){
-            ITEM_RANKING -> {
-                viewHolder = BindingHolder(DataBindingUtil.inflate(mLayoutInflater,
-                        R.layout.item_ranking,parent,false),ITEM_RANKING)
-            }
-            ITEM_ILLUST -> {
-                viewHolder = BindingHolder(DataBindingUtil.inflate(mLayoutInflater,
-                        R.layout.item_illust,parent,false),ITEM_ILLUST)
-            }
-            else -> viewHolder = null
+            ITEM_RANKING_TOP -> resId = R.layout.item_ranking_top
+            ITEM_RANKING -> resId = R.layout.item_ranking
+            ITEM_ILLUST_TOP -> resId = R.layout.item_illust_top
+            ITEM_ILLUST -> resId = R.layout.item_illust
         }
-        return viewHolder
+        if(resId != -1){
+            return BindingHolder(DataBindingUtil.inflate(mLayoutInflater, resId,parent,false),viewType)
+        }
+        return null
     }
 
     private fun getRelPosition(position : Int) = position - relPosition

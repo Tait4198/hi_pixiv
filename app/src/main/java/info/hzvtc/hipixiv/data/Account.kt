@@ -70,6 +70,8 @@ class Account @Inject constructor(val userPref: UserPreferences, val oAuthServic
         return obs
     }
 
+    fun isLogin() = userPref.isLogin
+
     fun saveTokenResponse(oAuthResponse: OAuthResponse){
         userPref.isLogin = true
         userPref.accessToken = oAuthResponse.accessToken

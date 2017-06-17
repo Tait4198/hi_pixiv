@@ -14,8 +14,7 @@
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:fitsSystemWindows="true"
-            android:id="@+id/appbar"
-            app:elevation="0dp">
+            android:id="@+id/appbar">
             <include layout="@layout/layout_toolbar" android:id="@+id/layout_toolbar"/>
         </android.support.design.widget.AppBarLayout>
         <FrameLayout

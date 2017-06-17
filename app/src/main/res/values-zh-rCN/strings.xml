@@ -23,7 +23,9 @@
     <string name="help">帮助</string>
     <string name="senior_member">Pixiv高级会员</string>
     <string name="general_user">Pixiv普通用户</string>
-
+    <string name="recommended">为您推荐</string>
+    <string name="ranking">排行榜</string>
+    <string name="see_more">查看更多</string>
 
 
     <!-- Home -->

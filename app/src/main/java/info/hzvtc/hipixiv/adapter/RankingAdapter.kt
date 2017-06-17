@@ -16,13 +16,13 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         typeList.clear()
         this.ranking = ranking
         for(index in 0..ranking.size-1){
-            typeList.add(ITEM_ILLUST)
+            typeList.add(ITEM_RANKING_ILLUST)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         return  BindingHolder(DataBindingUtil.inflate(mLayoutInflater,
-                R.layout.item_ranking_illust,parent,false),ITEM_ILLUST)
+                R.layout.item_ranking_illust,parent,false),ITEM_RANKING_ILLUST)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
