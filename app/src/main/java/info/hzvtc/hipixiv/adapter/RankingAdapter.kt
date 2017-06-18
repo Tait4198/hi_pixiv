@@ -36,7 +36,7 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         val root = bind.root
         val illust = ranking[position]
         val cover: SimpleDraweeView = root.findViewById(R.id.cover) as SimpleDraweeView
-        cover.setImageURI(illust.imageUrls.square)
+        cover.setImageURI(illust.imageUrls.medium)
         bind.setVariable(BR.rankingIllust,illust)
         bind.setVariable(BR.rankingPageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
         bind.setVariable(BR.rankingIllustItemClick,itemClick)

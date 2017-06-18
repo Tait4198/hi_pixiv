@@ -1,20 +1,11 @@
 package info.hzvtc.hipixiv.view.fragment
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
-import android.util.Log
 import android.view.View
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.adapter.IllustAdapter
-import info.hzvtc.hipixiv.adapter.IllustItemClick
 import info.hzvtc.hipixiv.databinding.FragmentIllustBinding
-import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
-import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.vm.fragment.IllustViewModel
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class IllustFragment(val obs : Observable<IllustResponse>) : BindingFragment<FragmentIllustBinding>() {
@@ -22,53 +13,13 @@ class IllustFragment(val obs : Observable<IllustResponse>) : BindingFragment<Fra
     @Inject
     lateinit var viewModel : IllustViewModel
 
-    lateinit var layoutManger : GridLayoutManager
-    lateinit var adapter : IllustAdapter
-
     override fun getLayoutId(): Int = R.layout.fragment_illust
 
     override fun initView(binding: FragmentIllustBinding): View {
         component.inject(this)
+        viewModel.obsNewData = obs
         viewModel.setView(this)
-
-        mBinding.srLayout.setColorSchemeColors(ContextCompat.getColor(this.context,R.color.primary))
-        mBinding.srLayout.setOnRefreshListener({ newData() })
-        mBinding.illustRecycler.itemAnimator = DefaultItemAnimator()
-
-        layoutManger = GridLayoutManager(this.context,2)
-        layoutManger.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
-            override fun getSpanSize(pos: Int): Int =
-                    if(adapter.getFull(pos)) 1 else layoutManger.spanCount
-        }
-        adapter = IllustAdapter(this.context)
-        adapter.setItemClick(
-                itemClick = object :IllustItemClick{
-                    override fun click(illust: Illust) {
-                        AppMessage.toastMessageShort(illust.title,context)
-                    }
-                }
-        )
-
-        newData()
-
         return binding.root
-    }
-
-    fun newData(){
-        Observable.just(obs)
-             .doOnNext({ mBinding.srLayout.isRefreshing = true })
-             .flatMap({ obs -> obs })
-             .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
-             .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        _ ->
-                        mBinding.illustRecycler.adapter = adapter
-                        mBinding.illustRecycler.layoutManager = layoutManger
-                    },{
-                        error -> Log.d("Error",error.toString())
-                    },{
-                        mBinding.srLayout.isRefreshing = false
-                    })
     }
 
     override fun onDestroy() {

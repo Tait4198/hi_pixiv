@@ -13,16 +13,32 @@ import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
 class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
+
+    var nextUrl = ""
+
     private lateinit var data : IllustResponse
-
     private lateinit var itemClick : IllustItemClick
-    private var relPosition = 0
 
+    private var relPosition = 0
+    private var positionStart = 0
+    private var moreDataSize = 0
+    private var tempTypeListSize = 0
 
     fun setNewData(data: IllustResponse) {
-        typeList.clear()
-        relPosition = 0
+        //Clear
+        if(typeList.size > 0) {
+            tempTypeListSize = typeList.size
+            typeList.clear()
+            relPosition = 0
+        }
+        //Set update index
+        positionStart = typeList.size
+        moreDataSize = data.content.size
+        //NextUrl
+        if(!data.nextUrl.isNullOrEmpty()) nextUrl = data.nextUrl
+        //New Data
         this.data = data
+        //Init typeList
         if(data.ranking.isNotEmpty()){
             typeList.add(ITEM_RANKING_TOP)
             relPosition++
@@ -34,6 +50,22 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
         for(index in 0..data.content.size-1){
             typeList.add(ITEM_ILLUST)
         }
+    }
+
+    fun addMoreData(moreData: IllustResponse){
+        positionStart = typeList.size + 1
+        moreDataSize = moreData.content.size
+
+        nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
+        for(index in 0..moreData.content.size-1){
+            typeList.add(ITEM_ILLUST)
+        }
+        data.content.addAll(moreData.content)
+    }
+
+    fun updateUI(isNew : Boolean){
+        if(isNew) notifyItemRangeRemoved(0, tempTypeListSize)
+        notifyItemRangeInserted(positionStart, moreDataSize)
     }
 
     fun getFull(position: Int) = typeList[position] == ITEM_ILLUST
@@ -79,7 +111,7 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
         val root = bind.root
         val cover: SimpleDraweeView = root.findViewById(R.id.cover) as SimpleDraweeView
         val illust = data.content[getRelPosition(position)]
-        cover.setImageURI(illust.imageUrls.square)
+        cover.setImageURI(illust.imageUrls.medium)
         bind.setVariable(BR.illust,illust)
         bind.setVariable(BR.pageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
         bind.setVariable(BR.illustItemClick,itemClick)
