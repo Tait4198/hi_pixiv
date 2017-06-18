@@ -23,6 +23,7 @@ data class Illust(
         @SerializedName("meta_pages") @Expose val metaPages : List<ImageUrls> = ArrayList<ImageUrls>(),
         @SerializedName("total_view") @Expose val view : Int,
         @SerializedName("total_bookmarks") @Expose val bookmarks : Int,
+        @SerializedName("is_bookmarked") @Expose val isBookmarked : Boolean,
         @SerializedName("visible") @Expose val visible : Boolean,
         @SerializedName("is_muted") @Expose val isMuted : Boolean
 )

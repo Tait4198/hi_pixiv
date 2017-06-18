@@ -62,4 +62,5 @@ dependencies {
     implementation "com.mikepenz:iconics-core:2.8.6@aar"
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.0.original@aar'
+    implementation 'com.github.jd-alexander:LikeButton:0.2.1'
 }

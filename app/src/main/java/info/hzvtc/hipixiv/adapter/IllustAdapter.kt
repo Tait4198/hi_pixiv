@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.facebook.drawee.view.SimpleDraweeView
+import com.like.LikeButton
+import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
@@ -18,6 +20,7 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
 
     private lateinit var data : IllustResponse
     private lateinit var itemClick : IllustItemClick
+    private lateinit var itemLike : ItemLike
 
     private var relPosition = 0
     private var positionStart = 0
@@ -74,6 +77,10 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
         this.itemClick = itemClick
     }
 
+    fun setItemLike(itemLike: ItemLike){
+        this.itemLike = itemLike
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         when((holder as BindingHolder).type) {
             ITEM_RANKING -> showItemRanking(holder.bind)
@@ -103,6 +110,7 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
         val adapter = RankingAdapter(context)
         adapter.setNewData(data.ranking)
         adapter.setItemClick(itemClick)
+        adapter.setItemLike(itemLike)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
     }
@@ -110,8 +118,21 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
     private fun showItemIllust(bind : ViewDataBinding,position: Int){
         val root = bind.root
         val cover: SimpleDraweeView = root.findViewById(R.id.cover) as SimpleDraweeView
+        val like : LikeButton = root.findViewById(R.id.collect_button) as LikeButton
         val illust = data.content[getRelPosition(position)]
+        //View
         cover.setImageURI(illust.imageUrls.medium)
+        like.isLiked = illust.isBookmarked
+        like.setOnLikeListener(object : OnLikeListener {
+            override fun liked(likeButton: LikeButton) {
+                itemLike.like(illust.pixivId,likeButton)
+            }
+
+            override fun unLiked(likeButton: LikeButton) {
+                itemLike.unlike(illust.pixivId,likeButton)
+            }
+        })
+        //Bind
         bind.setVariable(BR.illust,illust)
         bind.setVariable(BR.pageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
         bind.setVariable(BR.illustItemClick,itemClick)

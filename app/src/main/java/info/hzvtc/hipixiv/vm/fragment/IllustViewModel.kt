@@ -4,9 +4,11 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
+import com.like.LikeButton
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.IllustAdapter
 import info.hzvtc.hipixiv.adapter.IllustItemClick
+import info.hzvtc.hipixiv.adapter.ItemLike
 import info.hzvtc.hipixiv.adapter.OnScrollListener
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentIllustBinding
@@ -44,6 +46,15 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
                     }
                 }
         )
+        adapter.setItemLike(itemLike = object : ItemLike{
+            override fun like(pixivId: Int, likeButton: LikeButton) {
+                AppMessage.toastMessageLong(pixivId.toString(),mView.context)
+            }
+
+            override fun unlike(pixivId: Int, likeButton: LikeButton) {
+                AppMessage.toastMessageLong(pixivId.toString(),mView.context)
+            }
+        })
 
         mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getNewData(obsNewData) })

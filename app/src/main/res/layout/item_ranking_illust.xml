@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout >
+<layout>
 
     <data>
         <import type="android.view.View"/>
@@ -15,8 +15,9 @@
             type="info.hzvtc.hipixiv.adapter.IllustItemClick" />
     </data>
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
-        android:layout_width="200dp"
+        android:layout_width="210dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
@@ -29,7 +30,7 @@
             android:id="@+id/cover"
             android:background="@color/colorImageBg"
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_height="210dp"/>
 
         <com.mikepenz.iconics.view.IconicsTextView
             android:id="@+id/page_count"
@@ -43,5 +44,17 @@
             android:text="@{rankingPageCountValue}"
             android:visibility="@{rankingIllust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
 
+        <com.like.LikeButton
+            android:id="@+id/collect_button"
+            app:icon_size="24dp"
+            app:dots_primary_color="@color/md_pink_200"
+            app:dots_secondary_color="@color/md_pink_500"
+            app:circle_start_color="@color/md_pink_500"
+            app:circle_end_color="@color/md_pink_200"
+            app:like_drawable="@drawable/favorite_on"
+            app:unlike_drawable="@drawable/favorite_off"
+            android:layout_width="32dp"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom|end" />
     </FrameLayout>
 </layout>

@@ -5,6 +5,8 @@ import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.facebook.drawee.view.SimpleDraweeView
+import com.like.LikeButton
+import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.pojo.illust.Illust
@@ -13,6 +15,7 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
 
     private lateinit var ranking : List<Illust>
     private lateinit var itemClick : IllustItemClick
+    private lateinit var itemLike : ItemLike
 
     fun setNewData(ranking: List<Illust>) {
         typeList.clear()
@@ -26,6 +29,10 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         this.itemClick = itemClick
     }
 
+    fun setItemLike(itemLike: ItemLike){
+        this.itemLike = itemLike
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         return  BindingHolder(DataBindingUtil.inflate(mLayoutInflater,
                 R.layout.item_ranking_illust,parent,false),ITEM_RANKING_ILLUST)
@@ -36,7 +43,20 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         val root = bind.root
         val illust = ranking[position]
         val cover: SimpleDraweeView = root.findViewById(R.id.cover) as SimpleDraweeView
+        val like : LikeButton = root.findViewById(R.id.collect_button) as LikeButton
+        //View
         cover.setImageURI(illust.imageUrls.medium)
+        like.isLiked = illust.isBookmarked
+        like.setOnLikeListener(object : OnLikeListener{
+            override fun liked(likeButton: LikeButton) {
+                itemLike.like(illust.pixivId,likeButton)
+            }
+
+            override fun unLiked(likeButton: LikeButton) {
+                itemLike.unlike(illust.pixivId,likeButton)
+            }
+        })
+        //Bind
         bind.setVariable(BR.rankingIllust,illust)
         bind.setVariable(BR.rankingPageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
         bind.setVariable(BR.rankingIllustItemClick,itemClick)
