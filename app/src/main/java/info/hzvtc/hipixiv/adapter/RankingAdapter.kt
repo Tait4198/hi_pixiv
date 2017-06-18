@@ -17,6 +17,10 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
     private lateinit var itemClick : IllustItemClick
     private lateinit var itemLike : ItemLike
 
+    init {
+        setHasStableIds(true)
+    }
+
     fun setNewData(ranking: List<Illust>) {
         typeList.clear()
         this.ranking = ranking

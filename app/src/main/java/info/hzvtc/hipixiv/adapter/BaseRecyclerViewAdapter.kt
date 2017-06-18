@@ -18,4 +18,6 @@ abstract class BaseRecyclerViewAdapter(context: Context) : RecyclerView.Adapter<
     override fun getItemCount(): Int = typeList.size
 
     override fun getItemViewType(position: Int) = typeList[position]
+
+    override fun getItemId(position: Int) = position.toLong()
 }

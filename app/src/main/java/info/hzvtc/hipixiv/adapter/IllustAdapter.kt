@@ -1,10 +1,12 @@
 package info.hzvtc.hipixiv.adapter
 
 import android.content.Context
+import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.ViewGroup
 import com.facebook.drawee.view.SimpleDraweeView
 import com.like.LikeButton
@@ -13,8 +15,7 @@ import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
-class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
-
+class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(context = context) {
 
     var nextUrl = ""
 
@@ -26,6 +27,10 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
     private var positionStart = 0
     private var moreDataSize = 0
     private var tempTypeListSize = 0
+
+    init {
+        setHasStableIds(true)
+    }
 
     fun setNewData(data: IllustResponse) {
         //Clear
@@ -121,7 +126,13 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
         val like : LikeButton = root.findViewById(R.id.collect_button) as LikeButton
         val illust = data.content[getRelPosition(position)]
         //View
+        if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    300f, context.resources.displayMetrics).toInt()
+            //todo 横屏使用large图片
+        }
         cover.setImageURI(illust.imageUrls.medium)
+
         like.isLiked = illust.isBookmarked
         like.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {
@@ -136,5 +147,6 @@ class IllustAdapter(val context: Context) : BaseRecyclerViewAdapter(context = co
         bind.setVariable(BR.illust,illust)
         bind.setVariable(BR.pageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
         bind.setVariable(BR.illustItemClick,itemClick)
+
     }
 }
