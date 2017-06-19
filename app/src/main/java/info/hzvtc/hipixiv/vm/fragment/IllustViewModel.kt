@@ -3,6 +3,7 @@ package info.hzvtc.hipixiv.vm.fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
@@ -16,6 +17,7 @@ import info.hzvtc.hipixiv.net.ApiService
 import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.util.AppMessage
+import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.fragment.IllustFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
@@ -49,17 +51,17 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
         )
         adapter.setItemLike(itemLike = object : ItemLike{
             override fun like(pixivId: Int, likeButton: LikeButton) {
-                AppMessage.toastMessageLong(pixivId.toString(),mView.context)
+                postLikeOrUnlike(pixivId,likeButton,true)
             }
 
             override fun unlike(pixivId: Int, likeButton: LikeButton) {
-                AppMessage.toastMessageLong(pixivId.toString(),mView.context)
+                postLikeOrUnlike(pixivId,likeButton,false)
             }
         })
 
         mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getNewData(obsNewData) })
-        mBind.illustRecycler.itemAnimator = DefaultItemAnimator()
+        mBind.illustRecycler.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator
         mBind.illustRecycler.addOnScrollListener(object : OnScrollListener() {
             override fun onBottom() {
                 if(allowLoadMore){
@@ -79,11 +81,11 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
                .doOnNext({ mBind.srLayout.isRefreshing = true })
                .flatMap({ obs -> obs })
                .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
-               .observeOn(AndroidSchedulers.mainThread())
+               .subscribeOn(AndroidSchedulers.mainThread())
                .subscribe({
                    _ -> adapter.updateUI(true)
                 },{
-                    error -> Log.d("Error",error.toString())
+                    error -> Log.e("Error",error.toString())
                 },{
                     mBind.srLayout.isRefreshing = false
                 })
@@ -99,7 +101,7 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
                 .flatMap({ account.obsToken(mView.context) })
                 .flatMap({ token -> apiService.getIllustsNext(token,adapter.nextUrl)})
                 .doOnNext({ illustResponse -> adapter.addMoreData(illustResponse) })
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     _ ->
                     adapter.setProgress(false)
@@ -109,6 +111,31 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
                     allowLoadMore = true
                 },{
                     allowLoadMore = true
+                })
+    }
+
+    private fun postLikeOrUnlike(illustId : Int,likeButton: LikeButton,isLike : Boolean){
+        Observable.just(AppUtil.isNetworkConnected(mView.context))
+                .filter({ isConnected -> isConnected })
+                .flatMap({ account.obsToken(mView.context) })
+                .flatMap({
+                    token ->
+                    if(isLike){
+                        return@flatMap apiService.postLikeIllust(token,illustId,"public")
+                    }else{
+                        return@flatMap apiService.postUnlikeIllust(token,illustId)
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    //
+                },{
+                    error -> Log.e("Error",error.toString())
+                    likeButton.isLiked = false
+                },{
+                    if(!AppUtil.isNetworkConnected(mView.context)){
+                        likeButton.isLiked = false
+                    }
                 })
     }
 }

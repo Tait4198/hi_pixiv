@@ -1,11 +1,9 @@
 package info.hzvtc.hipixiv.net
 
+import info.hzvtc.hipixiv.pojo.NullResponse
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface ApiService {
     @GET("/v1/illust/recommended?filter=for_android")
@@ -15,4 +13,14 @@ interface ApiService {
     @GET
     fun getIllustsNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>
+
+    @FormUrlEncoded
+    @POST("/v2/illust/bookmark/add")
+    fun postLikeIllust(@Header("Authorization") authorization: String, @Field("illust_id") illustId: Int,
+                                @Field("restrict") restrict: String): Observable<NullResponse>
+
+    @FormUrlEncoded
+    @POST("/v1/illust/bookmark/delete")
+    fun postUnlikeIllust(@Header("Authorization") authorization: String,
+                                  @Field("illust_id") illustId: Int): Observable<NullResponse>
 }
