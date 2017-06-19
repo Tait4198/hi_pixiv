@@ -16,4 +16,16 @@
     <color name="colorImageBg">#CFD8DC</color>
     <color name="colorFogDark">#20000000</color>
     <color name="colorPageCountBg">#50000000</color>
+
+    <color name="color_blue">#3369E8</color>
+    <color name="color_red">#D50F25</color>
+    <color name="color_green">#009925</color>
+    <color name="color_yellow">#EEB211</color>
+
+    <integer-array name="progress_colors">
+        <item>@color/color_blue</item>
+        <item>@color/color_red</item>
+        <item>@color/color_green</item>
+        <item>@color/color_yellow</item>
+    </integer-array>
 </resources>

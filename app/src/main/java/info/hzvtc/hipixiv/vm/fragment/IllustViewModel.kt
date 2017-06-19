@@ -20,6 +20,7 @@ import info.hzvtc.hipixiv.view.fragment.IllustFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class IllustViewModel @Inject constructor(val account: Account,val apiService: ApiService) : BaseFragmentViewModel<IllustFragment, FragmentIllustBinding>(){
@@ -92,13 +93,19 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
         Observable.just(adapter.nextUrl)
                 .doOnNext({ allowLoadMore = false })
                 .filter({ url -> !url.isNullOrEmpty() })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext({ adapter.setProgress(true) })
+                .observeOn(Schedulers.io())
                 .flatMap({ account.obsToken(mView.context) })
                 .flatMap({ token -> apiService.getIllustsNext(token,adapter.nextUrl)})
                 .doOnNext({ illustResponse -> adapter.addMoreData(illustResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    _ -> adapter.updateUI(false)
+                    _ ->
+                    adapter.setProgress(false)
+                    adapter.updateUI(false)
                 },{
+                    adapter.setProgress(false)
                     allowLoadMore = true
                 },{
                     allowLoadMore = true

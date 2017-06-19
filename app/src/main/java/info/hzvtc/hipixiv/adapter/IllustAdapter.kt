@@ -27,6 +27,7 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
     private var positionStart = 0
     private var moreDataSize = 0
     private var tempTypeListSize = 0
+    private var tempProgressIndex = 0
 
     init {
         setHasStableIds(true)
@@ -86,6 +87,17 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
         this.itemLike = itemLike
     }
 
+    fun setProgress(isShow : Boolean){
+        if(isShow){
+            typeList.add(ITEM_PROGRESS)
+            tempProgressIndex = typeList.size
+            notifyItemRangeInserted(tempProgressIndex,1)
+        }else{
+            typeList.removeAt(tempProgressIndex-1)
+            notifyItemRangeRemoved(tempProgressIndex-1,1)
+        }
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         when((holder as BindingHolder).type) {
             ITEM_RANKING -> showItemRanking(holder.bind)
@@ -100,6 +112,7 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
             ITEM_RANKING -> resId = R.layout.item_ranking
             ITEM_ILLUST_TOP -> resId = R.layout.item_illust_top
             ITEM_ILLUST -> resId = R.layout.item_illust
+            ITEM_PROGRESS -> resId = R.layout.item_progress
         }
         if(resId != -1){
             return BindingHolder(DataBindingUtil.inflate(mLayoutInflater, resId,parent,false),viewType)
