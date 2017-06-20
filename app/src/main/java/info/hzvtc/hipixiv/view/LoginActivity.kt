@@ -26,9 +26,4 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(){
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.clear()
-    }
 }

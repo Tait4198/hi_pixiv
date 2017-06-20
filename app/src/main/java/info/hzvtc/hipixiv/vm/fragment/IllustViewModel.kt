@@ -22,12 +22,14 @@ import info.hzvtc.hipixiv.view.fragment.IllustFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class IllustViewModel @Inject constructor(val account: Account,val apiService: ApiService) : BaseFragmentViewModel<IllustFragment, FragmentIllustBinding>(){
+class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFragmentViewModel<IllustFragment, FragmentIllustBinding>(){
 
-    var obsNewData : Observable<IllustResponse>? = null
+    lateinit var obsNewData : Observable<IllustResponse>
+    lateinit var account: Account
 
     private var allowLoadMore = true
 
@@ -81,7 +83,7 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
                .doOnNext({ mBind.srLayout.isRefreshing = true })
                .flatMap({ obs -> obs })
                .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
-               .subscribeOn(AndroidSchedulers.mainThread())
+               .observeOn(AndroidSchedulers.mainThread())
                .subscribe({
                    _ -> adapter.updateUI(true)
                 },{
@@ -101,7 +103,7 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
                 .flatMap({ account.obsToken(mView.context) })
                 .flatMap({ token -> apiService.getIllustsNext(token,adapter.nextUrl)})
                 .doOnNext({ illustResponse -> adapter.addMoreData(illustResponse) })
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     _ ->
                     adapter.setProgress(false)
@@ -115,9 +117,8 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
     }
 
     private fun postLikeOrUnlike(illustId : Int,likeButton: LikeButton,isLike : Boolean){
-        Observable.just(AppUtil.isNetworkConnected(mView.context))
-                .filter({ isConnected -> isConnected })
-                .flatMap({ account.obsToken(mView.context) })
+        account.obsToken(mView.context)
+                .filter({ AppUtil.isNetworkConnected(mView.context) })
                 .flatMap({
                     token ->
                     if(isLike){
@@ -126,7 +127,7 @@ class IllustViewModel @Inject constructor(val account: Account,val apiService: A
                         return@flatMap apiService.postUnlikeIllust(token,illustId)
                     }
                 })
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     //
                 },{

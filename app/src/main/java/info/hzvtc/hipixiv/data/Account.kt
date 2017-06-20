@@ -11,7 +11,6 @@ import info.hzvtc.hipixiv.util.AppUtil
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-
 import javax.inject.Inject
 
 class Account @Inject constructor(val userPref: UserPreferences, val oAuthService: OAuthService) {

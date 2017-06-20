@@ -2,13 +2,14 @@ package info.hzvtc.hipixiv.view.fragment
 
 import android.view.View
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentIllustBinding
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.vm.fragment.IllustViewModel
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class IllustFragment(val obs : Observable<IllustResponse>) : BindingFragment<FragmentIllustBinding>() {
+class IllustFragment(val obsNewData : Observable<IllustResponse>,val account : Account) : BindingFragment<FragmentIllustBinding>() {
 
     @Inject
     lateinit var viewModel : IllustViewModel
@@ -17,13 +18,9 @@ class IllustFragment(val obs : Observable<IllustResponse>) : BindingFragment<Fra
 
     override fun initView(binding: FragmentIllustBinding): View {
         component.inject(this)
-        viewModel.obsNewData = obs
+        viewModel.obsNewData = obsNewData
+        viewModel.account = account
         viewModel.setView(this)
         return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.clear()
     }
 }

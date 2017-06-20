@@ -69,8 +69,6 @@ class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<L
                         val intent = Intent(mView.getString(R.string.activity_main))
                         ActivityCompat.startActivity(mView, intent, null)
                     }
-                },{
-                    disposable -> compositeDisposable.add(disposable)
                 })
     }
 

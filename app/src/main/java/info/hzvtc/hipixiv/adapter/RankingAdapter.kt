@@ -4,6 +4,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
 import com.like.LikeButton
 import com.like.OnLikeListener
@@ -47,9 +48,12 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         val root = bind.root
         val illust = ranking[position]
         val cover: SimpleDraweeView = root.findViewById(R.id.cover) as SimpleDraweeView
+        val profile : SimpleDraweeView = root.findViewById(R.id.profile) as SimpleDraweeView
         val like : LikeButton = root.findViewById(R.id.collect_button) as LikeButton
         //View
         cover.setImageURI(illust.imageUrls.medium)
+        profile.hierarchy.roundingParams = RoundingParams.asCircle()
+        profile.setImageURI(illust.user.profile.medium)
         like.isLiked = illust.isBookmarked
         like.setOnLikeListener(object : OnLikeListener{
             override fun liked(likeButton: LikeButton) {

@@ -1,3 +1,3 @@
 package info.hzvtc.hipixiv.pojo
 
-class NullResponse()
+class EmptyResponse()

@@ -123,7 +123,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             when(identifier){
                 Identifier.HOME_ILLUSTRATIONS.value -> {
                     nowFragment = IllustFragment(account.obsToken(this).flatMap({token ->
-                        apiService.getRecommendedIllusts(token, true) }))
+                        apiService.getRecommendedIllusts(token, true) }),account)
                 }
                 Identifier.HOME_ILLUSTRATIONS.value -> {
 
@@ -145,11 +145,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.clear()
     }
 
     enum class Identifier(val value : Int){
