@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.TypedValue
 import android.view.ViewGroup
 import com.facebook.drawee.view.SimpleDraweeView
@@ -13,9 +14,11 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
-class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(context = context) {
+//isMange = true 漫画/ false 插画
+class IllustAdapter(private var context: Context,private var isMange : Boolean) : BaseRecyclerViewAdapter(context = context) {
 
     var nextUrl = ""
 
@@ -23,7 +26,7 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
     private lateinit var itemClick : IllustItemClick
     private lateinit var itemLike : ItemLike
 
-    private var relPosition = 0
+    private var realPosition = 0
     private var positionStart = 0
     private var moreDataSize = 0
     private var tempTypeListSize = 0
@@ -38,7 +41,7 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
         if(typeList.size > 0) {
             tempTypeListSize = typeList.size
             typeList.clear()
-            relPosition = 0
+            realPosition = 0
         }
         //Set update index
         positionStart = typeList.size
@@ -50,14 +53,14 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
         //Init typeList
         if(data.ranking.isNotEmpty()){
             typeList.add(ITEM_RANKING_TOP)
-            relPosition++
+            realPosition++
             typeList.add(ITEM_RANKING)
-            relPosition++
+            realPosition++
+            typeList.add(ITEM_ILLUST_TOP)
+            realPosition++
         }
-        typeList.add(ITEM_ILLUST_TOP)
-        relPosition++
         for(index in 0..data.content.size-1){
-            typeList.add(ITEM_ILLUST)
+            if(isMange) typeList.add(ITEM_MANGA) else typeList.add(ITEM_ILLUST)
         }
     }
 
@@ -67,7 +70,7 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
 
         nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
         for(index in 0..moreData.content.size-1){
-            typeList.add(ITEM_ILLUST)
+            if(isMange) typeList.add(ITEM_MANGA) else typeList.add(ITEM_ILLUST)
         }
         data.content.addAll(moreData.content)
     }
@@ -77,7 +80,17 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
         notifyItemRangeInserted(positionStart, moreDataSize)
     }
 
-    fun getFull(position: Int) = typeList[position] == ITEM_ILLUST
+    fun updateBookmarked(position: Int,isBookmarked : Boolean,isRank : Boolean){
+        if(position <= data.content.size && !isRank){
+            data.content[position].isBookmarked = isBookmarked
+        }else if(position <= data.ranking.size && isRank){
+            data.ranking[position].isBookmarked = isBookmarked
+        }
+    }
+
+    fun getFull(position: Int): Boolean {
+        return typeList[position] == ITEM_ILLUST || typeList[position] == ITEM_MANGA
+    }
 
     fun setItemClick(itemClick: IllustItemClick){
         this.itemClick = itemClick
@@ -99,9 +112,19 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        when((holder as BindingHolder).type) {
+        val type = (holder as BindingHolder).type
+        //Manga Full
+        if(isMange && type != ITEM_MANGA){
+            val layoutParams = StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT)
+            layoutParams.isFullSpan = true
+            holder.itemView.layoutParams = layoutParams
+        }
+        //Item
+        when(type) {
             ITEM_RANKING -> showItemRanking(holder.bind)
             ITEM_ILLUST ->  showItemIllust(holder.bind,position)
+            ITEM_MANGA ->  showItemManga(holder.bind,position)
         }
     }
 
@@ -112,6 +135,7 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
             ITEM_RANKING -> resId = R.layout.item_ranking
             ITEM_ILLUST_TOP -> resId = R.layout.item_illust_top
             ITEM_ILLUST -> resId = R.layout.item_illust
+            ITEM_MANGA -> resId = R.layout.item_manga
             ITEM_PROGRESS -> resId = R.layout.item_progress
         }
         if(resId != -1){
@@ -120,7 +144,7 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
         return null
     }
 
-    private fun getRelPosition(position : Int) = position - relPosition
+    private fun getRealPosition(position : Int) = position - realPosition
 
     private fun showItemRanking(bind : ViewDataBinding){
         val root = bind.root
@@ -134,32 +158,40 @@ class IllustAdapter(private var context: Context) : BaseRecyclerViewAdapter(cont
     }
 
     private fun showItemIllust(bind : ViewDataBinding,position: Int){
+        val illust = data.content[getRealPosition(position)]
+        showItemImage(illust,bind,position)
+        bind.setVariable(BR.illust,illust)
+        bind.setVariable(BR.illustItemClick,itemClick)
+    }
+
+    private fun showItemManga(bind : ViewDataBinding,position: Int){
+        val illust = data.content[getRealPosition(position)]
+        showItemImage(illust,bind,position)
+        bind.setVariable(BR.mangaIllust,illust)
+        bind.setVariable(BR.mangaItemClick,itemClick)
+    }
+
+    private fun showItemImage(illust: Illust,bind : ViewDataBinding,position: Int){
         val root = bind.root
         val cover: SimpleDraweeView = root.findViewById(R.id.cover) as SimpleDraweeView
         val like : LikeButton = root.findViewById(R.id.collect_button) as LikeButton
-        val illust = data.content[getRelPosition(position)]
         //View
+        val coverHeight = if(isMange) 240f else 300f
         if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
             cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    300f, context.resources.displayMetrics).toInt()
-            //todo 横屏使用large图片
+                    coverHeight, context.resources.displayMetrics).toInt()
+            //todo 横屏使用large图片 Set
         }
         cover.setImageURI(illust.imageUrls.medium)
-
         like.isLiked = illust.isBookmarked
         like.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {
-                itemLike.like(illust.pixivId,likeButton)
+                itemLike.like(illust.pixivId,getRealPosition(position),false,likeButton)
             }
 
             override fun unLiked(likeButton: LikeButton) {
-                itemLike.unlike(illust.pixivId,likeButton)
+                itemLike.unlike(illust.pixivId,getRealPosition(position),false,likeButton)
             }
         })
-        //Bind
-        bind.setVariable(BR.illust,illust)
-        bind.setVariable(BR.pageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
-        bind.setVariable(BR.illustItemClick,itemClick)
-
     }
 }

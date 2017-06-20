@@ -5,9 +5,6 @@
         <import type="android.view.View"/>
 
         <variable
-            name="pageCountValue"
-            type="String" />
-        <variable
             name="illust"
             type="info.hzvtc.hipixiv.pojo.illust.Illust" />
         <variable
@@ -41,7 +38,7 @@
             android:textColor="@color/colorWhite"
             android:background="@color/colorPageCountBg"
             android:layout_gravity="end|top"
-            android:text="@{pageCountValue}"
+            android:text="@{@string/icon_page + illust.pageCount}"
             android:visibility="@{illust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
 
         <com.like.LikeButton

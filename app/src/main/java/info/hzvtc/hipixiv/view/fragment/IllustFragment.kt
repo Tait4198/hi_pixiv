@@ -9,7 +9,8 @@ import info.hzvtc.hipixiv.vm.fragment.IllustViewModel
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class IllustFragment(val obsNewData : Observable<IllustResponse>,val account : Account) : BindingFragment<FragmentIllustBinding>() {
+class IllustFragment(val obsNewData : Observable<IllustResponse>,val account : Account,val isManga: Boolean)
+    : BindingFragment<FragmentIllustBinding>() {
 
     @Inject
     lateinit var viewModel : IllustViewModel
@@ -18,6 +19,7 @@ class IllustFragment(val obsNewData : Observable<IllustResponse>,val account : A
 
     override fun initView(binding: FragmentIllustBinding): View {
         component.inject(this)
+        viewModel.isManga = isManga
         viewModel.obsNewData = obsNewData
         viewModel.account = account
         viewModel.setView(this)

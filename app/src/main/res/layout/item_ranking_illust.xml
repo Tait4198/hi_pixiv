@@ -5,9 +5,6 @@
         <import type="android.view.View"/>
 
         <variable
-            name="rankingPageCountValue"
-            type="String" />
-        <variable
             name="rankingIllust"
             type="info.hzvtc.hipixiv.pojo.illust.Illust" />
         <variable
@@ -41,7 +38,7 @@
             android:textColor="@color/colorWhite"
             android:background="@color/colorPageCountBg"
             android:layout_gravity="end|top"
-            android:text="@{rankingPageCountValue}"
+            android:text="@{@string/icon_page + rankingIllust.pageCount}"
             android:visibility="@{rankingIllust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
 
         <FrameLayout

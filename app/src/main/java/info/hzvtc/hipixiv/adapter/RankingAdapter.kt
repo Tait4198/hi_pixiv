@@ -57,16 +57,15 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         like.isLiked = illust.isBookmarked
         like.setOnLikeListener(object : OnLikeListener{
             override fun liked(likeButton: LikeButton) {
-                itemLike.like(illust.pixivId,likeButton)
+                itemLike.like(illust.pixivId,position,true,likeButton)
             }
 
             override fun unLiked(likeButton: LikeButton) {
-                itemLike.unlike(illust.pixivId,likeButton)
+                itemLike.unlike(illust.pixivId,position,true,likeButton)
             }
         })
         //Bind
         bind.setVariable(BR.rankingIllust,illust)
-        bind.setVariable(BR.rankingPageCountValue,context.getString(R.string.icon_page) + illust.pageCount)
         bind.setVariable(BR.rankingIllustItemClick,itemClick)
     }
 

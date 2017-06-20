@@ -4,6 +4,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
@@ -22,28 +23,32 @@ import info.hzvtc.hipixiv.view.fragment.IllustFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFragmentViewModel<IllustFragment, FragmentIllustBinding>(){
 
+    var isManga : Boolean = false
     lateinit var obsNewData : Observable<IllustResponse>
     lateinit var account: Account
 
     private var allowLoadMore = true
-
-    private lateinit var layoutManger : GridLayoutManager
     private lateinit var adapter : IllustAdapter
 
     override fun initViewModel() {
-        layoutManger = GridLayoutManager(mView.context,2)
-        layoutManger.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
-            override fun getSpanSize(pos: Int): Int =
-                    if(adapter.getFull(pos)) 1 else layoutManger.spanCount
+        if(isManga){
+            val layoutManger = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
+            mBind.illustRecycler.layoutManager = layoutManger
+        }else{
+            val layoutManger = GridLayoutManager(mView.context,2)
+            layoutManger.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
+                override fun getSpanSize(pos: Int): Int =
+                        if(adapter.getFull(pos)) 1 else layoutManger.spanCount
+            }
+            mBind.illustRecycler.layoutManager = layoutManger
         }
 
-        adapter = IllustAdapter(mView.context)
+        adapter = IllustAdapter(mView.context,isManga)
         adapter.setItemClick(
                 itemClick = object : IllustItemClick {
                     override fun click(illust: Illust) {
@@ -52,12 +57,12 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
                 }
         )
         adapter.setItemLike(itemLike = object : ItemLike{
-            override fun like(pixivId: Int, likeButton: LikeButton) {
-                postLikeOrUnlike(pixivId,likeButton,true)
+            override fun like(pixivId: Int, itemIndex: Int,isRank: Boolean, likeButton: LikeButton) {
+                postLikeOrUnlike(pixivId, itemIndex,true,isRank,likeButton)
             }
 
-            override fun unlike(pixivId: Int, likeButton: LikeButton) {
-                postLikeOrUnlike(pixivId,likeButton,false)
+            override fun unlike(pixivId: Int,itemIndex : Int,isRank: Boolean,likeButton: LikeButton) {
+                postLikeOrUnlike(pixivId,itemIndex,false,isRank,likeButton)
             }
         })
 
@@ -72,7 +77,6 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
             }
         })
         mBind.illustRecycler.adapter = adapter
-        mBind.illustRecycler.layoutManager = layoutManger
 
         getNewData(obsNewData)
     }
@@ -116,7 +120,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
                 })
     }
 
-    private fun postLikeOrUnlike(illustId : Int,likeButton: LikeButton,isLike : Boolean){
+    private fun postLikeOrUnlike(illustId : Int,position : Int,isLike : Boolean,isRank : Boolean,likeButton: LikeButton){
         account.obsToken(mView.context)
                 .filter({ AppUtil.isNetworkConnected(mView.context) })
                 .flatMap({
@@ -129,12 +133,14 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    //
+                    adapter.updateBookmarked(position,true,isRank)
                 },{
                     error -> Log.e("Error",error.toString())
+                    adapter.updateBookmarked(position,false,isRank)
                     likeButton.isLiked = false
                 },{
                     if(!AppUtil.isNetworkConnected(mView.context)){
+                        adapter.updateBookmarked(position,false,isRank)
                         likeButton.isLiked = false
                     }
                 })

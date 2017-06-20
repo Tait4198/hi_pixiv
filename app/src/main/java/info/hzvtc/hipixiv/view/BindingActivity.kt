@@ -14,7 +14,7 @@ abstract class BindingActivity<T : ViewDataBinding> : BaseActivity(){
         val rootView : View = layoutInflater.inflate(getLayoutId(),null,false)
         mBinding = DataBindingUtil.bind(rootView)
         setContentView(rootView)
-        initView()
+        initView(savedInstanceState)
     }
 
     fun getBinding() = mBinding
@@ -22,5 +22,5 @@ abstract class BindingActivity<T : ViewDataBinding> : BaseActivity(){
     @LayoutRes
     abstract fun getLayoutId() : Int
 
-    abstract fun initView()
+    abstract fun initView(savedInstanceState: Bundle?)
 }

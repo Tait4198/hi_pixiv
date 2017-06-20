@@ -5,6 +5,7 @@ import info.hzvtc.hipixiv.databinding.ActivityMainBinding
 import info.hzvtc.hipixiv.vm.MainViewModel
 import javax.inject.Inject
 import android.content.Intent
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.Log
@@ -34,17 +35,19 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     @Inject
     lateinit var apiService : ApiService
 
-    private var nowIdentifier = -1
-    private lateinit var nowFragment : Fragment
+    private var nowIdentifier = Identifier.HOME_ILLUSTRATIONS.value
+    private var isFirst = true
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
-    override fun initView() {
+    override fun initView(savedInstanceState: Bundle?) {
         component.inject(this)
         viewModel.setView(this)
 
-        mBinding.layoutToolbar.toolbar.setTitle(R.string.home_illust)
+        mBinding.layoutToolbar.toolbar.setTitle(R.string.app_name)
         setSupportActionBar(mBinding.layoutToolbar.toolbar)
+
+        if(savedInstanceState != null) nowIdentifier = savedInstanceState.getInt("Identifier")
 
         val dividerItem = DividerDrawerItem()
         val drawer = DrawerBuilder()
@@ -89,13 +92,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     _,_,drawerItem->
                     if (drawerItem.identifier > Identifier.COLLECT.value && drawerItem is PrimaryDrawerItem) {
                         mBinding.layoutToolbar.toolbar.title = getString(drawerItem.identifier.toInt())
+                        switchPage(drawerItem.identifier.toInt())
                     }
                     false
                 })
                 .build()
-        drawer.setSelection(Identifier.HOME_ILLUSTRATIONS.value.toLong())
-        switchPage(Identifier.HOME_ILLUSTRATIONS.value)
         initDrawerHeader(drawer)
+        drawer.setSelection(nowIdentifier.toLong())
 
         Log.d("Main",userPref.accessToken.toString())
         Log.d("Main",userPref.expires.toString())
@@ -118,18 +121,18 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     }
 
     fun switchPage(identifier : Int){
-        if(identifier != nowIdentifier){
+        if(identifier != nowIdentifier || isFirst){
             nowIdentifier = identifier
             when(identifier){
                 Identifier.HOME_ILLUSTRATIONS.value -> {
-                    nowFragment = IllustFragment(account.obsToken(this).flatMap({token ->
-                        apiService.getRecommendedIllusts(token, true) }),account)
+                    replaceFragment(IllustFragment(account.obsToken(this).flatMap({token ->
+                        apiService.getRecommendedIllusts(token, true) }),account,false))
                 }
-                Identifier.HOME_ILLUSTRATIONS.value -> {
-
+                Identifier.HOME_MANGA.value -> {
+                    replaceFragment(IllustFragment(account.obsToken(this).flatMap({token ->
+                        apiService.getRecommendedMangaList(token, true) }),account,true))
                 }
             }
-            replaceFragment(nowFragment)
         }
     }
 
@@ -138,6 +141,11 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         transaction.replace(R.id.contentFrame,fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("Identifier",nowIdentifier)
     }
 
     override fun onBackPressed() {

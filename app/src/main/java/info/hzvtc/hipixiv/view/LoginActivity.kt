@@ -1,6 +1,7 @@
 package info.hzvtc.hipixiv.view
 
 import android.content.Intent
+import android.os.Bundle
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.databinding.ActivityLoginBinding
 import info.hzvtc.hipixiv.vm.LoginViewModel
@@ -15,7 +16,7 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(){
         return R.layout.activity_login
     }
 
-    override fun initView() {
+    override fun initView(savedInstanceState: Bundle?) {
         component.inject(this)
         viewModel.setView(this)
     }

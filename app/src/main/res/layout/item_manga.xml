@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="mangaIllust"
+            type="info.hzvtc.hipixiv.pojo.illust.Illust" />
+        <variable
+            name="mangaItemClick"
+            type="info.hzvtc.hipixiv.adapter.IllustItemClick" />
+    </data>
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/root"
+        android:foreground="@drawable/dark_foreground"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_margin="4dp"
+        app:cardBackgroundColor="@color/colorLight"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        android:onClick="@{() -> mangaItemClick.click(mangaIllust)}">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/cover"
+                    android:background="@color/colorImageBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"/>
+                <com.mikepenz.iconics.view.IconicsTextView
+                    android:id="@+id/page_count"
+                    android:padding="3dp"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:background="@color/colorPageCountBg"
+                    android:layout_gravity="end|top"
+                    android:text="@{@string/icon_page + mangaIllust.pageCount}"
+                    android:visibility="@{mangaIllust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
+
+                <com.like.LikeButton
+                    android:id="@+id/collect_button"
+                    app:icon_size="24dp"
+                    app:dots_primary_color="@color/md_pink_200"
+                    app:dots_secondary_color="@color/md_pink_500"
+                    app:circle_start_color="@color/md_pink_500"
+                    app:circle_end_color="@color/md_pink_200"
+                    app:like_drawable="@drawable/favorite_on"
+                    app:unlike_drawable="@drawable/favorite_off"
+                    android:layout_width="32dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"/>
+            </FrameLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@id/title"
+                    android:textColor="@color/colorTextTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{mangaIllust.title}"/>
+                <com.mikepenz.iconics.view.IconicsTextView
+                    android:id="@+id/novel_heart"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title"
+                    android:paddingTop="4dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:text="@{@string/icon_heart + mangaIllust.bookmarks}"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</layout>

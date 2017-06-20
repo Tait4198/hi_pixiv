@@ -11,7 +11,8 @@ abstract class BaseRecyclerViewAdapter(context: Context) : RecyclerView.Adapter<
     val ITEM_RANKING_ILLUST = 2
     val ITEM_ILLUST_TOP = 3
     val ITEM_ILLUST = 4
-    val ITEM_PROGRESS = 5
+    val ITEM_MANGA = 5
+    val ITEM_PROGRESS = 6
 
     val mLayoutInflater : LayoutInflater = LayoutInflater.from(context)
     val typeList : MutableList<Int> = ArrayList()
