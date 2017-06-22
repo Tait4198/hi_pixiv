@@ -13,12 +13,13 @@ import info.hzvtc.hipixiv.adapter.IllustItemClick
 import info.hzvtc.hipixiv.adapter.ItemLike
 import info.hzvtc.hipixiv.adapter.OnScrollListener
 import info.hzvtc.hipixiv.data.Account
-import info.hzvtc.hipixiv.databinding.FragmentIllustBinding
+import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.net.ApiService
 import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
+import info.hzvtc.hipixiv.view.MainActivity
 import info.hzvtc.hipixiv.view.fragment.IllustFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
@@ -26,7 +27,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFragmentViewModel<IllustFragment, FragmentIllustBinding>(){
+class IllustViewModel @Inject constructor(val apiService: ApiService) :
+        BaseFragmentViewModel<IllustFragment, FragmentListBinding>(),ViewModelData<IllustResponse>{
 
     var isManga : Boolean = false
     lateinit var obsNewData : Observable<IllustResponse>
@@ -51,7 +53,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
         adapter = IllustAdapter(mView.context,isManga)
         adapter.setItemClick(
                 itemClick = object : IllustItemClick {
-                    override fun click(illust: Illust) {
+                    override fun itemClick(illust: Illust) {
                         AppMessage.toastMessageShort(illust.title,mView.context)
                     }
                 }
@@ -67,7 +69,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
         })
 
         mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
-        mBind.srLayout.setOnRefreshListener({ getNewData(obsNewData) })
+        mBind.srLayout.setOnRefreshListener({ getData(obsNewData) })
         mBind.illustRecycler.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator
         mBind.illustRecycler.addOnScrollListener(object : OnScrollListener() {
             override fun onBottom() {
@@ -75,13 +77,19 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
                     getMoreData()
                 }
             }
+            override fun scrollUp(dy: Int) {
+                (mView.activity as MainActivity).mBinding.fab.hide()
+            }
+            override fun scrollDown(dy: Int) {
+                (mView.activity as MainActivity).mBinding.fab.show()
+            }
         })
         mBind.illustRecycler.adapter = adapter
 
-        getNewData(obsNewData)
+        getData(obsNewData)
     }
 
-    private fun getNewData(obs : Observable<IllustResponse>?){
+    override fun getData(obs : Observable<IllustResponse>?){
        Observable.just(obs)
                .filter({obs -> obs != null})
                .doOnNext({ mBind.srLayout.isRefreshing = true })
@@ -97,7 +105,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) : BaseFrag
                 })
     }
 
-    private fun getMoreData(){
+    override fun getMoreData(){
         Observable.just(adapter.nextUrl)
                 .doOnNext({ allowLoadMore = false })
                 .filter({ url -> !url.isNullOrEmpty() })

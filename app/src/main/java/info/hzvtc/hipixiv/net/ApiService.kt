@@ -14,6 +14,10 @@ interface ApiService {
     fun getRecommendedMangaList(@Header("Authorization") authorization : String,
                               @Query("include_ranking_illusts") bool : Boolean) : Observable<IllustResponse>
 
+    @GET("/v2/illust/follow")
+    fun getFollowIllusts(@Header("Authorization") authorization: String,
+                         @Query("restrict") restrict: String): Observable<IllustResponse>
+
     @GET
     fun getIllustsNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>

@@ -9,7 +9,7 @@ abstract class BaseFragmentViewModel<V : BindingFragment<T>,T : ViewDataBinding>
 
     fun setView(view : V){
         this.mView = view
-        this.mBind = view.getBinding()
+        this.mBind = view.mBinding
         initViewModel()
     }
 

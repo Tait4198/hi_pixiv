@@ -6,7 +6,6 @@ import info.hzvtc.hipixiv.vm.MainViewModel
 import javax.inject.Inject
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.widget.TextView
@@ -18,10 +17,7 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
-import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
-import info.hzvtc.hipixiv.net.ApiService
-import info.hzvtc.hipixiv.view.fragment.IllustFragment
 
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
@@ -29,14 +25,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     @Inject
     lateinit var viewModel : MainViewModel
     @Inject
-    lateinit var account : Account
-    @Inject
     lateinit var userPref : UserPreferences
-    @Inject
-    lateinit var apiService : ApiService
-
-    private var nowIdentifier = Identifier.HOME_ILLUSTRATIONS.value
-    private var isFirst = true
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
@@ -47,8 +36,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         mBinding.layoutToolbar.toolbar.setTitle(R.string.app_name)
         setSupportActionBar(mBinding.layoutToolbar.toolbar)
 
-        if(savedInstanceState != null) nowIdentifier = savedInstanceState.getInt("Identifier")
-
+        if(userPref.pageIdentifier == 0L) userPref.pageIdentifier = Identifier.HOME_ILLUSTRATIONS.value.toLong()
+        val tempIdentifier = userPref.pageIdentifier?:Identifier.HOME_ILLUSTRATIONS.value.toLong()
+        val homeExpanded = tempIdentifier >= Identifier.HOME_ILLUSTRATIONS.value && tempIdentifier <= Identifier.HOME_NOVEL.value
+        val newestExpanded = tempIdentifier >= Identifier.NEWEST_FOLLOW.value && tempIdentifier <= Identifier.NEWEST_MY_PIXIV.value
         val dividerItem = DividerDrawerItem()
         val drawer = DrawerBuilder()
                 .withActivity(this)
@@ -58,7 +49,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                 .withMultiSelect(false)
                 .addDrawerItems(
                         ExpandableDrawerItem().withName(R.string.home_name).withIcon(GoogleMaterial.Icon.gmd_home)
-                                .withSelectable(false).withIsExpanded(true).withSubItems(
+                                .withSelectable(false).withIsExpanded(homeExpanded).withSubItems(
                                 PrimaryDrawerItem().withName(R.string.home_illust).
                                         withIdentifier(Identifier.HOME_ILLUSTRATIONS.value.toLong()).withLevel(2),
                                 PrimaryDrawerItem().withName(R.string.home_mange).
@@ -67,7 +58,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                                         withIdentifier(Identifier.HOME_NOVEL.value.toLong()).withLevel(2)
                         ),
                         ExpandableDrawerItem().withName(R.string.newest_name).withIcon(GoogleMaterial.Icon.gmd_fiber_new)
-                                .withSelectable(false).withSubItems(
+                                .withSelectable(false).withIsExpanded(newestExpanded).withSubItems(
                                 PrimaryDrawerItem().withName(R.string.newest_follow).
                                         withIdentifier(Identifier.NEWEST_FOLLOW.value.toLong()).withLevel(2),
                                 PrimaryDrawerItem().withName(R.string.newest_name).
@@ -81,7 +72,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         PrimaryDrawerItem().withName(R.string.collect_name).withIcon(GoogleMaterial.Icon.gmd_favorite)
                                 .withIdentifier(Identifier.COLLECT.value.toLong()).withSelectable(false),
                         PrimaryDrawerItem().withName(R.string.browsing_name).withIcon(GoogleMaterial.Icon.gmd_history)
-                                .withIdentifier(Identifier.BROWSING_HISTORY.value.toLong()).withSelectable(false),
+                                .withIdentifier(Identifier.BROWSING_HISTORY.value.toLong())
+                                .withSelectable(false).withEnabled(userPref.isPremium?:false),
                         PrimaryDrawerItem().withName(R.string.user_name).withIcon(GoogleMaterial.Icon.gmd_account_box)
                                 .withIdentifier(Identifier.USER.value.toLong()).withSelectable(false),
                         dividerItem,
@@ -90,21 +82,21 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                 )
                 .withOnDrawerItemClickListener({
                     _,_,drawerItem->
-                    if (drawerItem.identifier > Identifier.COLLECT.value && drawerItem is PrimaryDrawerItem) {
-                        mBinding.layoutToolbar.toolbar.title = getString(drawerItem.identifier.toInt())
-                        switchPage(drawerItem.identifier.toInt())
+                    if (drawerItem.identifier < Identifier.COLLECT.value && drawerItem is PrimaryDrawerItem) {
+                        mBinding.layoutToolbar.toolbar.title = getTitle(drawerItem.identifier.toInt())
+                        viewModel.switchPage(drawerItem.identifier.toInt())
                     }
                     false
                 })
                 .build()
         initDrawerHeader(drawer)
-        drawer.setSelection(nowIdentifier.toLong())
+        drawer.setSelection(tempIdentifier)
 
         Log.d("Main",userPref.accessToken.toString())
         Log.d("Main",userPref.expires.toString())
     }
 
-    fun initDrawerHeader(drawer : Drawer){
+    private fun initDrawerHeader(drawer : Drawer){
         val profile = drawer.header.findViewById(R.id.user_profile) as SimpleDraweeView
         val account = drawer.header.findViewById(R.id.account) as TextView
         val member = drawer.header.findViewById(R.id.member) as TextView
@@ -120,32 +112,18 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
     }
 
-    fun switchPage(identifier : Int){
-        if(identifier != nowIdentifier || isFirst){
-            nowIdentifier = identifier
-            when(identifier){
-                Identifier.HOME_ILLUSTRATIONS.value -> {
-                    replaceFragment(IllustFragment(account.obsToken(this).flatMap({token ->
-                        apiService.getRecommendedIllusts(token, true) }),account,false))
-                }
-                Identifier.HOME_MANGA.value -> {
-                    replaceFragment(IllustFragment(account.obsToken(this).flatMap({token ->
-                        apiService.getRecommendedMangaList(token, true) }),account,true))
-                }
-            }
+    private fun getTitle(identifier : Int) : String{
+        var title = ""
+        when(identifier){
+            Identifier.HOME_ILLUSTRATIONS.value -> title = getString(R.string.home_illust)
+            Identifier.HOME_MANGA.value -> title = getString(R.string.home_mange)
+            Identifier.HOME_NOVEL.value -> title = getString(R.string.home_novel)
+            Identifier.NEWEST_FOLLOW.value -> title = getString(R.string.newest_follow)
+            Identifier.NEWEST_NEW.value -> title = getString(R.string.newest_new)
+            Identifier.NEWEST_MY_PIXIV.value -> title = getString(R.string.newest_my_pixiv)
+            Identifier.PIXIVISION.value -> title = getString(R.string.pixivision_name)
         }
-    }
-
-    fun replaceFragment(fragment : Fragment){
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.contentFrame,fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("Identifier",nowIdentifier)
+        return title
     }
 
     override fun onBackPressed() {
@@ -156,16 +134,16 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     }
 
     enum class Identifier(val value : Int){
-        HOME_ILLUSTRATIONS(R.string.home_illust),
-        HOME_MANGA(R.string.home_mange),
-        HOME_NOVEL(R.string.home_novel),
-        NEWEST_FOLLOW(R.string.newest_follow),
-        NEWEST_NEW(R.string.newest_new),
-        NEWEST_MY_PIXIV(R.string.newest_my_pixiv),
-        PIXIVISION(R.string.pixivision_name),
+        HOME_ILLUSTRATIONS(101),
+        HOME_MANGA(102),
+        HOME_NOVEL(103),
+        NEWEST_FOLLOW(201),
+        NEWEST_NEW(202),
+        NEWEST_MY_PIXIV(203),
+        PIXIVISION(301),
         COLLECT(401),
-        BROWSING_HISTORY(301),
-        USER(201),
-        SETTING(101);
+        BROWSING_HISTORY(501),
+        USER(601),
+        SETTING(701);
     }
 }

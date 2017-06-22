@@ -23,6 +23,8 @@ class UserPreferences(val context: Context) {
     var isPremium by PreferenceDelegates.boolean()
     var xRestrict by PreferenceDelegates.int()
     var isMailAuthorized by PreferenceDelegates.boolean()
+
+    var pageIdentifier by PreferenceDelegates.long()
 }
 
 

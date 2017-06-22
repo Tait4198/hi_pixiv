@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="info.hzvtc.hipixiv.vm.LoginViewModel" />
-    </data>
+    <data/>
 
     <android.support.v4.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -68,8 +63,7 @@
                 android:background="@drawable/selector_primary_button"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
-                android:text="@string/login_btn"
-                android:onClick="@{viewModel::doLogin}"/>
+                android:text="@string/login_btn"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

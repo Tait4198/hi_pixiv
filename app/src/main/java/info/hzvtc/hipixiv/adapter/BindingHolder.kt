@@ -4,4 +4,4 @@ import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
 
 
-class BindingHolder(val bind : ViewDataBinding, val type : Int) : RecyclerView.ViewHolder(bind.root)
+class BindingHolder<out T : ViewDataBinding>(val bind : T, val type : ItemType) : RecyclerView.ViewHolder(bind.root)

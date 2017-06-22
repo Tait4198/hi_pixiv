@@ -28,6 +28,13 @@
     <string name="ranking">Ranking</string>
     <string name="see_more">See More</string>
 
+    <string name="newest_follow_illust_name">Filter</string>
+    <string-array name="newest_follow_illust_items">
+        <item>All</item>
+        <item>Public</item>
+        <item>Private</item>
+    </string-array>
+
     <!-- Home -->
     <string name="home_name">Home</string>
     <string name="home_illust">Illustrations</string>
@@ -78,6 +85,12 @@
 
     <string name="activity_login">info.hzvtc.hipixiv.login</string>
     <string name="activity_main">info.hzvtc.hipixiv.main</string>
+
+    <string-array name="restrict_parameters">
+        <item>all</item>
+        <item>public</item>
+        <item>private</item>
+    </string-array>
 
     <string name="icon_heart">{faw_heart}&#160;</string>
     <string name="icon_trophy">{faw_trophy}&#160;</string>

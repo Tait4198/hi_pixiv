@@ -13,6 +13,10 @@
         <item name="android:windowBackground">@drawable/launcher</item>
     </style>
 
+    <style name="TabStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorTextTitle</item>

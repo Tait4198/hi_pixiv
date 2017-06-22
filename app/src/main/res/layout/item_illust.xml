@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
 
         <variable
-            name="illust"
-            type="info.hzvtc.hipixiv.pojo.illust.Illust" />
-        <variable
-            name="illustItemClick"
-            type="info.hzvtc.hipixiv.adapter.IllustItemClick" />
+            name="illustPageCount"
+            type="Integer" />
     </data>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/frame_root"
+    <FrameLayout
+        android:id="@+id/root_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:foreground="@drawable/dark_foreground"
         android:clickable="true"
-        android:focusable="true"
-        android:onClick="@{() -> illustItemClick.click(illust)}">
+        android:focusable="true">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/cover"
@@ -38,8 +34,8 @@
             android:textColor="@color/colorWhite"
             android:background="@color/colorPageCountBg"
             android:layout_gravity="end|top"
-            android:text="@{@string/icon_page + illust.pageCount}"
-            android:visibility="@{illust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
+            android:text="@{@string/icon_page + illustPageCount}"
+            android:visibility="@{illustPageCount > 1 ? View.VISIBLE : View.GONE}"/>
 
         <com.like.LikeButton
             android:id="@+id/collect_button"

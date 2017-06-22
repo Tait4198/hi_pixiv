@@ -4,16 +4,16 @@
     <data />
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/root">
+        android:layout_height="wrap_content"
+        android:id="@+id/root_view">
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/srLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/illustRecycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:scrollbars="vertical"
                 android:scrollbarStyle="outsideOverlay"/>
         </android.support.v4.widget.SwipeRefreshLayout>

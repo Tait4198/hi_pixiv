@@ -29,10 +29,12 @@ class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<L
     }
 
     override fun initViewModel() {
-        mBind.viewModel = this
+        mBind.btnLogin.setOnClickListener({
+            doLogin()
+        })
     }
 
-    fun doLogin(@Suppress("UNUSED_PARAMETER") view : View){
+    fun doLogin(){
         val username = mBind.inputUsername.text.toString()
         val password = mBind.inputPassword.text.toString()
 

@@ -8,6 +8,7 @@ import info.hzvtc.hipixiv.inject.component.FragmentComponent
 import info.hzvtc.hipixiv.inject.module.ActivityModule
 import info.hzvtc.hipixiv.inject.module.ApplicationModule
 import info.hzvtc.hipixiv.inject.module.FragmentModule
+import info.hzvtc.hipixiv.vm.fragment.ViewModelData
 
 abstract class BaseFragment : Fragment() {
     val component : FragmentComponent by lazy {
@@ -22,4 +23,6 @@ abstract class BaseFragment : Fragment() {
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
+
+    abstract fun getViewModelData() : ViewModelData<*>?
 }

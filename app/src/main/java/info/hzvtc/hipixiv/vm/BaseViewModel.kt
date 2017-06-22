@@ -9,7 +9,7 @@ abstract class BaseViewModel<V : BindingActivity<T>,T : ViewDataBinding>{
 
     fun setView(view : V){
         this.mView = view
-        this.mBind = view.getBinding()
+        this.mBind = mView.getBinding()
         initViewModel()
     }
 

@@ -27,6 +27,13 @@
     <string name="ranking">排行榜</string>
     <string name="see_more">查看更多</string>
 
+    <string name="newest_follow_illust_name">筛选</string>
+    <string-array name="newest_follow_illust_items">
+        <item>全部</item>
+        <item>公开</item>
+        <item>私人</item>
+    </string-array>
+
 
     <!-- Home -->
     <string name="home_name">主页</string>

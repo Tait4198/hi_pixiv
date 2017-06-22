@@ -7,12 +7,10 @@
         <variable
             name="rankingIllust"
             type="info.hzvtc.hipixiv.pojo.illust.Illust" />
-        <variable
-            name="rankingIllustItemClick"
-            type="info.hzvtc.hipixiv.adapter.IllustItemClick" />
     </data>
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root_view"
         android:orientation="vertical"
         android:layout_width="210dp"
         android:layout_height="wrap_content"
@@ -20,8 +18,7 @@
         android:layout_marginRight="2dp"
         android:foreground="@drawable/dark_foreground"
         android:clickable="true"
-        android:focusable="true"
-        android:onClick="@{() -> rankingIllustItemClick.click(rankingIllust)}">
+        android:focusable="true">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/cover"
