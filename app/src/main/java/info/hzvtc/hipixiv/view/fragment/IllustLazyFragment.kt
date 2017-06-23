@@ -1,12 +1,10 @@
 package info.hzvtc.hipixiv.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
-import info.hzvtc.hipixiv.view.MainActivity
 import info.hzvtc.hipixiv.vm.fragment.IllustViewModel
 import info.hzvtc.hipixiv.vm.fragment.ViewModelData
 import io.reactivex.Observable

@@ -41,7 +41,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
         if(userPref.pageIdentifier == 0L) userPref.pageIdentifier = Identifier.HOME_ILLUSTRATIONS.value.toLong()
         val tempIdentifier = userPref.pageIdentifier?:Identifier.HOME_ILLUSTRATIONS.value.toLong()
-        val homeExpanded = tempIdentifier >= Identifier.HOME_ILLUSTRATIONS.value && tempIdentifier <= Identifier.HOME_NOVEL.value
+//        val homeExpanded = tempIdentifier >= Identifier.HOME_ILLUSTRATIONS.value && tempIdentifier <= Identifier.HOME_NOVEL.value
+        val homeExpanded = tempIdentifier >= Identifier.HOME_ILLUSTRATIONS.value && tempIdentifier <= Identifier.HOME_MANGA.value
         val newestExpanded = tempIdentifier >= Identifier.NEWEST_FOLLOW.value && tempIdentifier <= Identifier.NEWEST_MY_PIXIV.value
         val dividerItem = DividerDrawerItem()
         val drawer = DrawerBuilder()
@@ -56,9 +57,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                                 PrimaryDrawerItem().withName(R.string.home_illust).
                                         withIdentifier(Identifier.HOME_ILLUSTRATIONS.value.toLong()).withLevel(2),
                                 PrimaryDrawerItem().withName(R.string.home_mange).
-                                        withIdentifier(Identifier.HOME_MANGA.value.toLong()).withLevel(2),
-                                PrimaryDrawerItem().withName(R.string.home_novel).
-                                        withIdentifier(Identifier.HOME_NOVEL.value.toLong()).withLevel(2)
+                                        withIdentifier(Identifier.HOME_MANGA.value.toLong()).withLevel(2)
+//                                PrimaryDrawerItem().withName(R.string.home_novel).
+//                                        withIdentifier(Identifier.HOME_NOVEL.value.toLong()).withLevel(2)
                         ),
                         ExpandableDrawerItem().withName(R.string.newest_name).withIcon(GoogleMaterial.Icon.gmd_fiber_new)
                                 .withSelectable(false).withIsExpanded(newestExpanded).withSubItems(
@@ -140,7 +141,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         when(identifier){
             Identifier.HOME_ILLUSTRATIONS.value -> title = getString(R.string.home_illust)
             Identifier.HOME_MANGA.value -> title = getString(R.string.home_mange)
-            Identifier.HOME_NOVEL.value -> title = getString(R.string.home_novel)
+            //Identifier.HOME_NOVEL.value -> title = getString(R.string.home_novel)
             Identifier.NEWEST_FOLLOW.value -> title = getString(R.string.newest_follow)
             Identifier.NEWEST_NEW.value -> title = getString(R.string.newest_new)
             Identifier.NEWEST_MY_PIXIV.value -> title = getString(R.string.newest_my_pixiv)
@@ -159,7 +160,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     enum class Identifier(val value : Int){
         HOME_ILLUSTRATIONS(101),
         HOME_MANGA(102),
-        HOME_NOVEL(103),
+        //HOME_NOVEL(103),
         NEWEST_FOLLOW(201),
         NEWEST_NEW(202),
         NEWEST_MY_PIXIV(203),
