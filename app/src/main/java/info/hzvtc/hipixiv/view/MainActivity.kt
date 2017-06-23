@@ -6,6 +6,7 @@ import info.hzvtc.hipixiv.vm.MainViewModel
 import javax.inject.Inject
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.widget.TextView
@@ -26,6 +27,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     lateinit var viewModel : MainViewModel
     @Inject
     lateinit var userPref : UserPreferences
+
+    private var isShowFab : Boolean = false
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
@@ -110,6 +113,26 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             member.text = getString(R.string.general_user)
             member.setTextColor(ContextCompat.getColor(this,R.color.md_yellow_500))
         }
+    }
+
+    /**
+     * @param status 当前是否显示
+     * @param isShow 本次页面是否显示
+     * */
+    fun setFabVisible(status : Boolean,isShow : Boolean){
+        isShowFab = isShow
+        if(status) mBinding.fab.show() else mBinding.fab.hide()
+    }
+
+    fun showFab(status : Boolean){
+        if(isShowFab){
+            if(status) mBinding.fab.show() else mBinding.fab.hide()
+        }
+    }
+
+
+    fun getRootView(): CoordinatorLayout? {
+        return mBinding.rootView
     }
 
     private fun getTitle(identifier : Int) : String{

@@ -4,11 +4,12 @@ import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.LayoutRes
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-abstract class LazyFragment<T : ViewDataBinding> : BaseFragment(){
+abstract class LazyBindingFragment<T : ViewDataBinding> : BaseFragment<T>(){
 
     lateinit var mBinding : T
     private var isPrepared: Boolean = false
@@ -28,6 +29,7 @@ abstract class LazyFragment<T : ViewDataBinding> : BaseFragment(){
         return mBinding.root
     }
 
+    override fun getBinding(): T = mBinding
 
     @LayoutRes
     abstract fun getLayoutId() : Int
@@ -92,6 +94,4 @@ abstract class LazyFragment<T : ViewDataBinding> : BaseFragment(){
     open fun onUserInvisible() {
         //
     }
-
-    open fun isUserVisible() = isUserVisible
 }

@@ -25,6 +25,8 @@
     <string name="general_user">Pixiv普通用户</string>
     <string name="recommended">为您推荐</string>
     <string name="ranking">排行榜</string>
+    <string name="load_data_failed">发生异常,是否重新获取?</string>
+    <string name="load_data_timeout">请求超时,是否重新获取?</string>
     <string name="see_more">查看更多</string>
 
     <string name="newest_follow_illust_name">筛选</string>

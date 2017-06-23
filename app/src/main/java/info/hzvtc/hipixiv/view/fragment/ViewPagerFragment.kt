@@ -2,6 +2,7 @@ package info.hzvtc.hipixiv.view.fragment
 
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.util.Log
 import android.view.View
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.ViewPagerAdapter
@@ -10,7 +11,7 @@ import info.hzvtc.hipixiv.databinding.FragmentViewPagerBinding
 import info.hzvtc.hipixiv.vm.fragment.ViewModelData
 
 
-class ViewPagerFragment(val bundle : ViewPagerBundle<BaseFragment>) : BindingFragment<FragmentViewPagerBinding>(){
+class ViewPagerFragment(val bundle : ViewPagerBundle<BaseFragment<*>>) : BindingFragment<FragmentViewPagerBinding>(){
 
     override fun getLayoutId(): Int = R.layout.fragment_view_pager
 
@@ -33,7 +34,6 @@ class ViewPagerFragment(val bundle : ViewPagerBundle<BaseFragment>) : BindingFra
                 bundle.fabShow(position)
             }
         })
-
         return binding.root
     }
 

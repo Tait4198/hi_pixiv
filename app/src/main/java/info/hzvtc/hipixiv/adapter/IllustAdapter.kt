@@ -7,6 +7,7 @@ import android.databinding.ViewDataBinding
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import com.like.LikeButton

@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.vm.fragment
 
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -20,21 +21,23 @@ import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.MainActivity
-import info.hzvtc.hipixiv.view.fragment.IllustFragment
+import info.hzvtc.hipixiv.view.fragment.BaseFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class IllustViewModel @Inject constructor(val apiService: ApiService) :
-        BaseFragmentViewModel<IllustFragment, FragmentListBinding>(),ViewModelData<IllustResponse>{
+        BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<IllustResponse>{
 
     var isManga : Boolean = false
     lateinit var obsNewData : Observable<IllustResponse>
     lateinit var account: Account
 
     private var allowLoadMore = true
+    private var errorIndex = 0
     private lateinit var adapter : IllustAdapter
 
     override fun initViewModel() {
@@ -78,28 +81,34 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 }
             }
             override fun scrollUp(dy: Int) {
-                (mView.activity as MainActivity).mBinding.fab.hide()
+                getParent()?.showFab(false)
             }
             override fun scrollDown(dy: Int) {
-                (mView.activity as MainActivity).mBinding.fab.show()
+                getParent()?.showFab(true)
             }
         })
         mBind.illustRecycler.adapter = adapter
+    }
 
+    override fun runView() {
         getData(obsNewData)
     }
 
     override fun getData(obs : Observable<IllustResponse>?){
        Observable.just(obs)
+               .doOnNext({ errorIndex = 0 })
                .filter({obs -> obs != null})
                .doOnNext({ mBind.srLayout.isRefreshing = true })
+               .observeOn(Schedulers.io())
                .flatMap({ obs -> obs })
                .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
                .observeOn(AndroidSchedulers.mainThread())
                .subscribe({
                    _ -> adapter.updateUI(true)
                 },{
-                    error -> Log.e("Error",error.toString())
+                    error ->
+                    mBind.srLayout.isRefreshing = false
+                    processError(error)
                 },{
                     mBind.srLayout.isRefreshing = false
                 })
@@ -107,6 +116,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
 
     override fun getMoreData(){
         Observable.just(adapter.nextUrl)
+                .doOnNext({ errorIndex = 1 })
                 .doOnNext({ allowLoadMore = false })
                 .filter({ url -> !url.isNullOrEmpty() })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,8 +131,10 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                     adapter.setProgress(false)
                     adapter.updateUI(false)
                 },{
+                    error->
                     adapter.setProgress(false)
                     allowLoadMore = true
+                    processError(error)
                 },{
                     allowLoadMore = true
                 })
@@ -143,7 +155,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 .subscribe({
                     adapter.updateBookmarked(position,true,isRank)
                 },{
-                    error -> Log.e("Error",error.toString())
+                    error -> processError(error)
                     adapter.updateBookmarked(position,false,isRank)
                     likeButton.isLiked = false
                 },{
@@ -153,4 +165,30 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                     }
                 })
     }
+
+    private fun getParent() : MainActivity?{
+        if(mView.activity is MainActivity){
+            return mView.activity as MainActivity
+        }
+        return null
+    }
+
+    private fun processError(error : Throwable){
+        Log.e("Error",error.toString())
+        if(AppUtil.isNetworkConnected(mView.context)){
+            val msg = if(error is SocketTimeoutException)
+                mView.getString(R.string.load_data_timeout)
+            else
+                mView.getString(R.string.load_data_failed)
+            Snackbar.make(getParent()?.getRootView()?:mBind.rootView, msg,Snackbar.LENGTH_LONG)
+                    .setAction(mView.getString(R.string.app_dialog_ok),{
+                        if(errorIndex == 0){
+                            getData(obsNewData)
+                        }else if(errorIndex == 1){
+                            getMoreData()
+                        }
+                    }).show()
+        }
+    }
+
 }

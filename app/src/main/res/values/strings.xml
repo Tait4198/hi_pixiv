@@ -26,6 +26,8 @@
     <string name="general_user">Pixiv General User</string>
     <string name="recommended">Recommended for you</string>
     <string name="ranking">Ranking</string>
+    <string name="load_data_failed">An error occurred,Whether to regain it?</string>
+    <string name="load_data_timeout">Request timeout,Whether to regain it?</string>
     <string name="see_more">See More</string>
 
     <string name="newest_follow_illust_name">Filter</string>

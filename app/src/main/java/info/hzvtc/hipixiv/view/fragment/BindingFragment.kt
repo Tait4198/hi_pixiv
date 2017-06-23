@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-abstract class BindingFragment<T : ViewDataBinding> : BaseFragment() {
+abstract class BindingFragment<T : ViewDataBinding> : BaseFragment<T>() {
     lateinit var mBinding : T
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -16,6 +16,8 @@ abstract class BindingFragment<T : ViewDataBinding> : BaseFragment() {
         mBinding = DataBindingUtil.bind(rootView)
         return initView(mBinding)
     }
+
+    override fun getBinding(): T = mBinding
 
     @LayoutRes
     abstract fun getLayoutId() : Int

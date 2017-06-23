@@ -30,7 +30,7 @@ class RetrofitManager(context : Context){
                 .addInterceptor(oAuthInterceptor)
                 .addInterceptor(loggingInterceptor)
                 .retryOnConnectionFailure(true)
-                .connectTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(8, TimeUnit.SECONDS)
                 .build()
     }
     private val apiClient: OkHttpClient by lazy {
@@ -41,7 +41,7 @@ class RetrofitManager(context : Context){
                 .addInterceptor(loggingInterceptor)
                 .cache(Cache(File(context.cacheDir.toString(), "cache"), 64 * 1024 * 1024))
                 .retryOnConnectionFailure(true)
-                .connectTimeout(15,TimeUnit.SECONDS)
+                .connectTimeout(8,TimeUnit.SECONDS)
                 .build()
     }
 

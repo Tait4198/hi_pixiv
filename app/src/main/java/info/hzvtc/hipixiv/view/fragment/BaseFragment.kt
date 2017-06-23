@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.view.fragment
 
+import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import info.hzvtc.hipixiv.App
@@ -10,7 +11,7 @@ import info.hzvtc.hipixiv.inject.module.ApplicationModule
 import info.hzvtc.hipixiv.inject.module.FragmentModule
 import info.hzvtc.hipixiv.vm.fragment.ViewModelData
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<out T : ViewDataBinding> : Fragment() {
     val component : FragmentComponent by lazy {
         DaggerFragmentComponent.builder()
                 .applicationModule(ApplicationModule(App.getApp(this.context)))
@@ -25,4 +26,6 @@ abstract class BaseFragment : Fragment() {
     }
 
     abstract fun getViewModelData() : ViewModelData<*>?
+
+    abstract fun getBinding() : T
 }
