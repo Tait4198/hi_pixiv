@@ -22,6 +22,7 @@
     <string name="app_dialog_ok">OK</string>
     <string name="more">More</string>
     <string name="help">Help</string>
+    <string name="mute">Muted</string>
     <string name="senior_member">Pixiv Senior Member</string>
     <string name="general_user">Pixiv General User</string>
     <string name="recommended">Recommended for you</string>
@@ -98,4 +99,5 @@
     <string name="icon_trophy">{faw_trophy}&#160;</string>
     <string name="icon_chevron_right">&#160;{faw_chevron_right}</string>
     <string name="icon_page">{faw_clone}&#160;</string>
+    <string name="icon_muted">{faw_eye_slash}</string>
 </resources>

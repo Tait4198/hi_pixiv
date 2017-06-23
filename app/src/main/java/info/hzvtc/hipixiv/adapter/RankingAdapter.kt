@@ -15,7 +15,7 @@ import info.hzvtc.hipixiv.pojo.illust.Illust
 
 class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
-    private lateinit var ranking : List<Illust>
+    private lateinit var ranking : MutableList<Illust>
     private lateinit var itemClick : IllustItemClick
     private lateinit var itemLike : ItemLike
 
@@ -23,12 +23,19 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         setHasStableIds(true)
     }
 
-    fun setNewData(ranking: List<Illust>) {
+    fun setNewData(ranking: MutableList<Illust>) {
         typeList.clear()
-        this.ranking = ranking
-        for(index in 0..ranking.size-1){
-            typeList.add(ItemType.ITEM_RANKING_ILLUST)
+        val max = ranking.size-1
+        var jump = 0
+        for(index in 0..max){
+            if(!ranking[index-jump].isMuted){
+                typeList.add(ItemType.ITEM_RANKING_ILLUST)
+            }else{
+                ranking.removeAt(index-jump)
+                jump++
+            }
         }
+        this.ranking = ranking
     }
 
     fun setItemClick(itemClick: IllustItemClick){
@@ -39,33 +46,45 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         this.itemLike = itemLike
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        return  BindingHolder<ItemRankingIllustBinding>(DataBindingUtil.inflate(mLayoutInflater,
-                R.layout.item_ranking_illust,parent,false),ItemType.ITEM_RANKING_ILLUST)
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
+        var holder : BindingHolder<ViewDataBinding>? = null
+        when(viewType){
+            ItemType.ITEM_RANKING_ILLUST.value ->{
+                holder = BindingHolder<ItemRankingIllustBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_ranking_illust,parent,false),ItemType.ITEM_RANKING_ILLUST)
+            }
+            ItemType.ITEM_RANKING_MUTED.value->{
+                holder = BindingHolder<ItemRankingIllustBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_ranking_muted,parent,false),ItemType.ITEM_RANKING_MUTED)
+            }
+        }
+        return holder
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        val bind : ItemRankingIllustBinding = (holder as BindingHolder<ViewDataBinding>).bind as ItemRankingIllustBinding
-        val illust = ranking[position]
-        //View
-        bind.rootView.setOnClickListener({
-            itemClick.itemClick(illust)
-        })
-        bind.cover.setImageURI(illust.imageUrls.medium)
-        bind.profile.hierarchy.roundingParams = RoundingParams.asCircle()
-        bind.profile.setImageURI(illust.user.profile.medium)
-        bind.collectButton.isLiked = illust.isBookmarked
-        bind.collectButton.setOnLikeListener(object : OnLikeListener{
-            override fun liked(likeButton: LikeButton) {
-                itemLike.like(illust.pixivId,position,true,likeButton)
-            }
+        if((holder as BindingHolder<ViewDataBinding>).bind is ItemRankingIllustBinding){
+            val bind : ItemRankingIllustBinding = holder.bind as ItemRankingIllustBinding
+            val illust = ranking[position]
+            //View
+            bind.rootView.setOnClickListener({
+                itemClick.itemClick(illust)
+            })
+            bind.cover.setImageURI(illust.imageUrls.medium)
+            bind.profile.hierarchy.roundingParams = RoundingParams.asCircle()
+            bind.profile.setImageURI(illust.user.profile.medium)
+            bind.collectButton.isLiked = illust.isBookmarked
+            bind.collectButton.setOnLikeListener(object : OnLikeListener{
+                override fun liked(likeButton: LikeButton) {
+                    itemLike.like(illust.pixivId,position,true,likeButton)
+                }
 
-            override fun unLiked(likeButton: LikeButton) {
-                itemLike.unlike(illust.pixivId,position,true,likeButton)
-            }
-        })
-        //Bind
-        bind.setVariable(BR.rankingIllust,illust)
+                override fun unLiked(likeButton: LikeButton) {
+                    itemLike.unlike(illust.pixivId,position,true,likeButton)
+                }
+            })
+            //Bind
+            bind.setVariable(BR.rankingIllust,illust)
+        }
     }
 
 }

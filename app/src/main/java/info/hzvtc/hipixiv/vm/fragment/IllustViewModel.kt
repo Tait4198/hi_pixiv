@@ -174,7 +174,8 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     }
 
     private fun processError(error : Throwable){
-        Log.e("Error",error.toString())
+
+        Log.e("Error",error.printStackTrace().toString())
         if(AppUtil.isNetworkConnected(mView.context)){
             val msg = if(error is SocketTimeoutException)
                 mView.getString(R.string.load_data_timeout)

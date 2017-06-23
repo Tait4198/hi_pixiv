@@ -17,6 +17,7 @@ import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
+//todo 屏蔽设定
 //isMange = true 漫画/ false 插画
 class IllustAdapter(private var context: Context,private var isMange : Boolean) : BaseRecyclerViewAdapter(context = context) {
 
@@ -25,7 +26,7 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
     private lateinit var data : IllustResponse
     private lateinit var itemClick : IllustItemClick
     private lateinit var itemLike : ItemLike
-    private var realPosition = 0
+    private var frontPosition = 0
     private var positionStart = 0
     private var moreDataSize = 0
     private var tempTypeListSize = 0
@@ -35,41 +36,57 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
         setHasStableIds(true)
     }
 
-    fun setNewData(data: IllustResponse) {
+    fun setNewData(newData: IllustResponse) {
         //Clear
         if(typeList.size > 0) {
             tempTypeListSize = typeList.size
             typeList.clear()
-            realPosition = 0
+            frontPosition = 0
         }
         //Set update index
         positionStart = typeList.size
-        moreDataSize = data.content.size
+        moreDataSize = -1
         //NextUrl
-        if(!data.nextUrl.isNullOrEmpty()) nextUrl = data.nextUrl
+        if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl
         //New Data
-        this.data = data
         //Init typeList
-        if(data.ranking.isNotEmpty()){
+        if(newData.ranking.isNotEmpty()){
             typeList.add(ItemType.ITEM_RANKING_TOP)
-            realPosition++
+            frontPosition++
             typeList.add(ItemType.ITEM_RANKING)
-            realPosition++
+            frontPosition++
             typeList.add(ItemType.ITEM_ILLUST_TOP)
-            realPosition++
+            frontPosition++
         }
-        for(index in 0..data.content.size-1){
-            if(isMange) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
+        val max = newData.content.size-1
+        var jump = 0
+        for(index in 0..max){
+            if(!newData.content[index-jump].isMuted){
+                moreDataSize++
+                if(isMange) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
+            }else{
+                newData.content.removeAt(index-jump)
+                jump++
+            }
         }
+        this.data = newData
     }
 
     fun addMoreData(moreData: IllustResponse){
         positionStart = typeList.size + 1
-        moreDataSize = moreData.content.size
+        moreDataSize = -1
 
         nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
-        for(index in 0..moreData.content.size-1){
-            if(isMange) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
+        val max = moreData.content.size-1
+        var jump = 0
+        for(index in 0..max){
+            if(!moreData.content[index-jump].isMuted){
+                moreDataSize++
+                if(isMange) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
+            }else{
+                moreData.content.removeAt(index-jump)
+                jump++
+            }
         }
         data.content.addAll(moreData.content)
     }
@@ -89,6 +106,8 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
 
     fun getFull(position: Int): Boolean {
         return typeList[position] == ItemType.ITEM_ILLUST || typeList[position] == ItemType.ITEM_MANGA
+                || typeList[position] == ItemType.ITEM_ILLUST_MUTED
+                || typeList[position] == ItemType.ITEM_MANGA_MUTED
     }
 
     fun setItemClick(itemClick: IllustItemClick){
@@ -113,7 +132,7 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val type = (holder as BindingHolder<ViewDataBinding>).type
         //Manga Full
-        if(isMange && type != ItemType.ITEM_MANGA){
+        if(isMange && (type != ItemType.ITEM_MANGA || type != ItemType.ITEM_MANGA_MUTED)){
             val layoutParams = StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.isFullSpan = true
@@ -157,11 +176,19 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
                 holder = BindingHolder<ItemProgressBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_progress,parent,false),ItemType.ITEM_PROGRESS)
             }
+            ItemType.ITEM_ILLUST_MUTED.value -> {
+                holder = BindingHolder<ItemProgressBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_illust_muted,parent,false),ItemType.ITEM_ILLUST_MUTED)
+            }
+            ItemType.ITEM_MANGA_MUTED.value -> {
+                holder = BindingHolder<ItemProgressBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_manga_muted,parent,false),ItemType.ITEM_MANGA_MUTED)
+            }
         }
         return holder
     }
 
-    private fun getRealPosition(position : Int) = position - realPosition
+    private fun getRealPosition(position : Int) = position - frontPosition
 
     private fun showItemRanking(bind : ViewDataBinding){
         val mBind : ItemRankingBinding = bind as ItemRankingBinding

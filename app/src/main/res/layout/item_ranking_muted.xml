@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_view"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:foreground="@drawable/dark_foreground"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@color/colorImageBg">
+
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:id="@+id/icon_mute"
+            android:text="@string/icon_muted"
+            android:textSize="36sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+        <TextView
+            android:text="@string/mute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+    </FrameLayout>
+</layout>
