@@ -22,6 +22,10 @@ interface ApiService {
     @GET("/v1/user/recommended?filter=for_android")
     fun getUserRecommended(@Header("Authorization") authorization: String): Observable<UserResponse>
 
+    @GET("/v1/illust/new?filter=for_android")
+    fun getNewIllust(@Header("Authorization") authorization: String,
+                              @Query("content_type") type: String): Observable<IllustResponse>
+
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>

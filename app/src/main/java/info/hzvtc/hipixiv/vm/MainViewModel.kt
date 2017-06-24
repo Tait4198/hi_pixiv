@@ -31,14 +31,17 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private lateinit var restricts: Array<out String>
     private lateinit var obsToken : Observable<String>
     private lateinit var newestFollowBundle : ViewPagerBundle<BaseFragment<*>>
+    private lateinit var newestNewBundle : ViewPagerBundle<BaseFragment<*>>
 
     private lateinit var homeIllustFragment : IllustFragment
     private lateinit var homeMangaFragment : IllustFragment
     private lateinit var followVpFragment : ViewPagerFragment
+    private lateinit var newVpFragment : ViewPagerFragment
 
     override fun initViewModel() {
         obsToken = account.obsToken(mView)
         restricts = mView.resources.getStringArray(R.array.restrict_parameters)
+        //newest -> follow -> bundle
         newestFollowBundle = object : ViewPagerBundle<BaseFragment<*>>() {
             init {
                 titles = mView.resources.getStringArray(R.array.newest_follow_tab)
@@ -67,7 +70,17 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
             }
         }
 
+        //newest -> new -> bundle
+        newestNewBundle = object : ViewPagerBundle<BaseFragment<*>>(){
+            init {
+                titles = mView.resources.getStringArray(R.array.newest_new_tab)
+                pagers = arrayOf(
+                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"illust")}),account,false),
+                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"manga")}),account,true))
+            }
+        }
         followVpFragment = ViewPagerFragment(newestFollowBundle)
+        newVpFragment = ViewPagerFragment(newestNewBundle)
         homeIllustFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedIllusts(token, true) }),account,false)
         homeMangaFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedMangaList(token, true) }),account,true)
     }
@@ -93,6 +106,11 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     mBind.fab.setImageDrawable(ContextCompat.getDrawable(mView,R.drawable.ic_filter))
                     mBind.fab.setOnClickListener({ newestFollowBundle.fabClick() })
                     mView.setFabVisible(true,true)
+                }
+                //最新
+                MainActivity.Identifier.NEWEST_NEW.value -> {
+                    replaceFragment(newVpFragment)
+                    mView.setFabVisible(false,false)
                 }
             }
         }
