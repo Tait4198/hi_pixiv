@@ -111,7 +111,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     }
 
     override fun getMoreData(){
-        Observable.just(adapter.nextUrl)
+        Observable.just(adapter.nextUrl?:"")
                 .doOnNext({ errorIndex = 1 })
                 .doOnNext({ allowLoadMore = false })
                 .filter({ url -> !url.isNullOrEmpty() })
@@ -119,9 +119,15 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 .doOnNext({ adapter.setProgress(true) })
                 .observeOn(Schedulers.io())
                 .flatMap({ account.obsToken(mView.context) })
-                .flatMap({ token -> apiService.getIllustNext(token,adapter.nextUrl)})
+                .flatMap({ token -> apiService.getIllustNext(token,adapter.nextUrl?:"")})
                 .doOnNext({ illustResponse -> adapter.addMoreData(illustResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext({ (content) ->
+                    run {
+                        if (content.size == 0)
+                            AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                    }
+                })
                 .subscribe({
                     _ ->
                     adapter.setProgress(false)

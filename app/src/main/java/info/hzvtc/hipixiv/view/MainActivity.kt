@@ -74,19 +74,19 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                                 .withIdentifier(Identifier.PIXIVISION.value.toLong()),
                         dividerItem,
                         PrimaryDrawerItem().withName(R.string.collect_name).withIcon(GoogleMaterial.Icon.gmd_favorite)
-                                .withIdentifier(Identifier.COLLECT.value.toLong()).withSelectable(false),
+                                .withIdentifier(Identifier.COLLECT.value.toLong()),
                         PrimaryDrawerItem().withName(R.string.browsing_name).withIcon(GoogleMaterial.Icon.gmd_history)
                                 .withIdentifier(Identifier.BROWSING_HISTORY.value.toLong())
-                                .withSelectable(false).withEnabled(userPref.isPremium?:false),
+                                .withEnabled(userPref.isPremium?:false),
                         PrimaryDrawerItem().withName(R.string.user_name).withIcon(GoogleMaterial.Icon.gmd_account_box)
-                                .withIdentifier(Identifier.USER.value.toLong()).withSelectable(false),
+                                .withIdentifier(Identifier.USER.value.toLong()),
                         dividerItem,
                         PrimaryDrawerItem().withName(R.string.setting_name).withIcon(GoogleMaterial.Icon.gmd_settings)
                                 .withIdentifier(Identifier.SETTING.value.toLong()).withSelectable(false)
                 )
                 .withOnDrawerItemClickListener({
                     _,_,drawerItem->
-                    if (drawerItem.identifier < Identifier.COLLECT.value && drawerItem is PrimaryDrawerItem) {
+                    if (drawerItem.identifier < Identifier.SETTING.value && drawerItem is PrimaryDrawerItem) {
                         mBinding.layoutToolbar.toolbar.title = getTitle(drawerItem.identifier.toInt())
                         viewModel.switchPage(drawerItem.identifier.toInt())
                     }
@@ -146,6 +146,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             Identifier.NEWEST_NEW.value -> title = getString(R.string.newest_new)
             Identifier.NEWEST_MY_PIXIV.value -> title = getString(R.string.newest_my_pixiv)
             Identifier.PIXIVISION.value -> title = getString(R.string.pixivision_name)
+            Identifier.COLLECT.value -> title = getString(R.string.collect_name)
+            Identifier.BROWSING_HISTORY.value -> title = getString(R.string.browsing_name)
+            Identifier.USER.value -> title = getString(R.string.user_name)
         }
         return title
     }

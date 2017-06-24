@@ -19,7 +19,7 @@ import info.hzvtc.hipixiv.pojo.user.UserResponse
 
 class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
-    var nextUrl = ""
+    var nextUrl : String? = ""
 
     private lateinit var data : UserResponse
 
@@ -41,7 +41,7 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
         }
         //Set update index
         positionStart = typeList.size
-        moreDataSize = -1
+        moreDataSize = 0
         //NextUrl
         if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl
         //Init typeList
@@ -61,7 +61,7 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
 
     fun addMoreData(moreData: UserResponse){
         positionStart = typeList.size + 1
-        moreDataSize = -1
+        moreDataSize = 0
 
         nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
         val max = moreData.userPreviews.size-1

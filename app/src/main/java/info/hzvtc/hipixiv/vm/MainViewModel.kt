@@ -37,6 +37,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private lateinit var homeMangaFragment : IllustFragment
     private lateinit var followVpFragment : ViewPagerFragment
     private lateinit var newVpFragment : ViewPagerFragment
+    private lateinit var myPixivFragment : IllustFragment
 
     override fun initViewModel() {
         obsToken = account.obsToken(mView)
@@ -79,10 +80,11 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                         IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"manga")}),account,true))
             }
         }
-        followVpFragment = ViewPagerFragment(newestFollowBundle)
-        newVpFragment = ViewPagerFragment(newestNewBundle)
         homeIllustFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedIllusts(token, true) }),account,false)
         homeMangaFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedMangaList(token, true) }),account,true)
+        followVpFragment = ViewPagerFragment(newestFollowBundle)
+        newVpFragment = ViewPagerFragment(newestNewBundle)
+        myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,false)
     }
 
     fun switchPage(identifier : Int){
@@ -110,6 +112,11 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 //最新
                 MainActivity.Identifier.NEWEST_NEW.value -> {
                     replaceFragment(newVpFragment)
+                    mView.setFabVisible(false,false)
+                }
+                //My Pixiv
+                MainActivity.Identifier.NEWEST_MY_PIXIV.value ->{
+                    replaceFragment(myPixivFragment)
                     mView.setFabVisible(false,false)
                 }
             }

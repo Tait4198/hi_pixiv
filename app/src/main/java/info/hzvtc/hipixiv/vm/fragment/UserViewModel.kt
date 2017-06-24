@@ -13,6 +13,7 @@ import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.net.ApiService
 import info.hzvtc.hipixiv.pojo.user.UserResponse
+import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.fragment.BaseFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
@@ -88,7 +89,7 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
     }
 
     override fun getMoreData() {
-        Observable.just(adapter.nextUrl)
+        Observable.just(adapter.nextUrl?:"")
                 .doOnNext({ errorIndex = 1 })
                 .doOnNext({ allowLoadMore = false })
                 .filter({ url -> !url.isNullOrEmpty() })
@@ -96,9 +97,15 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
                 .doOnNext({ adapter.setProgress(true) })
                 .observeOn(Schedulers.io())
                 .flatMap({ account.obsToken(mView.context) })
-                .flatMap({ token -> apiService.getUserNext(token,adapter.nextUrl)})
+                .flatMap({ token -> apiService.getUserNext(token,adapter.nextUrl?:"")})
                 .doOnNext({ userResponse -> adapter.addMoreData(userResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext({ (content) ->
+                    run {
+                        if (content.size == 0)
+                            AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                    }
+                })
                 .subscribe({
                     _ ->
                     adapter.setProgress(false)

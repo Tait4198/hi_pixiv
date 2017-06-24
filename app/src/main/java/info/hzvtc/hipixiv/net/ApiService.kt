@@ -26,6 +26,9 @@ interface ApiService {
     fun getNewIllust(@Header("Authorization") authorization: String,
                               @Query("content_type") type: String): Observable<IllustResponse>
 
+    @GET("/v2/illust/mypixiv")
+    fun getMyPixivIllusts(@Header("Authorization") abstract : String): Observable<IllustResponse>
+
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>

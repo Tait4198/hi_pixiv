@@ -7,6 +7,7 @@ import android.databinding.ViewDataBinding
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import com.like.LikeButton
@@ -20,7 +21,7 @@ import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 //isMange = true 漫画/ false 插画
 class IllustAdapter(val context: Context,private var isMange : Boolean) : BaseRecyclerViewAdapter(context = context) {
 
-    var nextUrl = ""
+    var nextUrl : String? = ""
 
     private lateinit var data : IllustResponse
     private var itemClick : IllustItemClick? = null
@@ -44,7 +45,7 @@ class IllustAdapter(val context: Context,private var isMange : Boolean) : BaseRe
         }
         //Set update index
         positionStart = typeList.size
-        moreDataSize = -1
+        moreDataSize = 0
         //NextUrl
         if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl
         //New Data
@@ -73,7 +74,7 @@ class IllustAdapter(val context: Context,private var isMange : Boolean) : BaseRe
 
     fun addMoreData(moreData: IllustResponse){
         positionStart = typeList.size + 1
-        moreDataSize = -1
+        moreDataSize = 0
 
         nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
         val max = moreData.content.size-1
