@@ -2,6 +2,7 @@ package info.hzvtc.hipixiv.net
 
 import info.hzvtc.hipixiv.pojo.EmptyResponse
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
+import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -18,9 +19,16 @@ interface ApiService {
     fun getFollowIllusts(@Header("Authorization") authorization: String,
                          @Query("restrict") restrict: String): Observable<IllustResponse>
 
+    @GET("/v1/user/recommended?filter=for_android")
+    fun getUserRecommended(@Header("Authorization") authorization: String): Observable<UserResponse>
+
     @GET
-    fun getIllustsNext(@Header("Authorization") authorization : String,
+    fun getIllustNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>
+
+    @GET
+    fun getUserNext(@Header("Authorization") authorization : String,
+                       @Url url : String) : Observable<UserResponse>
 
     @FormUrlEncoded
     @POST("/v2/illust/bookmark/add")
@@ -31,4 +39,14 @@ interface ApiService {
     @POST("/v1/illust/bookmark/delete")
     fun postUnlikeIllust(@Header("Authorization") authorization: String,
                                   @Field("illust_id") illustId: Int): Observable<EmptyResponse>
+
+    @FormUrlEncoded
+    @POST("/v1/user/follow/add")
+    fun postFollowUser(@Header("Authorization") authorization: String, @Field("user_id") userId: Int,
+                       @Field("restrict") restrict: String): Observable<EmptyResponse>
+
+    @FormUrlEncoded
+    @POST("/v1/user/follow/delete")
+    fun postUnfollowUser(@Header("Authorization") authorization: String,
+                                  @Field("user_id") userId: Int): Observable<EmptyResponse>
 }

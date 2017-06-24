@@ -44,7 +44,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 titles = mView.resources.getStringArray(R.array.newest_follow_tab)
                 pagers = arrayOf(
                         IllustLazyFragment(obsToken.flatMap({ token -> apiService.getFollowIllusts(token,restricts[0])}),account,false),
-                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getRecommendedIllusts(token,false)}),account,false))
+                        UserLazyFragment(obsToken.flatMap({ token -> apiService.getUserRecommended(token)}),account))
             }
             override fun fabClick() {
                 when(nowPosition) {

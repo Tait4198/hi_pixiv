@@ -7,7 +7,6 @@ import android.databinding.ViewDataBinding
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
-import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import com.like.LikeButton
@@ -19,13 +18,13 @@ import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
 //todo 屏蔽设定
 //isMange = true 漫画/ false 插画
-class IllustAdapter(private var context: Context,private var isMange : Boolean) : BaseRecyclerViewAdapter(context = context) {
+class IllustAdapter(val context: Context,private var isMange : Boolean) : BaseRecyclerViewAdapter(context = context) {
 
     var nextUrl = ""
 
     private lateinit var data : IllustResponse
-    private lateinit var itemClick : IllustItemClick
-    private lateinit var itemLike : ItemLike
+    private var itemClick : IllustItemClick? = null
+    private var itemLike : ItemLike? = null
     private var frontPosition = 0
     private var positionStart = 0
     private var moreDataSize = 0
@@ -132,7 +131,7 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val type = (holder as BindingHolder<ViewDataBinding>).type
         //Manga Full
-        if(isMange && (type != ItemType.ITEM_MANGA || type != ItemType.ITEM_MANGA_MUTED)){
+        if(isMange && type != ItemType.ITEM_MANGA && type != ItemType.ITEM_MANGA_MUTED){
             val layoutParams = StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.isFullSpan = true
@@ -177,11 +176,11 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
                         R.layout.item_progress,parent,false),ItemType.ITEM_PROGRESS)
             }
             ItemType.ITEM_ILLUST_MUTED.value -> {
-                holder = BindingHolder<ItemProgressBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                holder = BindingHolder<ItemIllustMutedBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_illust_muted,parent,false),ItemType.ITEM_ILLUST_MUTED)
             }
             ItemType.ITEM_MANGA_MUTED.value -> {
-                holder = BindingHolder<ItemProgressBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                holder = BindingHolder<ItemMangaMutedBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_manga_muted,parent,false),ItemType.ITEM_MANGA_MUTED)
             }
         }
@@ -203,7 +202,7 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
     private fun showItemIllust(bind : ViewDataBinding,position: Int){
         val mBind : ItemIllustBinding = bind as ItemIllustBinding
         val illust = data.content[getRealPosition(position)]
-        mBind.rootView.setOnClickListener({ itemClick.itemClick(illust) })
+        mBind.rootView.setOnClickListener({ itemClick?.itemClick(illust) })
         mBind.cover.setImageURI(illust.imageUrls.medium)
         if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
             mBind.cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -212,11 +211,11 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
         mBind.collectButton.isLiked = illust.isBookmarked
         mBind.collectButton.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {
-                itemLike.like(illust.pixivId,getRealPosition(position),false,likeButton)
+                itemLike?.like(illust.pixivId,getRealPosition(position),false,likeButton)
             }
 
             override fun unLiked(likeButton: LikeButton) {
-                itemLike.unlike(illust.pixivId,getRealPosition(position),false,likeButton)
+                itemLike?.unlike(illust.pixivId,getRealPosition(position),false,likeButton)
             }
         })
         //bind
@@ -226,7 +225,7 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
     private fun showItemManga(bind : ViewDataBinding,position: Int){
         val mBind : ItemMangaBinding = bind as ItemMangaBinding
         val illust = data.content[getRealPosition(position)]
-        mBind.rootView.setOnClickListener({ itemClick.itemClick(illust) })
+        mBind.rootView.setOnClickListener({ itemClick?.itemClick(illust) })
         mBind.cover.setImageURI(illust.imageUrls.medium)
         if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
             mBind.cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -235,10 +234,10 @@ class IllustAdapter(private var context: Context,private var isMange : Boolean) 
         mBind.collectButton.isLiked = illust.isBookmarked
         mBind.collectButton.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {
-                itemLike.like(illust.pixivId,getRealPosition(position),false,likeButton)
+                itemLike?.like(illust.pixivId,getRealPosition(position),false,likeButton)
             }
             override fun unLiked(likeButton: LikeButton) {
-                itemLike.unlike(illust.pixivId,getRealPosition(position),false,likeButton)
+                itemLike?.unlike(illust.pixivId,getRealPosition(position),false,likeButton)
             }
         })
         bind.setVariable(BR.mangaIllust,illust)

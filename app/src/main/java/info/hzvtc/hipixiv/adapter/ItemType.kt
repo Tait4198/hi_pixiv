@@ -10,5 +10,7 @@ enum class ItemType(val value : Int) {
     ITEM_PROGRESS(6),
     ITEM_ILLUST_MUTED(7),
     ITEM_MANGA_MUTED(8),
-    ITEM_RANKING_MUTED(9)
+    ITEM_RANKING_MUTED(9),
+    ITEM_USER_MUTED(10),
+    ITEM_USER(11)
 }

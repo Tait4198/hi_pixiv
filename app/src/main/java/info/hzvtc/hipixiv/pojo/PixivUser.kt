@@ -8,5 +8,5 @@ data class PixivUser(
         @SerializedName("name") @Expose val name : String,
         @SerializedName("account") @Expose val account : String,
         @SerializedName("profile_image_urls") @Expose val profile : PixivUserProfile,
-        @SerializedName("is_followed") @Expose val isFollowed : Boolean
+        @SerializedName("is_followed") @Expose var isFollowed : Boolean
 )

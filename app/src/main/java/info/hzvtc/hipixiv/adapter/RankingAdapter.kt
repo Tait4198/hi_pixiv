@@ -11,13 +11,14 @@ import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.databinding.ItemRankingIllustBinding
+import info.hzvtc.hipixiv.databinding.ItemRankingMutedBinding
 import info.hzvtc.hipixiv.pojo.illust.Illust
 
 class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
     private lateinit var ranking : MutableList<Illust>
-    private lateinit var itemClick : IllustItemClick
-    private lateinit var itemLike : ItemLike
+    private var itemClick : IllustItemClick? = null
+    private var itemLike : ItemLike?  = null
 
     init {
         setHasStableIds(true)
@@ -38,11 +39,11 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         this.ranking = ranking
     }
 
-    fun setItemClick(itemClick: IllustItemClick){
+    fun setItemClick(itemClick: IllustItemClick?){
         this.itemClick = itemClick
     }
 
-    fun setItemLike(itemLike: ItemLike){
+    fun setItemLike(itemLike: ItemLike?){
         this.itemLike = itemLike
     }
 
@@ -54,7 +55,7 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
                         R.layout.item_ranking_illust,parent,false),ItemType.ITEM_RANKING_ILLUST)
             }
             ItemType.ITEM_RANKING_MUTED.value->{
-                holder = BindingHolder<ItemRankingIllustBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                holder = BindingHolder<ItemRankingMutedBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_ranking_muted,parent,false),ItemType.ITEM_RANKING_MUTED)
             }
         }
@@ -67,7 +68,7 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
             val illust = ranking[position]
             //View
             bind.rootView.setOnClickListener({
-                itemClick.itemClick(illust)
+                itemClick?.itemClick(illust)
             })
             bind.cover.setImageURI(illust.imageUrls.medium)
             bind.profile.hierarchy.roundingParams = RoundingParams.asCircle()
@@ -75,11 +76,11 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
             bind.collectButton.isLiked = illust.isBookmarked
             bind.collectButton.setOnLikeListener(object : OnLikeListener{
                 override fun liked(likeButton: LikeButton) {
-                    itemLike.like(illust.pixivId,position,true,likeButton)
+                    itemLike?.like(illust.pixivId,position,true,likeButton)
                 }
 
                 override fun unLiked(likeButton: LikeButton) {
-                    itemLike.unlike(illust.pixivId,position,true,likeButton)
+                    itemLike?.unlike(illust.pixivId,position,true,likeButton)
                 }
             })
             //Bind

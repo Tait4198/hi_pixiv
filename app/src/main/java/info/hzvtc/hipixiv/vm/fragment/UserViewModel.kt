@@ -3,20 +3,16 @@ package info.hzvtc.hipixiv.vm.fragment
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.adapter.IllustAdapter
-import info.hzvtc.hipixiv.adapter.IllustItemClick
 import info.hzvtc.hipixiv.adapter.ItemLike
 import info.hzvtc.hipixiv.adapter.OnScrollListener
+import info.hzvtc.hipixiv.adapter.UserAdapter
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.net.ApiService
-import info.hzvtc.hipixiv.pojo.illust.Illust
-import info.hzvtc.hipixiv.pojo.illust.IllustResponse
-import info.hzvtc.hipixiv.util.AppMessage
+import info.hzvtc.hipixiv.pojo.user.UserResponse
 import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.fragment.BaseFragment
 import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
@@ -26,48 +22,33 @@ import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class IllustViewModel @Inject constructor(val apiService: ApiService) :
-        BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<IllustResponse>{
+class UserViewModel @Inject constructor(val apiService : ApiService) :
+        BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<UserResponse> {
 
-    var isManga : Boolean = false
-    lateinit var obsNewData : Observable<IllustResponse>
+    lateinit var obsNewData : Observable<UserResponse>
     lateinit var account: Account
 
     private var allowLoadMore = true
     private var errorIndex = 0
-    private lateinit var adapter : IllustAdapter
+    private lateinit var adapter : UserAdapter
+
+    override fun runView() {
+        getData(obsNewData)
+    }
 
     override fun initViewModel() {
-        if(isManga){
-            val layoutManger = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
-            mBind.illustRecycler.layoutManager = layoutManger
-        }else{
-            val layoutManger = GridLayoutManager(mView.context,2)
-            layoutManger.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
-                override fun getSpanSize(pos: Int): Int =
-                        if(adapter.getFull(pos)) 1 else layoutManger.spanCount
-            }
-            mBind.illustRecycler.layoutManager = layoutManger
-        }
-
-        adapter = IllustAdapter(mView.context,isManga)
-        adapter.setItemClick(
-                itemClick = object : IllustItemClick {
-                    override fun itemClick(illust: Illust) {
-                        AppMessage.toastMessageShort(illust.title,mView.context)
-                    }
-                }
-        )
-        adapter.setItemLike(itemLike = object : ItemLike{
-            override fun like(id: Int, itemIndex: Int,isRank: Boolean, likeButton: LikeButton) {
-                postLikeOrUnlike(id, itemIndex,true,isRank,likeButton)
+        adapter = UserAdapter(mView.context)
+        adapter.setUserFollow(userFollow = object : ItemLike{
+            override fun like(id: Int, itemIndex: Int, isRank: Boolean, likeButton: LikeButton) {
+                postFollowOrUnfollow(id,itemIndex,true,likeButton)
             }
 
-            override fun unlike(id: Int,itemIndex : Int,isRank: Boolean,likeButton: LikeButton) {
-                postLikeOrUnlike(id,itemIndex,false,isRank,likeButton)
+            override fun unlike(id: Int, itemIndex: Int, isRank: Boolean, likeButton: LikeButton) {
+                postFollowOrUnfollow(id,itemIndex,false,likeButton)
             }
+
         })
-
+        mBind.illustRecycler.layoutManager = GridLayoutManager(mView.context,1)
         mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getData(obsNewData) })
         mBind.illustRecycler.addOnScrollListener(object : OnScrollListener() {
@@ -86,21 +67,17 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
         mBind.illustRecycler.adapter = adapter
     }
 
-    override fun runView() {
-        getData(obsNewData)
-    }
-
-    override fun getData(obs : Observable<IllustResponse>?){
-       Observable.just(obs)
-               .doOnNext({ errorIndex = 0 })
-               .filter({obs -> obs != null})
-               .doOnNext({ mBind.srLayout.isRefreshing = true })
-               .observeOn(Schedulers.io())
-               .flatMap({ obs -> obs })
-               .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
-               .observeOn(AndroidSchedulers.mainThread())
-               .subscribe({
-                   _ -> adapter.updateUI(true)
+    override fun getData(obs: Observable<UserResponse>?) {
+        Observable.just(obs)
+                .doOnNext({ errorIndex = 0 })
+                .filter({obs -> obs != null})
+                .doOnNext({ mBind.srLayout.isRefreshing = true })
+                .observeOn(Schedulers.io())
+                .flatMap({ obs -> obs })
+                .doOnNext({ userResponse -> adapter.setNewData(userResponse) })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    _ -> adapter.updateUI(true)
                 },{
                     error ->
                     mBind.srLayout.isRefreshing = false
@@ -110,7 +87,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 })
     }
 
-    override fun getMoreData(){
+    override fun getMoreData() {
         Observable.just(adapter.nextUrl)
                 .doOnNext({ errorIndex = 1 })
                 .doOnNext({ allowLoadMore = false })
@@ -119,8 +96,8 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 .doOnNext({ adapter.setProgress(true) })
                 .observeOn(Schedulers.io())
                 .flatMap({ account.obsToken(mView.context) })
-                .flatMap({ token -> apiService.getIllustNext(token,adapter.nextUrl)})
-                .doOnNext({ illustResponse -> adapter.addMoreData(illustResponse) })
+                .flatMap({ token -> apiService.getUserNext(token,adapter.nextUrl)})
+                .doOnNext({ userResponse -> adapter.addMoreData(userResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     _ ->
@@ -136,27 +113,27 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 })
     }
 
-    private fun postLikeOrUnlike(illustId : Int,position : Int,isLike : Boolean,isRank : Boolean,likeButton: LikeButton){
+    private fun postFollowOrUnfollow(userId : Int,position : Int,isLike : Boolean,likeButton: LikeButton){
         account.obsToken(mView.context)
                 .filter({ AppUtil.isNetworkConnected(mView.context) })
                 .flatMap({
                     token ->
                     if(isLike){
-                        return@flatMap apiService.postLikeIllust(token,illustId,"public")
+                        return@flatMap apiService.postFollowUser(token,userId,"public")
                     }else{
-                        return@flatMap apiService.postUnlikeIllust(token,illustId)
+                        return@flatMap apiService.postUnfollowUser(token,userId)
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    adapter.updateBookmarked(position,true,isRank)
+                    adapter.updateFollowed(position,true)
                 },{
                     error -> processError(error)
-                    adapter.updateBookmarked(position,false,isRank)
+                    adapter.updateFollowed(position,false)
                     likeButton.isLiked = false
                 },{
                     if(!AppUtil.isNetworkConnected(mView.context)){
-                        adapter.updateBookmarked(position,false,isRank)
+                        adapter.updateFollowed(position,false)
                         likeButton.isLiked = false
                     }
                 })
