@@ -100,10 +100,14 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
                 .flatMap({ token -> apiService.getUserNext(token,adapter.nextUrl?:"")})
                 .doOnNext({ userResponse -> adapter.addMoreData(userResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext({ (content) ->
-                    run {
-                        if (content.size == 0)
-                            AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                .doOnNext({ (userPreviews) ->
+                    if (userPreviews.size == 0){
+                        AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                    }
+                })
+                .doOnNext({ userResponse ->
+                    if(userResponse.nextUrl.isNullOrEmpty()){
+                        AppMessage.toastMessageLong(mView.getString(R.string.is_last_data), mView.context)
                     }
                 })
                 .subscribe({

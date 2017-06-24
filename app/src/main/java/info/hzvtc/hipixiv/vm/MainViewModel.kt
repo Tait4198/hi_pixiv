@@ -38,6 +38,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private lateinit var followVpFragment : ViewPagerFragment
     private lateinit var newVpFragment : ViewPagerFragment
     private lateinit var myPixivFragment : IllustFragment
+    private lateinit var collectFragment : IllustFragment
 
     override fun initViewModel() {
         obsToken = account.obsToken(mView)
@@ -85,6 +86,8 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
         followVpFragment = ViewPagerFragment(newestFollowBundle)
         newVpFragment = ViewPagerFragment(newestNewBundle)
         myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,false)
+        collectFragment = IllustFragment(obsToken.flatMap({ token -> apiService
+                .getLikeIllust(token,userPreferences.id?:0,restricts[1])}),account,false)
     }
 
     fun switchPage(identifier : Int){
@@ -118,6 +121,12 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 MainActivity.Identifier.NEWEST_MY_PIXIV.value ->{
                     replaceFragment(myPixivFragment)
                     mView.setFabVisible(false,false)
+                }
+                //收集
+                MainActivity.Identifier.COLLECT.value ->{
+                    replaceFragment(collectFragment)
+                    mBind.fab.setImageDrawable(ContextCompat.getDrawable(mView,R.drawable.ic_filter))
+                    mView.setFabVisible(true,true)
                 }
             }
         }

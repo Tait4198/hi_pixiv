@@ -2,6 +2,7 @@ package info.hzvtc.hipixiv.net
 
 import info.hzvtc.hipixiv.pojo.EmptyResponse
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
+import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -28,6 +29,18 @@ interface ApiService {
 
     @GET("/v2/illust/mypixiv")
     fun getMyPixivIllusts(@Header("Authorization") abstract : String): Observable<IllustResponse>
+
+    @GET("v1/user/bookmark-tags/illust")
+    fun getIllustBookmarkTags(@Header("Authorization") authorization: String, @Query("user_id") userId: Int,
+                                       @Query("restrict") restrict: String): Observable<BookmarkTagResponse>
+
+    @GET("/v1/user/bookmarks/illust")
+    fun getLikeIllust(@Header("Authorization") authorization: String, @Query("user_id") userId : Int,
+                      @Query("restrict") restrict : String) : Observable<IllustResponse>
+
+    @GET("/v1/user/bookmarks/illust")
+    fun getLikeIllust(@Header("Authorization") authorization: String, @Query("user_id") user_id : Int,
+                      @Query("restrict") restrict : String, @Query("tag") tag : String) : Observable<IllustResponse>
 
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,

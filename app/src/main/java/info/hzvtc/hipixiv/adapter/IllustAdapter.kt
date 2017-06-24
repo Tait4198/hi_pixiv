@@ -75,7 +75,6 @@ class IllustAdapter(val context: Context,private var isMange : Boolean) : BaseRe
     fun addMoreData(moreData: IllustResponse){
         positionStart = typeList.size + 1
         moreDataSize = 0
-
         nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
         val max = moreData.content.size-1
         var jump = 0

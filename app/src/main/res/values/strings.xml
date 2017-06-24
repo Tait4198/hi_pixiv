@@ -23,7 +23,8 @@
     <string name="more">More</string>
     <string name="help">Help</string>
     <string name="mute">Muted</string>
-    <string name="no_more_data">No More Data</string>
+    <string name="no_more_data">No More Data!</string>
+    <string name="is_last_data">This is the last set of data!</string>
     <string name="senior_member">Pixiv Senior Member</string>
     <string name="general_user">Pixiv General User</string>
     <string name="recommended">Recommended for you</string>

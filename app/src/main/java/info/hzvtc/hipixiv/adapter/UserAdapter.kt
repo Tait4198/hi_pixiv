@@ -1,10 +1,12 @@
 package info.hzvtc.hipixiv.adapter
 
 import android.content.Context
+import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.generic.RoundingParams
@@ -62,7 +64,6 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
     fun addMoreData(moreData: UserResponse){
         positionStart = typeList.size + 1
         moreDataSize = 0
-
         nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
         val max = moreData.userPreviews.size-1
         var jump = 0
@@ -136,6 +137,14 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
     private fun showItemUser(bind : ViewDataBinding,position: Int) {
         val mBind : ItemUserBinding = bind as ItemUserBinding
         val preview = data.userPreviews[position]
+        if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mBind.rootView.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    230f , context.resources.displayMetrics).toInt()
+            val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180f , context.resources.displayMetrics).toInt()
+            mBind.preview1.layoutParams.height = height
+            mBind.preview2.layoutParams.height = height
+            mBind.preview3.layoutParams.height = height
+        }
         val roundingParams = RoundingParams()
         roundingParams.setBorder(ContextCompat.getColor(context,R.color.colorTextSecond), 2f)
         roundingParams.roundAsCircle = true

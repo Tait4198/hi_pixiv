@@ -123,9 +123,13 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 .doOnNext({ illustResponse -> adapter.addMoreData(illustResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({ (content) ->
-                    run {
-                        if (content.size == 0)
-                            AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                    if (content.size == 0) {
+                        AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                    }
+                })
+                .doOnNext({ illustResponse ->
+                    if(illustResponse.nextUrl.isNullOrEmpty()){
+                        AppMessage.toastMessageLong(mView.getString(R.string.is_last_data), mView.context)
                     }
                 })
                 .subscribe({
