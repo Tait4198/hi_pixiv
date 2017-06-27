@@ -12,8 +12,4 @@ class EmptyFragment : LazyBindingFragment<FragmentEmptyBinding>() {
 
     }
 
-    override fun getViewModelData(): ViewModelData<*>? {
-        return null
-    }
-
 }

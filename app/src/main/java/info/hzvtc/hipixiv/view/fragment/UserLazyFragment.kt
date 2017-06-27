@@ -30,8 +30,4 @@ class UserLazyFragment(val obsNewData : Observable<UserResponse>,val account : A
         viewModel.setView(this)
         viewModel.runView()
     }
-
-    override fun getViewModelData(): ViewModelData<UserResponse>? {
-        return viewModel
-    }
 }

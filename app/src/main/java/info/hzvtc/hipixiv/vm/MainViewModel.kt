@@ -1,22 +1,30 @@
 package info.hzvtc.hipixiv.vm
 
 import android.databinding.DataBindingUtil
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.afollestad.materialdialogs.MaterialDialog
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.adapter.BookmarkTagAdapter
+import info.hzvtc.hipixiv.adapter.SimplePagerAdapter
+import info.hzvtc.hipixiv.adapter.TagItemClick
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.data.ViewPagerBundle
-import info.hzvtc.hipixiv.databinding.ActivityMainBinding
-import info.hzvtc.hipixiv.databinding.DialogSingleFilterBinding
+import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.net.ApiService
+import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.MainActivity
 import info.hzvtc.hipixiv.view.fragment.*
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -25,10 +33,21 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
 
     var nowIdentifier = -1
 
-    //restricts index
+    //关注者
+    //restricts position
     private var restrictPos = 0
-    //all public private
+    //collect restrict position
+    private var collectRestrictPos = 0
+    //item[3]-> all public private
     private lateinit var restricts: Array<out String>
+
+    //标签过滤
+    //item[2]-> public private
+    private lateinit var collectRestricts: Array<out String>
+    private var lastPosition = 0
+    private var isPublicPage = true
+    private var dialog : MaterialDialog? = null
+
     private lateinit var obsToken : Observable<String>
     private lateinit var newestFollowBundle : ViewPagerBundle<BaseFragment<*>>
     private lateinit var newestNewBundle : ViewPagerBundle<BaseFragment<*>>
@@ -43,6 +62,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     override fun initViewModel() {
         obsToken = account.obsToken(mView)
         restricts = mView.resources.getStringArray(R.array.restrict_parameters)
+        collectRestricts = mView.resources.getStringArray(R.array.collect_restrict_parameters)
         //newest -> follow -> bundle
         newestFollowBundle = object : ViewPagerBundle<BaseFragment<*>>() {
             init {
@@ -54,9 +74,9 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
             override fun fabClick() {
                 when(nowPosition) {
                     0 -> {
-                        showSingleFilterDialog(R.array.newest_follow_illust_items,object : Action{
+                        showSingleFilterDialog(mView.resources.getStringArray(R.array.newest_follow_illust_items),object : Action{
                             override fun doAction() {
-                                (pagers[0] as IllustLazyFragment).getViewModelData()?.getData(obsToken.
+                                (pagers[0] as IllustLazyFragment).viewModel.getData(obsToken.
                                         flatMap({token -> apiService.getFollowIllusts(token,restricts[restrictPos])}))
                             }
                         })
@@ -87,7 +107,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
         newVpFragment = ViewPagerFragment(newestNewBundle)
         myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,false)
         collectFragment = IllustFragment(obsToken.flatMap({ token -> apiService
-                .getLikeIllust(token,userPreferences.id?:0,restricts[1])}),account,false)
+                .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0])}),account,false)
     }
 
     fun switchPage(identifier : Int){
@@ -125,7 +145,11 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 //收集
                 MainActivity.Identifier.COLLECT.value ->{
                     replaceFragment(collectFragment)
+                    lastPosition = 0
+                    isPublicPage = true
+                    dialog = null
                     mBind.fab.setImageDrawable(ContextCompat.getDrawable(mView,R.drawable.ic_filter))
+                    mBind.fab.setOnClickListener({ showTagViewPagerDialog()})
                     mView.setFabVisible(true,true)
                 }
             }
@@ -139,8 +163,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
         transaction.commit()
     }
 
-
-    private fun showSingleFilterDialog(items: Int, action : Action){
+    private fun showSingleFilterDialog(items: Array<String>, action : Action){
         val dialog = MaterialDialog.Builder(mView)
                 .title(mView.getString(R.string.newest_follow_illust_name))
                 .customView(R.layout.dialog_single_filter, true)
@@ -149,8 +172,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 .onPositive({ _, _ -> action.doAction()})
                 .build()
         val bind = DataBindingUtil.bind<DialogSingleFilterBinding>(dialog.customView)
-        bind.restrict.adapter = ArrayAdapter<String>(mView,android.R.layout.simple_list_item_1
-                ,mView.resources.getStringArray(items))
+        bind.restrict.adapter = ArrayAdapter<String>(mView,android.R.layout.simple_list_item_1,items)
         bind.restrict.setSelection(restrictPos)
         bind.restrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -161,6 +183,122 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
             }
         }
         dialog.show()
+    }
+
+    //标签过滤
+    private fun showTagViewPagerDialog(){
+        if(dialog == null){
+            dialog = MaterialDialog.Builder(mView)
+                    .title(mView.getString(R.string.collect_filter_name))
+                    .negativeText(mView.getString(R.string.app_dialog_cancel))
+                    .customView(R.layout.dialog_view_pager, false)
+                    .build()
+            val bind = DataBindingUtil.bind<DialogViewPagerBinding>(dialog?.customView)
+            val publicPage = DataBindingUtil.bind<FragmentListBinding>(View.inflate(mView,R.layout.fragment_list,null))
+            val privatePage = DataBindingUtil.bind<FragmentListBinding>(View.inflate(mView,R.layout.fragment_list,null))
+            val adapter = SimplePagerAdapter(arrayOf(publicPage.root,privatePage.root),
+                    mView.resources.getStringArray(R.array.collect_filter_items))
+            val publicPageAdapter = BookmarkTagAdapter(mView)
+            val privatePageAdapter = BookmarkTagAdapter(mView)
+            publicPage.recyclerView.adapter = publicPageAdapter
+            publicPage.recyclerView.layoutManager = LinearLayoutManager(mView)
+            publicPage.srLayout.setColorSchemeColors(ContextCompat.getColor(mView, R.color.primary))
+            publicPage.srLayout.setOnRefreshListener({ initPageData(publicPage,publicPageAdapter,true) })
+            privatePage.recyclerView.adapter = privatePageAdapter
+            privatePage.recyclerView.layoutManager = LinearLayoutManager(mView)
+            privatePage.srLayout.setColorSchemeColors(ContextCompat.getColor(mView, R.color.primary))
+            privatePage.srLayout.setOnRefreshListener({ initPageData(privatePage,privatePageAdapter,false) })
+            publicPageAdapter.setTagItemClick(object : TagItemClick{
+                override fun itemClick(position: Int,tag : String) {
+                    if(!isPublicPage){
+                        privatePageAdapter.updateLastPositionItem(lastPosition)
+                    }else{
+                        publicPageAdapter.updateLastPositionItem(lastPosition)
+                    }
+                    publicPageAdapter.updatePositionItem(position)
+                    lastPosition = position
+                    isPublicPage = true
+                    when(position){
+                        0 ->{
+                            collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
+                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0])}))
+                        }
+                        1 ->{
+                            collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
+                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0],"未分類")}))
+                        }
+                        else->{
+                            collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
+                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0],tag)}))
+                        }
+                    }
+                    dialog?.hide()
+                }
+            })
+            privatePageAdapter.setTagItemClick(object : TagItemClick{
+                override fun itemClick(position: Int,tag : String) {
+                    if(isPublicPage){
+                        publicPageAdapter.updateLastPositionItem(lastPosition)
+                    }else {
+                        privatePageAdapter.updateLastPositionItem(lastPosition)
+                    }
+                    privatePageAdapter.updatePositionItem(position)
+                    when(position){
+                        0 ->{
+                            collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
+                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[1])}))
+                        }
+                        1 ->{
+                            collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
+                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[1],"未分類")}))
+                        }
+                        else->{
+                            collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
+                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[1],tag)}))
+                        }
+                    }
+                    lastPosition = position
+                    isPublicPage = false
+                    dialog?.hide()
+                }
+            })
+
+            bind.viewPager.adapter = adapter
+            bind.viewPager.currentItem = collectRestrictPos
+            bind.tab.setupWithViewPager(bind.viewPager)
+            bind.tab.tabMode = TabLayout.MODE_FIXED
+
+            initPageData(publicPage,publicPageAdapter,true)
+            initPageData(privatePage,privatePageAdapter,false)
+        }
+        dialog?.show()
+    }
+
+    //加载标签选择页面数据
+    private fun initPageData(page : FragmentListBinding,pageAdapter : BookmarkTagAdapter?,isPublic : Boolean){
+        val restrict = if(isPublic) collectRestricts[0] else collectRestricts[1]
+        val mPos = if(isPublic){ if(isPublicPage) lastPosition else -1 }else{ if(isPublicPage) -1 else lastPosition }
+
+        val isNetConnected = AppUtil.isNetworkConnected(mView)
+        Observable.just(isNetConnected)
+                .filter({ isNetConnected -> isNetConnected})
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext({ page.srLayout.isRefreshing = true})
+                .observeOn(Schedulers.io())
+                .flatMap({ account.obsToken(mView) })
+                .flatMap({
+                    token -> apiService.getIllustBookmarkTags(token,userPreferences.id?:0,restrict)
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    response -> pageAdapter?.initNewData(response,mPos)
+                },{
+                    error -> Log.d("Error",error.printStackTrace().toString())
+                    page.srLayout.isRefreshing = false
+                },{
+                    if(!isNetConnected) pageAdapter?.initNewData(null,mPos)
+                     page.srLayout.isRefreshing = false
+                })
     }
 
     interface Action{

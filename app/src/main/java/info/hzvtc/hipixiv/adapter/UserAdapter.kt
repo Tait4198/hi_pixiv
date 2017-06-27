@@ -45,7 +45,7 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
         positionStart = typeList.size
         moreDataSize = 0
         //NextUrl
-        if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl
+        if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl else nextUrl = ""
         //Init typeList
         val max = newData.userPreviews.size-1
         var jump = 0

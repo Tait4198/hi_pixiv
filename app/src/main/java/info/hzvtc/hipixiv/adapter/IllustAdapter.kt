@@ -47,7 +47,7 @@ class IllustAdapter(val context: Context,private var isMange : Boolean) : BaseRe
         positionStart = typeList.size
         moreDataSize = 0
         //NextUrl
-        if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl
+        if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl else nextUrl = ""
         //New Data
         //Init typeList
         if(newData.ranking.isNotEmpty()){

@@ -39,6 +39,16 @@
         <item>私人</item>
     </string-array>
 
+    <string name="collect_filter_name">标签过滤</string>
+    <string-array name="collect_filter_items">
+        <item>公开</item>
+        <item>私人</item>
+    </string-array>
+
+    <string-array name="default_tag_name_items">
+        <item>全部</item>
+        <item>未分类</item>
+    </string-array>
 
     <!-- Home -->
     <string name="home_name">主页</string>

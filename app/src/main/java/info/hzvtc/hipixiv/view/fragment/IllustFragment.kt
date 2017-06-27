@@ -33,8 +33,4 @@ class IllustFragment(val obsNewData : Observable<IllustResponse>,val account: Ac
         viewModel.runView()
         return binding.root
     }
-
-    override fun getViewModelData(): ViewModelData<IllustResponse>? {
-        return viewModel
-    }
 }

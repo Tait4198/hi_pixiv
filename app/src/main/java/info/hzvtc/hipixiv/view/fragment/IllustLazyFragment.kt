@@ -23,10 +23,6 @@ class IllustLazyFragment(val obsNewData : Observable<IllustResponse>, val accoun
 
     override fun getLayoutId(): Int = R.layout.fragment_list
 
-    override fun getViewModelData(): ViewModelData<IllustResponse>? {
-        return viewModel
-    }
-
     override fun onFirstUserVisible() {
         super.onFirstUserVisible()
         viewModel.isManga = isManga

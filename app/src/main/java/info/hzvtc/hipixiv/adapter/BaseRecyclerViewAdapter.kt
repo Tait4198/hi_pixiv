@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 
 abstract class BaseRecyclerViewAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
-
     val mLayoutInflater : LayoutInflater = LayoutInflater.from(context)
     val typeList : MutableList<ItemType> = ArrayList()
 

@@ -30,7 +30,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
         BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<IllustResponse>{
 
     var isManga : Boolean = false
-    lateinit var obsNewData : Observable<IllustResponse>
+    var obsNewData : Observable<IllustResponse>? = null
     lateinit var account: Account
 
     private var allowLoadMore = true
@@ -40,14 +40,14 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     override fun initViewModel() {
         if(isManga){
             val layoutManger = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
-            mBind.illustRecycler.layoutManager = layoutManger
+            mBind.recyclerView.layoutManager = layoutManger
         }else{
             val layoutManger = GridLayoutManager(mView.context,2)
             layoutManger.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
                 override fun getSpanSize(pos: Int): Int =
                         if(adapter.getFull(pos)) 1 else layoutManger.spanCount
             }
-            mBind.illustRecycler.layoutManager = layoutManger
+            mBind.recyclerView.layoutManager = layoutManger
         }
 
         adapter = IllustAdapter(mView.context,isManga)
@@ -70,7 +70,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
 
         mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getData(obsNewData) })
-        mBind.illustRecycler.addOnScrollListener(object : OnScrollListener() {
+        mBind.recyclerView.addOnScrollListener(object : OnScrollListener() {
             override fun onBottom() {
                 if(allowLoadMore){
                     getMoreData()
@@ -83,7 +83,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                 getParent()?.showFab(true)
             }
         })
-        mBind.illustRecycler.adapter = adapter
+        mBind.recyclerView.adapter = adapter
     }
 
     override fun runView() {
@@ -91,7 +91,8 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     }
 
     override fun getData(obs : Observable<IllustResponse>?){
-       Observable.just(obs)
+        if(obs != obsNewData) obsNewData = obs
+        Observable.just(obs)
                .doOnNext({ errorIndex = 0 })
                .filter({obs -> obs != null})
                .doOnNext({ mBind.srLayout.isRefreshing = true })

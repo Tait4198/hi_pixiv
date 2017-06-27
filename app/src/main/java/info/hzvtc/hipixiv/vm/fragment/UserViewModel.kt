@@ -26,7 +26,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(val apiService : ApiService) :
         BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<UserResponse> {
 
-    lateinit var obsNewData : Observable<UserResponse>
+    var obsNewData : Observable<UserResponse>? = null
     lateinit var account: Account
 
     private var allowLoadMore = true
@@ -49,10 +49,10 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
             }
 
         })
-        mBind.illustRecycler.layoutManager = GridLayoutManager(mView.context,1)
+        mBind.recyclerView.layoutManager = GridLayoutManager(mView.context,1)
         mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getData(obsNewData) })
-        mBind.illustRecycler.addOnScrollListener(object : OnScrollListener() {
+        mBind.recyclerView.addOnScrollListener(object : OnScrollListener() {
             override fun onBottom() {
                 if(allowLoadMore){
                     getMoreData()
@@ -65,10 +65,11 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
                 getParent()?.showFab(true)
             }
         })
-        mBind.illustRecycler.adapter = adapter
+        mBind.recyclerView.adapter = adapter
     }
 
     override fun getData(obs: Observable<UserResponse>?) {
+        if(obs != obsNewData) obsNewData = obs
         Observable.just(obs)
                 .doOnNext({ errorIndex = 0 })
                 .filter({obs -> obs != null})

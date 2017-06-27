@@ -25,7 +25,5 @@ abstract class BaseFragment<out T : ViewDataBinding> : Fragment() {
         retainInstance = true
     }
 
-    abstract fun getViewModelData() : ViewModelData<*>?
-
     abstract fun getBinding() : T
 }

@@ -37,8 +37,4 @@ class ViewPagerFragment(val bundle : ViewPagerBundle<BaseFragment<*>>) : Binding
         return binding.root
     }
 
-    override fun getViewModelData(): ViewModelData<*>? {
-        return null
-    }
-
 }

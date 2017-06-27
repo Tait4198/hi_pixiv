@@ -40,6 +40,12 @@
         <item>Private</item>
     </string-array>
 
+    <string name="collect_filter_name">Tag Filter</string>
+    <string-array name="collect_filter_items">
+        <item>Public</item>
+        <item>Private</item>
+    </string-array>
+
     <!-- Home -->
     <string name="home_name">Home</string>
     <string name="home_illust">Illustrations</string>
@@ -96,6 +102,18 @@
         <item>public</item>
         <item>private</item>
     </string-array>
+
+    <string-array name="collect_restrict_parameters">
+        <item>public</item>
+        <item>private</item>
+    </string-array>
+
+    <string-array name="default_tag_name_items">
+        <item>All</item>
+        <item>Uncategorized</item>
+    </string-array>
+
+    <string name="empty">&#160;</string>
 
     <string name="icon_heart">{faw_heart}&#160;</string>
     <string name="icon_trophy">{faw_trophy}&#160;</string>

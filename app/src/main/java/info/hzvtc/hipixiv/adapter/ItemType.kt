@@ -12,5 +12,7 @@ enum class ItemType(val value : Int) {
     ITEM_MANGA_MUTED(8),
     ITEM_RANKING_MUTED(9),
     ITEM_USER_MUTED(10),
-    ITEM_USER(11)
+    ITEM_USER(11),
+    ITEM_BOOKMARK_TAG(12),
+    ITEM_BOOKMARK_TAG_SELECTED(13)
 }
