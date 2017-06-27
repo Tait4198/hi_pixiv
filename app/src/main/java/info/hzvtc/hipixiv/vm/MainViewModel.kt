@@ -58,6 +58,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private lateinit var newVpFragment : ViewPagerFragment
     private lateinit var myPixivFragment : IllustFragment
     private lateinit var collectFragment : IllustFragment
+    private lateinit var historyFragment : IllustFragment
 
     override fun initViewModel() {
         obsToken = account.obsToken(mView)
@@ -108,6 +109,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
         myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,false)
         collectFragment = IllustFragment(obsToken.flatMap({ token -> apiService
                 .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0])}),account,false)
+        historyFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getIllustBrowsingHistory(token)}),account,false)
     }
 
     fun switchPage(identifier : Int){
@@ -151,6 +153,11 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     mBind.fab.setImageDrawable(ContextCompat.getDrawable(mView,R.drawable.ic_filter))
                     mBind.fab.setOnClickListener({ showTagViewPagerDialog()})
                     mView.setFabVisible(true,true)
+                }
+                //浏览历史
+                MainActivity.Identifier.BROWSING_HISTORY.value ->{
+                    replaceFragment(historyFragment)
+                    mView.setFabVisible(false,false)
                 }
             }
         }

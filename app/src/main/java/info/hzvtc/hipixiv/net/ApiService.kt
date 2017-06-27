@@ -42,6 +42,9 @@ interface ApiService {
     fun getLikeIllust(@Header("Authorization") authorization: String, @Query("user_id") user_id : Int,
                       @Query("restrict") restrict : String, @Query("tag") tag : String) : Observable<IllustResponse>
 
+    @GET("/v1/user/browsing-history/illusts")
+    fun getIllustBrowsingHistory(@Header("Authorization") authorization: String): Observable<IllustResponse>
+
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>
