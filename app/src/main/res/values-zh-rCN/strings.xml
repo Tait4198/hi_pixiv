@@ -40,7 +40,7 @@
     </string-array>
 
     <string name="collect_filter_name">标签过滤</string>
-    <string-array name="collect_filter_items">
+    <string-array name="filter_items">
         <item>公开</item>
         <item>私人</item>
     </string-array>

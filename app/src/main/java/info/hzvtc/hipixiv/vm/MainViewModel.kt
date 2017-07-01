@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
 
     //标签过滤
     //item[2]-> public private
-    private lateinit var collectRestricts: Array<out String>
+    private lateinit var doubleRestricts: Array<out String>
     private var lastPosition = 0
     private var isPublicPage = true
     private var dialog : MaterialDialog? = null
@@ -51,6 +51,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private lateinit var obsToken : Observable<String>
     private lateinit var newestFollowBundle : ViewPagerBundle<BaseFragment<*>>
     private lateinit var newestNewBundle : ViewPagerBundle<BaseFragment<*>>
+    private lateinit var userPageBundle : ViewPagerBundle<BaseFragment<*>>
 
     private lateinit var homeIllustFragment : IllustFragment
     private lateinit var homeMangaFragment : IllustFragment
@@ -59,11 +60,12 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private lateinit var myPixivFragment : IllustFragment
     private lateinit var collectFragment : IllustFragment
     private lateinit var historyFragment : IllustFragment
+    private lateinit var userVpFragment : ViewPagerFragment
 
     override fun initViewModel() {
         obsToken = account.obsToken(mView)
         restricts = mView.resources.getStringArray(R.array.restrict_parameters)
-        collectRestricts = mView.resources.getStringArray(R.array.collect_restrict_parameters)
+        doubleRestricts = mView.resources.getStringArray(R.array.double_restrict_parameters)
         //newest -> follow -> bundle
         newestFollowBundle = object : ViewPagerBundle<BaseFragment<*>>() {
             init {
@@ -102,14 +104,52 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                         IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"manga")}),account,true))
             }
         }
+        //user
+        userPageBundle = object : ViewPagerBundle<BaseFragment<*>>(){
+            init {
+                titles = mView.resources.getStringArray(R.array.user_tab)
+                pagers = arrayOf(
+                        UserLazyFragment(obsToken.flatMap({ token ->
+                            apiService.getUserFollowing(token,userPreferences.id?:0,doubleRestricts[0])}),account),
+                        UserLazyFragment(obsToken.flatMap({ token ->
+                            apiService.getUserFollower(token,userPreferences.id?:0)}),account),
+                        UserLazyFragment(obsToken.flatMap({ token ->
+                            apiService.getUserMyPixiv(token,userPreferences.id?:0)}),account)
+                )
+            }
+
+            override fun fabClick() {
+                super.fabClick()
+                when(nowPosition){
+                    0 ->{
+                        showSingleFilterDialog(mView.resources.getStringArray(R.array.filter_items),object : Action{
+                            override fun doAction() {
+                                (pagers[0] as UserLazyFragment).viewModel.getData(obsToken.
+                                        flatMap({token -> apiService.getUserFollowing(token,userPreferences.id?:0,doubleRestricts[restrictPos])}))
+                            }
+                        })
+                    }
+                }
+            }
+
+            override fun fabShow(position: Int) {
+                super.fabShow(position)
+                if(position == 0)
+                    mView.setFabVisible(true,true)
+                else
+                    mView.setFabVisible(false,false)
+            }
+        }
+
         homeIllustFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedIllusts(token, true) }),account,false)
         homeMangaFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedMangaList(token, true) }),account,true)
         followVpFragment = ViewPagerFragment(newestFollowBundle)
         newVpFragment = ViewPagerFragment(newestNewBundle)
         myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,false)
         collectFragment = IllustFragment(obsToken.flatMap({ token -> apiService
-                .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0])}),account,false)
+                .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[0])}),account,false)
         historyFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getIllustBrowsingHistory(token)}),account,false)
+        userVpFragment = ViewPagerFragment(userPageBundle)
     }
 
     fun switchPage(identifier : Int){
@@ -159,6 +199,13 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     replaceFragment(historyFragment)
                     mView.setFabVisible(false,false)
                 }
+                //用户
+                MainActivity.Identifier.USER.value ->{
+                    replaceFragment(userVpFragment)
+                    mBind.fab.setImageDrawable(ContextCompat.getDrawable(mView,R.drawable.ic_filter))
+                    mBind.fab.setOnClickListener({ userPageBundle.fabClick() })
+                    mView.setFabVisible(true,true)
+                }
             }
         }
     }
@@ -204,7 +251,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
             val publicPage = DataBindingUtil.bind<FragmentListBinding>(View.inflate(mView,R.layout.fragment_list,null))
             val privatePage = DataBindingUtil.bind<FragmentListBinding>(View.inflate(mView,R.layout.fragment_list,null))
             val adapter = SimplePagerAdapter(arrayOf(publicPage.root,privatePage.root),
-                    mView.resources.getStringArray(R.array.collect_filter_items))
+                    mView.resources.getStringArray(R.array.filter_items))
             val publicPageAdapter = BookmarkTagAdapter(mView)
             val privatePageAdapter = BookmarkTagAdapter(mView)
             publicPage.recyclerView.adapter = publicPageAdapter
@@ -228,15 +275,15 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     when(position){
                         0 ->{
                             collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
-                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0])}))
+                                    .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[0])}))
                         }
                         1 ->{
                             collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
-                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0],"未分類")}))
+                                    .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[0],"未分類")}))
                         }
                         else->{
                             collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
-                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[0],tag)}))
+                                    .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[0],tag)}))
                         }
                     }
                     dialog?.hide()
@@ -253,15 +300,15 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     when(position){
                         0 ->{
                             collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
-                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[1])}))
+                                    .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[1])}))
                         }
                         1 ->{
                             collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
-                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[1],"未分類")}))
+                                    .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[1],"未分類")}))
                         }
                         else->{
                             collectFragment.viewModel.getData(obsToken.flatMap({ token -> apiService
-                                    .getLikeIllust(token,userPreferences.id?:0,collectRestricts[1],tag)}))
+                                    .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[1],tag)}))
                         }
                     }
                     lastPosition = position
@@ -283,7 +330,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
 
     //加载标签选择页面数据
     private fun initPageData(page : FragmentListBinding,pageAdapter : BookmarkTagAdapter?,isPublic : Boolean){
-        val restrict = if(isPublic) collectRestricts[0] else collectRestricts[1]
+        val restrict = if(isPublic) doubleRestricts[0] else doubleRestricts[1]
         val mPos = if(isPublic){ if(isPublicPage) lastPosition else -1 }else{ if(isPublicPage) -1 else lastPosition }
 
         val isNetConnected = AppUtil.isNetworkConnected(mView)

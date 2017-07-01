@@ -6,6 +6,9 @@ import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
+import retrofit2.http.GET
+
+
 
 interface ApiService {
     @GET("/v1/illust/recommended?filter=for_android")
@@ -44,6 +47,18 @@ interface ApiService {
 
     @GET("/v1/user/browsing-history/illusts")
     fun getIllustBrowsingHistory(@Header("Authorization") authorization: String): Observable<IllustResponse>
+
+    @GET("/v1/user/following?filter=for_android")
+    fun getUserFollowing(@Header("Authorization") authorization: String, @Query("user_id") userId: Int,
+                         @Query("restrict") restrict: String): Observable<UserResponse>
+
+    @GET("/v1/user/follower?filter=for_android")
+    fun getUserFollower(@Header("Authorization") authorization: String,
+                        @Query("user_id") userId: Int): Observable<UserResponse>
+
+    @GET("/v1/user/mypixiv?filter=for_android")
+    fun getUserMyPixiv(@Header("Authorization") authorization: String,
+                       @Query("user_id") userId: Int): Observable<UserResponse>
 
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,

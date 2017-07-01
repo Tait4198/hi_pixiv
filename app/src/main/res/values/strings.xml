@@ -41,7 +41,7 @@
     </string-array>
 
     <string name="collect_filter_name">Tag Filter</string>
-    <string-array name="collect_filter_items">
+    <string-array name="filter_items">
         <item>Public</item>
         <item>Private</item>
     </string-array>
@@ -103,7 +103,7 @@
         <item>private</item>
     </string-array>
 
-    <string-array name="collect_restrict_parameters">
+    <string-array name="double_restrict_parameters">
         <item>public</item>
         <item>private</item>
     </string-array>
