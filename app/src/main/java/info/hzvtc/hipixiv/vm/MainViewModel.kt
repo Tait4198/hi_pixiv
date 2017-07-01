@@ -170,6 +170,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 //关注者
                 MainActivity.Identifier.NEWEST_FOLLOW.value -> {
                     replaceFragment(followVpFragment)
+                    restrictPos = 0
                     mBind.fab.setImageDrawable(ContextCompat.getDrawable(mView,R.drawable.ic_filter))
                     mBind.fab.setOnClickListener({ newestFollowBundle.fabClick() })
                     mView.setFabVisible(true,true)
@@ -202,6 +203,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 //用户
                 MainActivity.Identifier.USER.value ->{
                     replaceFragment(userVpFragment)
+                    restrictPos = 0
                     mBind.fab.setImageDrawable(ContextCompat.getDrawable(mView,R.drawable.ic_filter))
                     mBind.fab.setOnClickListener({ userPageBundle.fabClick() })
                     mView.setFabVisible(true,true)

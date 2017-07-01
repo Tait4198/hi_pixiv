@@ -50,6 +50,34 @@
         <item>未分类</item>
     </string-array>
 
+    <string name="select_ranking">选择排行榜</string>
+
+    <string name="ranking_illust_title">插画排行</string>
+    <string name="ranking_manga_title">漫画排行</string>
+    <string-array name="ranking_illust_items">
+        <item>每日</item>
+        <item>男性热门</item>
+        <item>女性热门</item>
+        <item>原创</item>
+        <item>新人</item>
+        <item>每周</item>
+        <item>每月</item>
+        <item>R-18每日</item>
+        <item>R-18每周</item>
+        <item>R-18男性热门</item>
+        <item>R-18女性热门</item>
+        <item>R-18G</item>
+    </string-array>
+    <string-array name="ranking_manga_items">
+        <item>每日</item>
+        <item>新人</item>
+        <item>每周</item>
+        <item>每月</item>
+        <item>R-18 每日</item>
+        <item>R-18 每周</item>
+        <item>R-18G</item>
+    </string-array>
+
     <!-- Home -->
     <string name="home_name">主页</string>
     <string name="home_illust">插画</string>
@@ -93,6 +121,8 @@
         <item>粉丝</item>
         <item>好P友</item>
     </string-array>
+    <!-- muted -->
+    <string name="muted_setting">屏蔽设定</string>
     <!-- Setting -->
     <string name="setting_name">设置</string>
 

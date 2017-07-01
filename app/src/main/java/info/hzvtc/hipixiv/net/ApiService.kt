@@ -6,9 +6,6 @@ import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
-import retrofit2.http.GET
-
-
 
 interface ApiService {
     @GET("/v1/illust/recommended?filter=for_android")
@@ -59,6 +56,14 @@ interface ApiService {
     @GET("/v1/user/mypixiv?filter=for_android")
     fun getUserMyPixiv(@Header("Authorization") authorization: String,
                        @Query("user_id") userId: Int): Observable<UserResponse>
+
+    @GET("/v1/illust/ranking?filter=for_android")
+    fun getIllustRanking(@Header("Authorization") authorization: String,
+                         @Query("mode") mode: String): Observable<IllustResponse>
+
+    @GET("/v1/illust/ranking?filter=for_android")
+    fun getIllustRanking(@Header("Authorization") authorization: String, @Query("mode") mode: String
+                         , @Query("date") date: String): Observable<IllustResponse>
 
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,

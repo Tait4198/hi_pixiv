@@ -17,7 +17,7 @@ import info.hzvtc.hipixiv.pojo.illust.Illust
 class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
     private lateinit var ranking : MutableList<Illust>
-    private var itemClick : IllustItemClick? = null
+    private var itemClick : ItemClick? = null
     private var itemLike : ItemLike?  = null
 
     init {
@@ -39,7 +39,7 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
         this.ranking = ranking
     }
 
-    fun setItemClick(itemClick: IllustItemClick?){
+    fun setItemClick(itemClick: ItemClick?){
         this.itemClick = itemClick
     }
 

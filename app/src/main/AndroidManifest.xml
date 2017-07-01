@@ -36,6 +36,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.RankingActivity">
+            <intent-filter>
+                <action android:name="info.hzvtc.hipixiv.ranking"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.TextView
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
+import com.mikepenz.fontawesome_typeface_library.FontAwesome
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -81,12 +82,14 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         PrimaryDrawerItem().withName(R.string.user_name).withIcon(GoogleMaterial.Icon.gmd_account_box)
                                 .withIdentifier(Identifier.USER.value.toLong()),
                         dividerItem,
+                        PrimaryDrawerItem().withName(R.string.muted_setting).withIcon(FontAwesome.Icon.faw_eye_slash)
+                                .withIdentifier(Identifier.MUTE_SETTINGS.value.toLong()).withSelectable(false),
                         PrimaryDrawerItem().withName(R.string.setting_name).withIcon(GoogleMaterial.Icon.gmd_settings)
-                                .withIdentifier(Identifier.SETTING.value.toLong()).withSelectable(false)
+                                .withIdentifier(Identifier.SETTINGS.value.toLong()).withSelectable(false)
                 )
                 .withOnDrawerItemClickListener({
                     _,_,drawerItem->
-                    if (drawerItem.identifier < Identifier.SETTING.value && drawerItem is PrimaryDrawerItem) {
+                    if (drawerItem.identifier < Identifier.MUTE_SETTINGS.value && drawerItem is PrimaryDrawerItem) {
                         mBinding.layoutToolbar.toolbar.title = getTitle(drawerItem.identifier.toInt())
                         viewModel.switchPage(drawerItem.identifier.toInt())
                     }
@@ -131,7 +134,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
     }
 
-
     fun getRootView(): CoordinatorLayout? {
         return mBinding.rootView
     }
@@ -171,6 +173,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         COLLECT(401),
         BROWSING_HISTORY(501),
         USER(601),
-        SETTING(701);
+        MUTE_SETTINGS(701),
+        SETTINGS(901);
     }
 }

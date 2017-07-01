@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="listRankingIllust"
+            type="info.hzvtc.hipixiv.pojo.illust.Illust" />
+    </data>
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardBackgroundColor="@color/colorLight"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/cover"
+                    android:background="@color/colorImageBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="480dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/dark_foreground"/>
+                <com.mikepenz.iconics.view.IconicsTextView
+                    android:id="@+id/page_count"
+                    android:padding="6dp"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:background="@color/colorPageCountBg"
+                    android:layout_gravity="end|top"
+                    android:text="@{@string/icon_page + listRankingIllust.pageCount}"
+                    android:visibility="@{listRankingIllust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
+            </FrameLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="6dp">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/user_profile"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toEndOf="@+id/user_profile"
+                    android:layout_toRightOf="@+id/user_profile"
+                    tools:ignore="RelativeOverlap">
+                    <TextView
+                        android:id="@+id/title"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorTextTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{listRankingIllust.title}"/>
+                    <TextView
+                        android:id="@+id/user"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorTextSecond"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{listRankingIllust.user.name}"/>
+                </LinearLayout>
+                <com.like.LikeButton
+                    android:id="@+id/collect_button"
+                    app:icon_size="28dp"
+                    app:dots_primary_color="@color/md_pink_200"
+                    app:dots_secondary_color="@color/md_pink_500"
+                    app:circle_start_color="@color/md_pink_500"
+                    app:circle_end_color="@color/md_pink_200"
+                    app:like_drawable="@drawable/favorite_on"
+                    app:unlike_drawable="@drawable/favorite_off"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</layout>

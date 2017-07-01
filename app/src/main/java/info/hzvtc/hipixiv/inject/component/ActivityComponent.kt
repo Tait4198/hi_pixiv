@@ -12,6 +12,7 @@ import info.hzvtc.hipixiv.net.RetrofitManager
 import info.hzvtc.hipixiv.view.LauncherActivity
 import info.hzvtc.hipixiv.view.LoginActivity
 import info.hzvtc.hipixiv.view.MainActivity
+import info.hzvtc.hipixiv.view.RankingActivity
 import javax.inject.Singleton
 
 @Singleton
@@ -21,6 +22,7 @@ interface ActivityComponent {
     fun inject(launcherActivity: LauncherActivity)
     fun inject(mainActivity: MainActivity)
     fun inject(loginActivity: LoginActivity)
+    fun inject(rankingActivity: RankingActivity)
 
     @ActivityContext
     fun context() : Context

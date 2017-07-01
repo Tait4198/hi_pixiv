@@ -46,6 +46,34 @@
         <item>Private</item>
     </string-array>
 
+    <string name="select_ranking">Choose Ranking</string>
+
+    <string name="ranking_illust_title">Illust Ranking</string>
+    <string name="ranking_manga_title">Manga Ranking</string>
+    <string-array name="ranking_illust_items">
+        <item>Daily</item>
+        <item>Popular amongst males</item>
+        <item>Popular amongst females</item>
+        <item>Original</item>
+        <item>Rookie</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>R-18 Daily</item>
+        <item>R-18 Weekly</item>
+        <item>R-18 Popular amongst males</item>
+        <item>R-18 Popular amongst females</item>
+        <item>R-18G</item>
+    </string-array>
+    <string-array name="ranking_manga_items">
+        <item>Daily</item>
+        <item>Rookie</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>R-18 Daily</item>
+        <item>R-18 Weekly</item>
+        <item>R-18G</item>
+    </string-array>
+
     <!-- Home -->
     <string name="home_name">Home</string>
     <string name="home_illust">Illustrations</string>
@@ -91,11 +119,16 @@
         <item>Followers</item>
         <item>My Pixiv</item>
     </string-array>
+    <!-- muted -->
+    <string name="muted_setting">Mute Settings</string>
     <!-- Setting -->
-    <string name="setting_name">Setting</string>
+    <string name="setting_name">Settings</string>
 
     <string name="activity_login">info.hzvtc.hipixiv.login</string>
     <string name="activity_main">info.hzvtc.hipixiv.main</string>
+    <string name="activity_ranking">info.hzvtc.hipixiv.ranking</string>
+
+    <string name="extra_type">Type</string>
 
     <string-array name="restrict_parameters">
         <item>all</item>
@@ -111,6 +144,30 @@
     <string-array name="default_tag_name_items">
         <item>All</item>
         <item>Uncategorized</item>
+    </string-array>
+
+    <string-array name="ranking_illust_parameters">
+        <item>day</item>
+        <item>day_male</item>
+        <item>day_female</item>
+        <item>week_original</item>
+        <item>week_rookie</item>
+        <item>week</item>
+        <item>month</item>
+        <item>day_r18</item>
+        <item>week_r18</item>
+        <item>day_male_r18</item>
+        <item>day_female_r18</item>
+        <item>week_r18g</item>
+    </string-array>
+    <string-array name="ranking_manga_parameters">
+        <item>day_manga</item>
+        <item>week_rookie_manga</item>
+        <item>week_manga</item>
+        <item>month_manga</item>
+        <item>day_r18_manga</item>
+        <item>week_r18_manga</item>
+        <item>week_r18g_manga</item>
     </string-array>
 
     <string name="empty">&#160;</string>
