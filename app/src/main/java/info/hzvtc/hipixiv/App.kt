@@ -43,8 +43,6 @@ class App : Application() {
         Fresco.initialize(this,config)
     }
 
-    fun getApplicationComponent() : ApplicationComponent = mAppComponent
-
     companion object {
         fun getApp(context: Context) : App = context.applicationContext as App
     }

@@ -2,10 +2,14 @@ package info.hzvtc.hipixiv.net
 
 import info.hzvtc.hipixiv.pojo.EmptyResponse
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
+import info.hzvtc.hipixiv.pojo.pixivision.PixivisionResopnse
 import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
+import retrofit2.http.GET
+
+
 
 interface ApiService {
     @GET("/v1/illust/recommended?filter=for_android")
@@ -65,6 +69,10 @@ interface ApiService {
     fun getIllustRanking(@Header("Authorization") authorization: String, @Query("mode") mode: String
                          , @Query("date") date: String): Observable<IllustResponse>
 
+    @GET("/v1/spotlight/articles?filter=for_android")
+    fun getPixivisionArticles(@Header("Authorization") authorization: String,
+                              @Query("category") category: String): Observable<PixivisionResopnse>
+
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>
@@ -72,6 +80,10 @@ interface ApiService {
     @GET
     fun getUserNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<UserResponse>
+
+    @GET
+    fun getPixivisionNext(@Header("Authorization") authorization : String,
+                    @Url url : String) : Observable<PixivisionResopnse>
 
     @FormUrlEncoded
     @POST("/v2/illust/bookmark/add")

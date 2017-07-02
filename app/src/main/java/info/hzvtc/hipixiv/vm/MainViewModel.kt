@@ -52,11 +52,13 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private lateinit var newestFollowBundle : ViewPagerBundle<BaseFragment<*>>
     private lateinit var newestNewBundle : ViewPagerBundle<BaseFragment<*>>
     private lateinit var userPageBundle : ViewPagerBundle<BaseFragment<*>>
+    private lateinit var pixivisionPageBundle : ViewPagerBundle<BaseFragment<*>>
 
     private lateinit var homeIllustFragment : IllustFragment
     private lateinit var homeMangaFragment : IllustFragment
     private lateinit var followVpFragment : ViewPagerFragment
     private lateinit var newVpFragment : ViewPagerFragment
+    private lateinit var pixivisionVpFragment : ViewPagerFragment
     private lateinit var myPixivFragment : IllustFragment
     private lateinit var collectFragment : IllustFragment
     private lateinit var historyFragment : IllustFragment
@@ -140,11 +142,23 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     mView.setFabVisible(false,false)
             }
         }
+        //Pixivision
+        pixivisionPageBundle = object : ViewPagerBundle<BaseFragment<*>>(){
+            init {
+                titles = mView.resources.getStringArray(R.array.newest_new_tab)
+                pagers = arrayOf(
+                        PixivisionLazyFragment(obsToken.flatMap({ token -> apiService.getPixivisionArticles(token,"illust")}),account),
+                        PixivisionLazyFragment(obsToken.flatMap({ token -> apiService.getPixivisionArticles(token,"manga")}),account)
+                )
+            }
+        }
+
 
         homeIllustFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedIllusts(token, true) }),account,false)
         homeMangaFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedMangaList(token, true) }),account,true)
         followVpFragment = ViewPagerFragment(newestFollowBundle)
         newVpFragment = ViewPagerFragment(newestNewBundle)
+        pixivisionVpFragment = ViewPagerFragment(pixivisionPageBundle)
         myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,false)
         collectFragment = IllustFragment(obsToken.flatMap({ token -> apiService
                 .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[0])}),account,false)
@@ -178,6 +192,11 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 //最新
                 MainActivity.Identifier.NEWEST_NEW.value -> {
                     replaceFragment(newVpFragment)
+                    mView.setFabVisible(false,false)
+                }
+                //Pixivision
+                MainActivity.Identifier.PIXIVISION.value ->{
+                    replaceFragment(pixivisionVpFragment)
                     mView.setFabVisible(false,false)
                 }
                 //My Pixiv

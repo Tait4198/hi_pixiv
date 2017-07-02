@@ -79,26 +79,32 @@ class RankingViewModel @Inject constructor() : BaseViewModel<RankingActivity, Ac
     }
 
      fun getIllustData(obs : Observable<IllustResponse>?){
-        if(obs != obsIllustNewData) obsIllustNewData = obs
         Observable.just(obs)
                 .doOnNext({ errorIndex = 0 })
                 .filter({obs -> obs != null})
-                .doOnNext({ mBind.recyclerView.visibility = View.GONE})
-                .doOnNext({ mBind.progressBar.visibility = View.VISIBLE })
+                .doOnNext({ mBind.progressBar.visibility = View.VISIBLE})
+                .doOnNext({
+                    if(obs != obsIllustNewData){
+                        mBind.recyclerView.visibility = View.GONE
+                        obsIllustNewData = obs
+                    }
+                })
                 .observeOn(Schedulers.io())
                 .flatMap({ obs -> obs })
                 .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext({ mBind.recyclerView.visibility = View.VISIBLE })
+                .doOnNext({ mBind.progressBar.visibility = View.GONE })
                 .subscribe({
-                    _ -> adapter.updateUI(true)
+                    _ ->
+                    adapter.updateUI(true)
                 },{
                     error ->
-                    mBind.recyclerView.visibility = View.VISIBLE
                     mBind.progressBar.visibility = View.GONE
+                    mBind.recyclerView.visibility = View.VISIBLE
                     processError(error)
                 },{
-                    mBind.recyclerView.visibility = View.VISIBLE
-                    mBind.progressBar.visibility = View.GONE
+                    //
                 })
     }
 

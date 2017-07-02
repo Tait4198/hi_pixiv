@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
+import android.view.View
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.*
@@ -91,20 +92,20 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     }
 
     override fun getData(obs : Observable<IllustResponse>?){
-        if(obs != obsNewData) obsNewData = obs
         Observable.just(obs)
-               .doOnNext({ errorIndex = 0 })
-               .filter({obs -> obs != null})
-               .doOnNext({ mBind.srLayout.isRefreshing = true })
-               .observeOn(Schedulers.io())
-               .flatMap({ obs -> obs })
-               .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
-               .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext({ errorIndex = 0 })
+                .filter({obs -> obs != null})
+                .doOnNext({ if(obs != obsNewData) obsNewData = obs })
+                .doOnNext({ mBind.srLayout.isRefreshing = true })
+                .observeOn(Schedulers.io())
+                .flatMap({ obs -> obs })
+                .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({
                     illustResponse ->
                     if(illustResponse.ranking.isNotEmpty()) rankingTopClick()
                 })
-               .subscribe({
+                .subscribe({
                    _ -> adapter.updateUI(true)
                 },{
                     error ->

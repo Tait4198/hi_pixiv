@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data />
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/dark_foreground">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/spotlight_cover"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@color/colorImageBg"/>
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:textSize="14sp"
+            android:textColor="@color/md_white_1000"
+            android:padding="4dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:padding="8dp"
+            android:background="@color/colorPageCountBg">
+            <TextView
+                android:id="@+id/spotlight_title"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

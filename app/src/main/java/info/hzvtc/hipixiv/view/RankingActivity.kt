@@ -45,6 +45,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         component.inject(this)
         val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DATE,-1)
         year = calendar.get(Calendar.YEAR)
         month = calendar.get(Calendar.MONTH)
         day = calendar.get(Calendar.DAY_OF_MONTH)
