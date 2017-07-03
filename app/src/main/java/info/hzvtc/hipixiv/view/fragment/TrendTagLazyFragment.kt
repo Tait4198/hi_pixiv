@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.view.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
@@ -8,6 +9,7 @@ import info.hzvtc.hipixiv.vm.fragment.TrendTagViewModel
 import io.reactivex.Observable
 import javax.inject.Inject
 
+@SuppressLint("ValidFragment")
 class TrendTagLazyFragment(val obsNewData : Observable<TrendTagsResponse>) :
         LazyBindingFragment<FragmentListBinding>() {
 

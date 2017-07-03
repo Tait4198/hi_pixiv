@@ -74,7 +74,10 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
                 jump++
             }
         }
-        if(typeList.size == 0) typeList.add(ItemType.ITEM_NO_DATA)
+        if(typeList.size == 0){
+            moreDataSize++
+            typeList.add(ItemType.ITEM_NO_DATA)
+        }
         this.data = newData
     }
 

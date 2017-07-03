@@ -12,6 +12,7 @@ import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import com.google.gson.Gson
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.adapter.IllustAdapter
 
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
@@ -39,7 +40,6 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
     private lateinit var obsToken : Observable<String>
     private lateinit var vpFragment : ViewPagerFragment
     private lateinit var mainBundle : ViewPagerBundle<BaseFragment<*>>
-    private lateinit var searchBundle : ViewPagerBundle<BaseFragment<*>>
 
     private lateinit var sortArray : Array<String>
     private lateinit var targetArray : Array<String>
@@ -84,6 +84,7 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
 
             override fun onSuggestionClicked(searchSuggestion: SearchSuggestion?) {
                 mBind.searchView.setSearchText(searchSuggestion?.body)
+                mBind.searchView.clearSuggestions()
                 onSearchAction(searchSuggestion?.body)
             }
         })
@@ -105,27 +106,6 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
             }
         }
 
-        searchBundle = object : ViewPagerBundle<BaseFragment<*>>() {
-            init {
-                titles = mView.resources.getStringArray(R.array.search_tab)
-                pagers = arrayOf(
-                        IllustSearchFragment(account),UserSearchFragment(account)
-                )
-            }
-
-            override fun fabClick() {
-                super.fabClick()
-                if(nowPosition == 0) showSearchFilter()
-            }
-
-            override fun fabShow(position: Int) {
-                super.fabShow(position)
-                if(position == 0)
-                    mView.setFabVisible(true,true)
-                else
-                    mView.setFabVisible(false,false)
-            }
-        }
         vpFragment = ViewPagerFragment(mainBundle)
 
         replaceFragment(vpFragment)
@@ -184,12 +164,33 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
         if(query != ""){
             pushNewWord(query)
             mView.setFabVisible(true,true)
-            vpFragment.updateBundle(searchBundle)
-            (searchBundle.pagers[0] as IllustSearchFragment)
-                    .setTempObs(obsToken.flatMap{token -> apiService.getSearchIllust(token,query,sort,target,duration)})
-            (searchBundle.pagers[1] as UserSearchFragment)
-                    .setTempObs(obsToken.flatMap { token -> apiService.getSearchUser(token,query) })
+            vpFragment.updateBundle(getSearchBundle())
             mBind.fab.setOnClickListener { showSearchFilter() }
+        }
+    }
+
+    private fun getSearchBundle(): ViewPagerBundle<BaseFragment<*>> {
+        return object : ViewPagerBundle<BaseFragment<*>>() {
+            init {
+                titles = mView.resources.getStringArray(R.array.search_tab)
+                pagers = arrayOf(
+                        IllustLazyFragment(obsToken.flatMap{token -> apiService.getSearchIllust(token,query,sort,target,duration)}
+                                ,account,IllustAdapter.Type.ILLUST),
+                        UserLazyFragment(obsToken.flatMap { token -> apiService.getSearchUser(token,query)},account))
+            }
+
+            override fun fabClick() {
+                super.fabClick()
+                if(nowPosition == 0) showSearchFilter()
+            }
+
+            override fun fabShow(position: Int) {
+                super.fabShow(position)
+                if(position == 0)
+                    mView.setFabVisible(true,true)
+                else
+                    mView.setFabVisible(false,false)
+            }
         }
     }
 

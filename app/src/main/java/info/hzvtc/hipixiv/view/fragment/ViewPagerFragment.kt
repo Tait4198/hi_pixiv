@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.view.fragment
 
+import android.annotation.SuppressLint
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.view.View
@@ -8,6 +9,7 @@ import info.hzvtc.hipixiv.adapter.ViewPagerAdapter
 import info.hzvtc.hipixiv.data.ViewPagerBundle
 import info.hzvtc.hipixiv.databinding.FragmentViewPagerBinding
 
+@SuppressLint("ValidFragment")
 class ViewPagerFragment(val bundle : ViewPagerBundle<BaseFragment<*>>) : BindingFragment<FragmentViewPagerBinding>(){
 
     private lateinit var pagerAdapter : ViewPagerAdapter<BaseFragment<*>>

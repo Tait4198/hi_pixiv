@@ -19,6 +19,7 @@ import info.hzvtc.hipixiv.databinding.ItemProgressBinding
 import info.hzvtc.hipixiv.databinding.ItemUserBinding
 import info.hzvtc.hipixiv.databinding.ItemUserMutedBinding
 import info.hzvtc.hipixiv.pojo.user.UserResponse
+import info.hzvtc.hipixiv.util.AppMessage
 
 class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
@@ -59,7 +60,10 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
                 jump++
             }
         }
-        if(typeList.size == 0) typeList.add(ItemType.ITEM_NO_DATA)
+        if(typeList.size == 0){
+            moreDataSize++
+            typeList.add(ItemType.ITEM_NO_DATA)
+        }
         this.data = newData
     }
 
