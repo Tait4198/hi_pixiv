@@ -9,10 +9,7 @@ import info.hzvtc.hipixiv.inject.module.ApplicationModule
 import info.hzvtc.hipixiv.net.ApiService
 import info.hzvtc.hipixiv.net.OAuthService
 import info.hzvtc.hipixiv.net.RetrofitManager
-import info.hzvtc.hipixiv.view.LauncherActivity
-import info.hzvtc.hipixiv.view.LoginActivity
-import info.hzvtc.hipixiv.view.MainActivity
-import info.hzvtc.hipixiv.view.RankingActivity
+import info.hzvtc.hipixiv.view.*
 import javax.inject.Singleton
 
 @Singleton
@@ -23,6 +20,7 @@ interface ActivityComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(loginActivity: LoginActivity)
     fun inject(rankingActivity: RankingActivity)
+    fun inject(searchActivity: SearchActivity)
 
     @ActivityContext
     fun context() : Context

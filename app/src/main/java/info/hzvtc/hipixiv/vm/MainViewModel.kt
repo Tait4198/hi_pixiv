@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import com.afollestad.materialdialogs.MaterialDialog
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.BookmarkTagAdapter
+import info.hzvtc.hipixiv.adapter.IllustAdapter
 import info.hzvtc.hipixiv.adapter.SimplePagerAdapter
 import info.hzvtc.hipixiv.adapter.TagItemClick
 import info.hzvtc.hipixiv.data.Account
@@ -73,7 +74,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
             init {
                 titles = mView.resources.getStringArray(R.array.newest_follow_tab)
                 pagers = arrayOf(
-                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getFollowIllusts(token,restricts[0])}),account,false),
+                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getFollowIllusts(token,restricts[0])}),account,IllustAdapter.Type.ILLUST),
                         UserLazyFragment(obsToken.flatMap({ token -> apiService.getUserRecommended(token)}),account))
             }
             override fun fabClick() {
@@ -102,8 +103,8 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
             init {
                 titles = mView.resources.getStringArray(R.array.newest_new_tab)
                 pagers = arrayOf(
-                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"illust")}),account,false),
-                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"manga")}),account,true))
+                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"illust")}),account,IllustAdapter.Type.ILLUST),
+                        IllustLazyFragment(obsToken.flatMap({ token -> apiService.getNewIllust(token,"manga")}),account,IllustAdapter.Type.MANGA))
             }
         }
         //user
@@ -154,15 +155,15 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
         }
 
 
-        homeIllustFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedIllusts(token, true) }),account,false)
-        homeMangaFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedMangaList(token, true) }),account,true)
+        homeIllustFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedIllusts(token, true) }),account,IllustAdapter.Type.ILLUST)
+        homeMangaFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getRecommendedMangaList(token, true) }),account,IllustAdapter.Type.MANGA)
         followVpFragment = ViewPagerFragment(newestFollowBundle)
         newVpFragment = ViewPagerFragment(newestNewBundle)
         pixivisionVpFragment = ViewPagerFragment(pixivisionPageBundle)
-        myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,false)
+        myPixivFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getMyPixivIllusts(token)}),account,IllustAdapter.Type.ILLUST)
         collectFragment = IllustFragment(obsToken.flatMap({ token -> apiService
-                .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[0])}),account,false)
-        historyFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getIllustBrowsingHistory(token)}),account,false)
+                .getLikeIllust(token,userPreferences.id?:0,doubleRestricts[0])}),account,IllustAdapter.Type.ILLUST)
+        historyFragment = IllustFragment(obsToken.flatMap({ token -> apiService.getIllustBrowsingHistory(token)}),account,IllustAdapter.Type.ILLUST)
         userVpFragment = ViewPagerFragment(userPageBundle)
     }
 

@@ -14,7 +14,6 @@ import info.hzvtc.hipixiv.pojo.pixivision.PixivisionResopnse
 import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.fragment.BaseFragment
-import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -58,24 +57,25 @@ class PixivisionViewModel @Inject constructor(val apiService: ApiService): BaseF
     }
 
     override fun getData(obs: Observable<PixivisionResopnse>?) {
-        Observable.just(obs)
-                .doOnNext({ errorIndex = 0 })
-                .filter({obs -> obs != null})
-                .doOnNext({ if(obs != obsNewData) obsNewData = obs })
-                .doOnNext({ mBind.srLayout.isRefreshing = true })
-                .observeOn(Schedulers.io())
-                .flatMap({ obs -> obs })
-                .doOnNext({ response -> adapter.setNewData(response) })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    _ -> adapter.updateUI(true)
-                },{
-                    error ->
-                    mBind.srLayout.isRefreshing = false
-                    processError(error)
-                },{
-                    mBind.srLayout.isRefreshing = false
-                })
+        if(obs != null){
+            Observable.just(obs)
+                    .doOnNext({ errorIndex = 0 })
+                    .doOnNext({ if(obs != obsNewData) obsNewData = obs })
+                    .doOnNext({ mBind.srLayout.isRefreshing = true })
+                    .observeOn(Schedulers.io())
+                    .flatMap({ obs -> obs })
+                    .doOnNext({ response -> adapter.setNewData(response) })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        _ -> adapter.updateUI(true)
+                    },{
+                        error ->
+                        mBind.srLayout.isRefreshing = false
+                        processError(error)
+                    },{
+                        mBind.srLayout.isRefreshing = false
+                    })
+        }
     }
 
     override fun getMoreData() {

@@ -22,6 +22,7 @@
     <string name="app_dialog_ok">OK</string>
     <string name="more">More</string>
     <string name="help">Help</string>
+    <string name="no_data">No Data</string>
     <string name="mute">Muted</string>
     <string name="no_more_data">No More Data!</string>
     <string name="is_last_data">This is the last set of data!</string>
@@ -46,8 +47,8 @@
         <item>Private</item>
     </string-array>
 
+    <!-- Ranking Filter -->
     <string name="select_ranking">Choose Ranking</string>
-
     <string name="ranking_illust_title">Illust Ranking</string>
     <string name="ranking_manga_title">Manga Ranking</string>
     <string-array name="ranking_illust_items">
@@ -72,6 +73,35 @@
         <item>R-18 Daily</item>
         <item>R-18 Weekly</item>
         <item>R-18G</item>
+    </string-array>
+
+    <!-- Search Filter -->
+    <string name="search_filter_title">Filter Search</string>
+    <string name="search_filter">Search</string>
+    <string name="sort_name">Sort</string>
+    <string-array name="sort_items">
+        <item>Newest</item>
+        <item>Oldest</item>
+    </string-array>
+    <string-array name="sort_premium_items">
+        <item>Newest</item>
+        <item>Oldest</item>
+        <item>Popularity</item>
+    </string-array>
+
+    <string name="search_target_name">Target</string>
+    <string-array name="search_target_items">
+        <item>Tag Partial</item>
+        <item>Tag Total</item>
+        <item>Title Caption</item>
+    </string-array>
+
+    <string name="duration_name">Duration</string>
+    <string-array name="duration_items">
+        <item>Noting</item>
+        <item>Last Day</item>
+        <item>Last Week</item>
+        <item>Last Month</item>
     </string-array>
 
     <!-- Home -->
@@ -124,9 +154,18 @@
     <!-- Setting -->
     <string name="setting_name">Settings</string>
 
+    <!-- Search -->
+    <string name="search_name">Search</string>
+    <string-array name="search_tab">
+        <item>Illust/Manga</item>
+        <!--<item>Novels</item>-->
+        <item>User</item>
+    </string-array>
+
     <string name="activity_login">info.hzvtc.hipixiv.login</string>
     <string name="activity_main">info.hzvtc.hipixiv.main</string>
     <string name="activity_ranking">info.hzvtc.hipixiv.ranking</string>
+    <string name="activity_search">info.hzvtc.hipixiv.search</string>
 
     <string name="extra_type">Type</string>
 
@@ -146,6 +185,7 @@
         <item>Uncategorized</item>
     </string-array>
 
+    <!-- Ranking Parameter-->
     <string-array name="ranking_illust_parameters">
         <item>day</item>
         <item>day_male</item>
@@ -170,6 +210,26 @@
         <item>week_r18g_manga</item>
     </string-array>
 
+    <!-- Search Parameter-->
+    <string-array name="search_sort_parameters">
+        <item>date_desc</item>
+        <item>date_asc</item>
+        <item>popular_desc</item>
+    </string-array>
+
+    <string-array name="search_target_parameters">
+        <item>partial_match_for_tags</item>
+        <item>exact_match_for_tags</item>
+        <item>title_and_caption</item>
+    </string-array>
+
+    <string-array name="search_duration_parameters">
+        <item>null</item>
+        <item>within_last_day</item>
+        <item>within_last_week</item>
+        <item>within_last_month</item>
+    </string-array>
+
     <string name="empty">&#160;</string>
 
     <string name="icon_heart">{faw_heart}&#160;</string>
@@ -177,4 +237,5 @@
     <string name="icon_chevron_right">&#160;{faw_chevron_right}</string>
     <string name="icon_page">{faw_clone}&#160;</string>
     <string name="icon_muted">{faw_eye_slash}</string>
+    <string name="icon_dissatisfied">{gmd_sentiment_very_dissatisfied}</string>
 </resources>

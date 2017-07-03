@@ -19,9 +19,7 @@ import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
 //todo 屏蔽设定
-//isMange = true 漫画/ false 插画
-//isRank = true 排行显示
-class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Boolean) : BaseRecyclerViewAdapter(context = context) {
+class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerViewAdapter(context = context) {
 
     var nextUrl : String? = ""
 
@@ -53,7 +51,7 @@ class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Bool
         if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl else nextUrl = ""
         //New Data
         //Init typeList
-        if(newData.ranking.isNotEmpty() && !isRank){
+        if(newData.ranking.isNotEmpty() && contentType != Type.RANK){
             typeList.add(ItemType.ITEM_RANKING_TOP)
             frontPosition++
             typeList.add(ItemType.ITEM_RANKING)
@@ -66,16 +64,17 @@ class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Bool
         for(index in 0..max){
             if(!newData.content[index-jump].isMuted){
                 moreDataSize++
-                if(isRank){
+                if(contentType == Type.RANK){
                     if(index <= 2) typeList.add(ItemType.ITEM_LIST_RANKING_ILLUST) else typeList.add(ItemType.ITEM_ILLUST)
                 }else{
-                    if(isMange) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
+                    if(contentType == Type.MANGA) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
                 }
             }else{
                 newData.content.removeAt(index-jump)
                 jump++
             }
         }
+        if(typeList.size == 0) typeList.add(ItemType.ITEM_NO_DATA)
         this.data = newData
     }
 
@@ -88,10 +87,10 @@ class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Bool
         for(index in 0..max){
             if(!moreData.content[index-jump].isMuted){
                 moreDataSize++
-                if(isRank){
+                if(contentType == Type.RANK){
                     typeList.add(ItemType.ITEM_ILLUST)
                 }else{
-                    if(isMange) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
+                    if(contentType == Type.MANGA) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
                 }
             }else{
                 moreData.content.removeAt(index-jump)
@@ -146,7 +145,7 @@ class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Bool
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val type = (holder as BindingHolder<ViewDataBinding>).type
         //Manga Full
-        if(isMange && type != ItemType.ITEM_MANGA && type != ItemType.ITEM_MANGA_MUTED){
+        if(contentType == Type.MANGA && type != ItemType.ITEM_MANGA && type != ItemType.ITEM_MANGA_MUTED){
             val layoutParams = StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.isFullSpan = true
@@ -204,6 +203,10 @@ class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Bool
                 holder = BindingHolder<ItemListRankingIllustBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_list_ranking_illust,parent,false),ItemType.ITEM_LIST_RANKING_ILLUST)
             }
+            ItemType.ITEM_NO_DATA.value ->{
+                holder = BindingHolder<ItemNoDataBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_no_data, parent, false), ItemType.ITEM_NO_DATA)
+            }
         }
         return holder
     }
@@ -212,7 +215,7 @@ class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Bool
 
     private fun  showItemRankingTop(bind: ViewDataBinding) {
         val mBind : ItemRankingTopBinding = bind as ItemRankingTopBinding
-        val type = if(isMange) RankingType.MANGA else RankingType.ILLUST
+        val type = if(contentType == Type.MANGA) RankingType.MANGA else RankingType.ILLUST
         mBind.root.setOnClickListener({
             rankingTopClick?.itemClick(type)
         })
@@ -305,5 +308,11 @@ class IllustAdapter(val context: Context,val isMange : Boolean,val isRank : Bool
             }
         })
         bind.setVariable(BR.mangaIllust,illust)
+    }
+
+    enum class Type(val value : Int){
+        ILLUST(0),
+        MANGA(1),
+        RANK(2)
     }
 }

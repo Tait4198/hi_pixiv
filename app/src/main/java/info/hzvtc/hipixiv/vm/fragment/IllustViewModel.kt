@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
-import android.view.View
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.*
@@ -19,7 +18,6 @@ import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.fragment.BaseFragment
-import info.hzvtc.hipixiv.vm.BaseFragmentViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -29,8 +27,7 @@ import javax.inject.Inject
 class IllustViewModel @Inject constructor(val apiService: ApiService) :
         BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<IllustResponse>{
 
-    var isManga : Boolean = false
-    var isRank : Boolean = false
+    var contentType : IllustAdapter.Type = IllustAdapter.Type.ILLUST
     var obsNewData : Observable<IllustResponse>? = null
     lateinit var account: Account
 
@@ -39,7 +36,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     private lateinit var adapter : IllustAdapter
 
     override fun initViewModel() {
-        if(isManga){
+        if(contentType == IllustAdapter.Type.MANGA){
             val layoutManger = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
             mBind.recyclerView.layoutManager = layoutManger
         }else{
@@ -51,7 +48,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
             mBind.recyclerView.layoutManager = layoutManger
         }
 
-        adapter = IllustAdapter(mView.context,isManga,isRank)
+        adapter = IllustAdapter(mView.context,contentType)
         adapter.setItemClick(
                 itemClick = object : ItemClick {
                     override fun itemClick(illust: Illust) {
@@ -92,28 +89,30 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     }
 
     override fun getData(obs : Observable<IllustResponse>?){
-        Observable.just(obs)
-                .doOnNext({ errorIndex = 0 })
-                .filter({obs -> obs != null})
-                .doOnNext({ if(obs != obsNewData) obsNewData = obs })
-                .doOnNext({ mBind.srLayout.isRefreshing = true })
-                .observeOn(Schedulers.io())
-                .flatMap({ obs -> obs })
-                .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext({
-                    illustResponse ->
-                    if(illustResponse.ranking.isNotEmpty()) rankingTopClick()
-                })
-                .subscribe({
-                   _ -> adapter.updateUI(true)
-                },{
-                    error ->
-                    mBind.srLayout.isRefreshing = false
-                    processError(error)
-                },{
-                    mBind.srLayout.isRefreshing = false
-                })
+        if(obs != null){
+            Observable.just(obs)
+                    .doOnNext({ errorIndex = 0 })
+                    .doOnNext({ if(obs != obsNewData) obsNewData = obs })
+                    .doOnNext({ mBind.srLayout.isRefreshing = true })
+                    .observeOn(Schedulers.io())
+                    .flatMap({ obs -> obs })
+                    .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext({
+                        illustResponse ->
+                        if(illustResponse.ranking.isNotEmpty()) rankingTopClick()
+                    })
+                    .subscribe({
+                        _ -> adapter.updateUI(true)
+                    },{
+                        error ->
+                        mBind.srLayout.isRefreshing = false
+                        processError(error)
+                    },{
+                        mBind.srLayout.isRefreshing = false
+                    })
+        }
+
     }
 
     override fun getMoreData(){

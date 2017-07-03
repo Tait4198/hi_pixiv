@@ -7,8 +7,11 @@ import javax.inject.Inject
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
@@ -22,7 +25,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import info.hzvtc.hipixiv.data.UserPreferences
 
 
-class MainActivity : BindingActivity<ActivityMainBinding>() {
+class MainActivity : BindingActivity<ActivityMainBinding>(),RootActivity {
 
     @Inject
     lateinit var viewModel : MainViewModel
@@ -128,13 +131,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         if(status) mBinding.fab.show() else mBinding.fab.hide()
     }
 
-    fun showFab(status : Boolean){
+    override fun showFab(status : Boolean){
         if(isShowFab){
             if(status) mBinding.fab.show() else mBinding.fab.hide()
         }
     }
 
-    fun getRootView(): CoordinatorLayout? {
+    override fun getRootView(): CoordinatorLayout {
         return mBinding.rootView
     }
 
@@ -160,6 +163,20 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.search, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.itemId == R.id.action_search){
+            val intent = Intent(getString(R.string.activity_search))
+            ActivityCompat.startActivity(this, intent, null)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     enum class Identifier(val value : Int){

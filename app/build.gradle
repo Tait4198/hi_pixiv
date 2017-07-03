@@ -62,5 +62,5 @@ dependencies {
     implementation 'com.mikepenz:google-material-typeface:3.0.1.0.original@aar'
     implementation 'com.github.jd-alexander:LikeButton:0.2.1'
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
-
+    implementation 'com.github.arimorty:floatingsearchview:2.1.1'
 }

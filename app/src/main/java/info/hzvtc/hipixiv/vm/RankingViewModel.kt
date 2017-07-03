@@ -43,7 +43,7 @@ class RankingViewModel @Inject constructor() : BaseViewModel<RankingActivity, Ac
             override fun getSpanSize(pos: Int): Int = if(adapter.getFull(pos)) 1 else layoutManger.spanCount
         }
         mBind.recyclerView.layoutManager = layoutManger
-        adapter = IllustAdapter(mView,false,true)
+        adapter = IllustAdapter(mView,IllustAdapter.Type.RANK)
         adapter.setItemClick(
                 itemClick = object : ItemClick {
                     override fun itemClick(illust: Illust) {

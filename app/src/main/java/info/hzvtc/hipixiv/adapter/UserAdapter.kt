@@ -14,6 +14,7 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.databinding.ItemNoDataBinding
 import info.hzvtc.hipixiv.databinding.ItemProgressBinding
 import info.hzvtc.hipixiv.databinding.ItemUserBinding
 import info.hzvtc.hipixiv.databinding.ItemUserMutedBinding
@@ -58,6 +59,7 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
                 jump++
             }
         }
+        if(typeList.size == 0) typeList.add(ItemType.ITEM_NO_DATA)
         this.data = newData
     }
 
@@ -120,6 +122,10 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
                 holder = BindingHolder<ItemUserMutedBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_user_muted, parent, false), ItemType.ITEM_USER_MUTED)
             }
+            ItemType.ITEM_NO_DATA.value ->{
+                holder = BindingHolder<ItemNoDataBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_no_data, parent, false), ItemType.ITEM_NO_DATA)
+            }
         }
         return holder
     }
@@ -141,20 +147,27 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
             mBind.rootView.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     230f , context.resources.displayMetrics).toInt()
             val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180f , context.resources.displayMetrics).toInt()
-            mBind.preview1.layoutParams.height = height
-            mBind.preview2.layoutParams.height = height
-            mBind.preview3.layoutParams.height = height
+            mBind.previewRoot1.layoutParams.height = height
+            mBind.previewRoot1.layoutParams.height = height
+            mBind.previewRoot1.layoutParams.height = height
         }
         val roundingParams = RoundingParams()
         roundingParams.setBorder(ContextCompat.getColor(context,R.color.colorTextSecond), 2f)
         roundingParams.roundAsCircle = true
         mBind.userProfile.hierarchy.roundingParams = roundingParams
         mBind.userProfile.setImageURI(preview.user.profile.medium)
+        val roots = arrayOf(mBind.previewRoot1,mBind.previewRoot2,mBind.previewRoot3)
         val images = arrayOf(mBind.preview1,mBind.preview2,mBind.preview3)
+        val labels = arrayOf(mBind.pageCount1,mBind.pageCount2,mBind.pageCount3)
         val max = if(preview.illustList.size <= 3) preview.illustList.size-1 else 2
         for(index in 0..max){
             images[index].setImageURI(preview.illustList[index].imageUrls.square)
-            images[index].visibility = View.VISIBLE
+            roots[index].visibility = View.VISIBLE
+            if(preview.illustList[index].pageCount > 1){
+                labels[index].visibility = View.VISIBLE
+                val count = context.getString(R.string.icon_page) + preview.illustList[index].pageCount
+                labels[index].text = count
+            }
         }
         mBind.likeButton.isLiked = preview.user.isFollowed
         mBind.likeButton.setOnLikeListener(object : OnLikeListener{

@@ -2,6 +2,7 @@ package info.hzvtc.hipixiv.view
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -18,7 +19,7 @@ import info.hzvtc.hipixiv.vm.RankingViewModel
 import java.util.*
 import javax.inject.Inject
 
-class RankingActivity : BindingActivity<ActivityRankingBinding>() {
+class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
 
     @Inject
     lateinit var viewModel : RankingViewModel
@@ -65,7 +66,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>() {
                 mBinding.layoutToolbar.toolbar.title = getString(R.string.ranking_manga_title)
                 modeItemArray = resources.getStringArray(R.array.ranking_manga_items)
                 restrictArray = arrayOf(4,6,7)
-                modeParamArray = resources.getStringArray(R.array.ranking_illust_parameters)
+                modeParamArray = resources.getStringArray(R.array.ranking_manga_parameters)
                 modeParam = modeParamArray[modePosition]
                 viewModel.obsIllustNewData = account.obsToken(this).flatMap({token -> apiService.getIllustRanking(token,modeParam)})
             }
@@ -114,7 +115,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>() {
         dialog.show()
     }
 
-    fun showFab(status : Boolean){
+    override fun showFab(status : Boolean){
         if(status) mBinding.fab.show() else mBinding.fab.hide()
     }
 
@@ -138,4 +139,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>() {
             to[i] = from[i]
     }
 
+    override fun getRootView(): CoordinatorLayout {
+        return mBinding.rootView
+    }
 }

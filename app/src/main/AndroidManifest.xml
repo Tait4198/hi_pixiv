@@ -44,6 +44,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.SearchActivity">
+            <intent-filter>
+                <action android:name="info.hzvtc.hipixiv.search"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

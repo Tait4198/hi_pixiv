@@ -25,6 +25,7 @@ class UserPreferences(val context: Context) {
     var isMailAuthorized by PreferenceDelegates.boolean()
 
     var pageIdentifier by PreferenceDelegates.long()
+    var historyJson by PreferenceDelegates.string()
 }
 
 

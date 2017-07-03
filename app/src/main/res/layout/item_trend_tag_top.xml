@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data />
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/dark_foreground"
+        android:padding="1dp">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/trend_cover"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@color/colorImageBg"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:padding="8dp"
+            android:background="@color/colorPageCountBg">
+            <TextView
+                android:id="@+id/trend_tag_title"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

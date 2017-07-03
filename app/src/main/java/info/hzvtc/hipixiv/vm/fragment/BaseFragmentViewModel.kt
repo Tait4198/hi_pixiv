@@ -1,7 +1,7 @@
-package info.hzvtc.hipixiv.vm
+package info.hzvtc.hipixiv.vm.fragment
 
 import android.databinding.ViewDataBinding
-import info.hzvtc.hipixiv.view.MainActivity
+import info.hzvtc.hipixiv.view.RootActivity
 import info.hzvtc.hipixiv.view.fragment.BaseFragment
 
 abstract class BaseFragmentViewModel<V : BaseFragment<T>,T : ViewDataBinding>{
@@ -14,9 +14,9 @@ abstract class BaseFragmentViewModel<V : BaseFragment<T>,T : ViewDataBinding>{
         initViewModel()
     }
 
-    fun getParent() : MainActivity?{
-        if(mView.activity is MainActivity){
-            return mView.activity as MainActivity
+    fun getParent() : RootActivity?{
+        if(mView.activity is RootActivity) {
+            return mView.activity as RootActivity
         }
         return null
     }

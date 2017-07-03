@@ -1,9 +1,11 @@
 package info.hzvtc.hipixiv.net
 
+import info.hzvtc.hipixiv.pojo.AutoCompleteResponse
 import info.hzvtc.hipixiv.pojo.EmptyResponse
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.pojo.pixivision.PixivisionResopnse
 import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
+import info.hzvtc.hipixiv.pojo.trend.TrendTagsResponse
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -72,6 +74,22 @@ interface ApiService {
     @GET("/v1/spotlight/articles?filter=for_android")
     fun getPixivisionArticles(@Header("Authorization") authorization: String,
                               @Query("category") category: String): Observable<PixivisionResopnse>
+
+    @GET("/v1/search/autocomplete")
+    fun getSearchAutoCompleteKeywords(@Header("Authorization") authorization: String,
+                                      @Query("word") word: String): Observable<AutoCompleteResponse>
+
+    @GET("/v1/trending-tags/illust?filter=for_android")
+    fun getIllustTrendTags(@Header("Authorization") authorization: String): Observable<TrendTagsResponse>
+
+    //@Query("bookmark_num") bookmarkNum: Int?
+    @GET("/v1/search/illust?filter=for_android")
+    fun getSearchIllust(@Header("Authorization") authorization: String,@Query("word") word: String,
+                        @Query("sort") sort: String, @Query("search_target") searchTarget: String,
+                        @Query("duration") duration: String?): Observable<IllustResponse>
+
+    @GET("/v1/search/user?filter=for_android")
+    fun getSearchUser(@Header("Authorization") authorization : String, @Query("word") word : String): Observable<UserResponse>
 
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,
