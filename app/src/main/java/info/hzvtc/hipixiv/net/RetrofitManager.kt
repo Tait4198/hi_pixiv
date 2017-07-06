@@ -39,7 +39,7 @@ class RetrofitManager(context : Context){
                 .addInterceptor(cacheInterceptor)
                 .addNetworkInterceptor(cacheInterceptor)
                 .addInterceptor(loggingInterceptor)
-                .cache(Cache(File(context.cacheDir.toString(), "cache"), 64 * 1024 * 1024))
+                .cache(Cache(File(context.cacheDir.toString(), "cache"), 128 * 1024 * 1024))
                 .retryOnConnectionFailure(true)
                 .connectTimeout(8,TimeUnit.SECONDS)
                 .build()

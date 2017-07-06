@@ -1,6 +1,7 @@
 package info.hzvtc.hipixiv.view.fragment
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import info.hzvtc.hipixiv.R
@@ -13,7 +14,8 @@ import info.hzvtc.hipixiv.vm.fragment.ViewModelData
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class IllustFragment(val obsNewData : Observable<IllustResponse>,val account: Account,val contentType : IllustAdapter.Type)
+@SuppressLint("ValidFragment")
+class IllustFragment(val obsNewData : Observable<IllustResponse>, val account: Account, val contentType : IllustAdapter.Type)
     : BindingFragment<FragmentListBinding>() {
 
     @Inject

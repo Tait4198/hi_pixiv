@@ -9,12 +9,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.generic.RoundingParams
 import com.like.LikeButton
 import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.adapter.events.CheckDoubleClickListener
+import info.hzvtc.hipixiv.adapter.events.ItemClick
+import info.hzvtc.hipixiv.adapter.events.ItemLike
+import info.hzvtc.hipixiv.adapter.events.RankingTopClick
 import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
@@ -145,6 +150,14 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
         }
     }
 
+    fun loadError(){
+        if(typeList.size == 0){
+            moreDataSize++
+            typeList.add(ItemType.ITEM_LOAD_ERROR)
+            updateUI(true)
+        }
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val type = (holder as BindingHolder<ViewDataBinding>).type
         //Manga Full
@@ -210,6 +223,10 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
                 holder = BindingHolder<ItemNoDataBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_no_data, parent, false), ItemType.ITEM_NO_DATA)
             }
+            ItemType.ITEM_LOAD_ERROR.value ->{
+                holder = BindingHolder<ItemLoadErrorBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_load_error, parent, false), ItemType.ITEM_LOAD_ERROR)
+            }
         }
         return holder
     }
@@ -219,12 +236,13 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
     private fun  showItemRankingTop(bind: ViewDataBinding) {
         val mBind : ItemRankingTopBinding = bind as ItemRankingTopBinding
         val type = if(contentType == Type.MANGA) RankingType.MANGA else RankingType.ILLUST
-        mBind.root.setOnClickListener({
-            rankingTopClick?.itemClick(type)
-        })
-        mBind.seeMore.setOnClickListener({
-            rankingTopClick?.itemClick(type)
-        })
+        val rankClick = object : CheckDoubleClickListener(){
+            override fun click(v: View?) {
+                rankingTopClick?.itemClick(type)
+            }
+        }
+        mBind.root.setOnClickListener(rankClick)
+        mBind.seeMore.setOnClickListener(rankClick)
     }
 
     private fun showItemRanking(bind : ViewDataBinding){
@@ -241,7 +259,11 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
         val mBind : ItemListRankingIllustBinding = bind as ItemListRankingIllustBinding
         val illust = data.content[getRealPosition(position)]
 
-        mBind.rootView.setOnClickListener({ itemClick?.itemClick(illust) })
+        mBind.cover.setOnClickListener(object : CheckDoubleClickListener() {
+            override fun click(v: View?) {
+                itemClick?.itemClick(illust)
+            }
+        })
 
         mBind.cover.setImageURI(illust.imageUrls.large)
         val roundingParams = RoundingParams()
@@ -272,7 +294,11 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
     private fun showItemIllust(bind : ViewDataBinding,position: Int){
         val mBind : ItemIllustBinding = bind as ItemIllustBinding
         val illust = data.content[getRealPosition(position)]
-        mBind.rootView.setOnClickListener({ itemClick?.itemClick(illust) })
+        mBind.rootView.setOnClickListener(object : CheckDoubleClickListener() {
+            override fun click(v: View?) {
+                itemClick?.itemClick(illust)
+            }
+        })
         mBind.cover.setImageURI(illust.imageUrls.medium)
         if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
             mBind.cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -295,7 +321,11 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
     private fun showItemManga(bind : ViewDataBinding,position: Int){
         val mBind : ItemMangaBinding = bind as ItemMangaBinding
         val illust = data.content[getRealPosition(position)]
-        mBind.rootView.setOnClickListener({ itemClick?.itemClick(illust) })
+        mBind.rootView.setOnClickListener(object : CheckDoubleClickListener() {
+            override fun click(v: View?) {
+                itemClick?.itemClick(illust)
+            }
+        })
         mBind.cover.setImageURI(illust.imageUrls.medium)
         if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
             mBind.cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,

@@ -2,7 +2,9 @@ package info.hzvtc.hipixiv.net
 
 import info.hzvtc.hipixiv.pojo.AutoCompleteResponse
 import info.hzvtc.hipixiv.pojo.EmptyResponse
+import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
+import info.hzvtc.hipixiv.pojo.illust.SingleIllust
 import info.hzvtc.hipixiv.pojo.pixivision.PixivisionResopnse
 import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 import info.hzvtc.hipixiv.pojo.trend.TrendTagsResponse
@@ -10,6 +12,10 @@ import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.FormUrlEncoded
+
+
 
 
 
@@ -91,6 +97,9 @@ interface ApiService {
     @GET("/v1/search/user?filter=for_android")
     fun getSearchUser(@Header("Authorization") authorization : String, @Query("word") word : String): Observable<UserResponse>
 
+    @GET("/v1/illust/detail?filter=for_android")
+    fun getIllust(@Header("Authorization") authorization: String, @Query("illust_id") illustId: Int): Observable<SingleIllust>
+
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>
@@ -122,4 +131,9 @@ interface ApiService {
     @POST("/v1/user/follow/delete")
     fun postUnfollowUser(@Header("Authorization") authorization: String,
                                   @Field("user_id") userId: Int): Observable<EmptyResponse>
+
+    @FormUrlEncoded
+    @POST("/v2/user/browsing-history/illust/add")
+    fun postAddIllustBrowsingHistory(@Header("Authorization") authorization: String,
+                                     @Field("illust_ids[]") list: List<Int>): Observable<EmptyResponse>
 }

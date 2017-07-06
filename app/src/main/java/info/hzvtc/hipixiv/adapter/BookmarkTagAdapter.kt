@@ -4,9 +4,12 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.adapter.events.CheckDoubleClickListener
+import info.hzvtc.hipixiv.adapter.events.TagItemClick
 import info.hzvtc.hipixiv.databinding.ItemBookmarkTagBinding
 import info.hzvtc.hipixiv.databinding.ItemBookmarkTagSelectedBinding
 import info.hzvtc.hipixiv.pojo.tag.BookmarkTag
@@ -63,8 +66,10 @@ class BookmarkTagAdapter(context: Context) : BaseRecyclerViewAdapter(context = c
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val bind = (holder as BindingHolder<ViewDataBinding>).bind
         if(bind is ItemBookmarkTagBinding){
-            bind.root.setOnClickListener({
-                tagItemClick?.itemClick(position,tags[position].name)
+            bind.root.setOnClickListener(object : CheckDoubleClickListener() {
+                override fun click(v: View?) {
+                    tagItemClick?.itemClick(position,tags[position].name)
+                }
             })
         }
         bind.setVariable(BR.bookmarkTag,tags[position])

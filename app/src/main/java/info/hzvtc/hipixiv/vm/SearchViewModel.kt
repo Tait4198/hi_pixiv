@@ -32,10 +32,8 @@ import javax.inject.Inject
 
 
 //todo 其他Activity Tag
-class SearchViewModel @Inject constructor(val userPref: UserPreferences,val account : Account,val apiService: ApiService)
+class SearchViewModel @Inject constructor(val userPref: UserPreferences,val account : Account,val apiService: ApiService,val gson: Gson)
     : BaseViewModel<SearchActivity, ActivitySearchBinding>(){
-
-    private val gson = Gson()
 
     private lateinit var obsToken : Observable<String>
     private lateinit var vpFragment : ViewPagerFragment
@@ -196,9 +194,9 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
 
     private fun showSearchFilter(){
         val dialog = MaterialDialog.Builder(mView)
-                .title(mView.getString(R.string.search_filter_title))
+                .title(getString(R.string.search_filter_title))
                 .customView(R.layout.dialog_search_filter, true)
-                .positiveText(mView.getString(R.string.search_filter))
+                .positiveText(getString(R.string.search_filter))
                 .negativeText(R.string.app_dialog_cancel)
                 .onPositive({ _, _ -> doQuery(query) })
                 .build()

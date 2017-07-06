@@ -4,9 +4,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.adapter.TrendTagItemClick
+import info.hzvtc.hipixiv.adapter.events.TrendTagItemClick
 import info.hzvtc.hipixiv.adapter.TrendTagsAdapter
-import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.pojo.trend.TrendTagsResponse
 import info.hzvtc.hipixiv.view.SearchActivity
@@ -34,7 +33,7 @@ class TrendTagViewModel @Inject constructor():
         }
         mBind.recyclerView.layoutManager = layoutManger
         adapter = TrendTagsAdapter(mView.context)
-        adapter.setTrendTagItemClick(object : TrendTagItemClick{
+        adapter.setTrendTagItemClick(object : TrendTagItemClick {
             override fun itemClick(tag: String) {
                 if(mView.activity is SearchActivity){
                     (mView.activity as SearchActivity).searchByTrendTag(tag)

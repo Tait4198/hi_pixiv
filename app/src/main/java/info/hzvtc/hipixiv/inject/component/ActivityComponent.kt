@@ -2,7 +2,6 @@ package info.hzvtc.hipixiv.inject.component
 
 import android.content.Context
 import dagger.Component
-import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.inject.annotation.ActivityContext
 import info.hzvtc.hipixiv.inject.module.ActivityModule
 import info.hzvtc.hipixiv.inject.module.ApplicationModule
@@ -21,6 +20,8 @@ interface ActivityComponent {
     fun inject(loginActivity: LoginActivity)
     fun inject(rankingActivity: RankingActivity)
     fun inject(searchActivity: SearchActivity)
+    fun inject(contentActivity: ContentActivity)
+    fun inject(imageActivity: ImageActivity)
 
     @ActivityContext
     fun context() : Context
@@ -30,4 +31,5 @@ interface ActivityComponent {
     fun oAuthService() : OAuthService
 
     fun apiService() : ApiService
+
 }

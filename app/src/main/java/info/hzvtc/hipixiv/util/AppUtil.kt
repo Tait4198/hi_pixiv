@@ -1,9 +1,11 @@
 package info.hzvtc.hipixiv.util
 
+import android.app.Activity
 import android.content.Context
 import java.util.*
 import android.net.ConnectivityManager
-import java.net.URLEncoder
+
+
 
 class AppUtil{
     companion object{

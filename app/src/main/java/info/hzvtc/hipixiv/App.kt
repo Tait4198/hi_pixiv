@@ -34,7 +34,7 @@ class App : Application() {
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .build()
         val cache = DiskCacheConfig.newBuilder(this)
-                .setMaxCacheSize(128 * 1024 * 1024)
+                .setMaxCacheSize(256 * 1024 * 1024)
                 .build()
         val config = OkHttpImagePipelineConfigFactory
                 .newBuilder(this,client)

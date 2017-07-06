@@ -14,12 +14,11 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.databinding.ItemNoDataBinding
-import info.hzvtc.hipixiv.databinding.ItemProgressBinding
-import info.hzvtc.hipixiv.databinding.ItemUserBinding
-import info.hzvtc.hipixiv.databinding.ItemUserMutedBinding
+import info.hzvtc.hipixiv.adapter.events.CheckDoubleClickListener
+import info.hzvtc.hipixiv.adapter.events.ItemClick
+import info.hzvtc.hipixiv.adapter.events.ItemLike
+import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.user.UserResponse
-import info.hzvtc.hipixiv.util.AppMessage
 
 class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = context) {
 
@@ -31,6 +30,7 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
     private var moreDataSize = 0
     private var tempTypeListSize = 0
     private var tempProgressIndex = 0
+    private var itemClick : ItemClick? = null
     private var userFollow : ItemLike? = null
 
     init {
@@ -111,6 +111,18 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
         this.userFollow = userFollow
     }
 
+    fun setPreviewClick(itemClick: ItemClick){
+        this.itemClick = itemClick
+    }
+
+    fun loadError(){
+        if(typeList.size == 0){
+            moreDataSize++
+            typeList.add(ItemType.ITEM_LOAD_ERROR)
+            updateUI(true)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
         var holder : BindingHolder<ViewDataBinding>? = null
         when(viewType) {
@@ -129,6 +141,10 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
             ItemType.ITEM_NO_DATA.value ->{
                 holder = BindingHolder<ItemNoDataBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_no_data, parent, false), ItemType.ITEM_NO_DATA)
+            }
+            ItemType.ITEM_LOAD_ERROR.value ->{
+                holder = BindingHolder<ItemLoadErrorBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_load_error, parent, false), ItemType.ITEM_LOAD_ERROR)
             }
         }
         return holder
@@ -167,6 +183,12 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
         for(index in 0..max){
             images[index].setImageURI(preview.illustList[index].imageUrls.square)
             roots[index].visibility = View.VISIBLE
+            //preview click
+            roots[index].setOnClickListener(object : CheckDoubleClickListener(){
+                override fun click(v: View?) {
+                    itemClick?.itemClick(preview.illustList[index])
+                }
+            })
             if(preview.illustList[index].pageCount > 1){
                 labels[index].visibility = View.VISIBLE
                 val count = context.getString(R.string.icon_page) + preview.illustList[index].pageCount

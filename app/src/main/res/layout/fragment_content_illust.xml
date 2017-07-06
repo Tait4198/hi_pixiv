@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data />
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/image_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay"
+            android:layout_marginBottom="50dp"
+            android:visibility="gone"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="66dp"
+            android:src="@drawable/favorite_off"
+            android:clickable="true"
+            android:focusable="true"
+            app:backgroundTint="@color/colorWhite"
+            app:rippleColor="@color/colorFogDark"
+            app:borderWidth="0dp"
+            android:visibility="gone"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/bottom_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorLight"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="50dp"
+            android:visibility="gone"
+            app:layout_behavior="@string/bottom_sheet_behavior"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:maxHeight="48dp"
+            android:minHeight="36dp"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:id="@+id/msg_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <include layout="@layout/item_no_data"/>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

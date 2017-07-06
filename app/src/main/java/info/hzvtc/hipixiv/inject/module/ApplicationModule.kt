@@ -2,6 +2,7 @@ package info.hzvtc.hipixiv.inject.module
 
 import android.app.Application
 import android.content.Context
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import info.hzvtc.hipixiv.inject.annotation.ApplicationContext
@@ -20,4 +21,7 @@ class ApplicationModule(application: Application) {
 
     @Provides
     fun provideUserPreferences() : UserPreferences = UserPreferences(mApplication)
+
+    @Provides
+    fun provideGson() : Gson = Gson()
 }

@@ -1,6 +1,7 @@
 package info.hzvtc.hipixiv.inject.component
 
 import android.content.Context
+import com.google.gson.Gson
 import dagger.Component
 import info.hzvtc.hipixiv.App
 import info.hzvtc.hipixiv.data.Account
@@ -20,4 +21,6 @@ interface ApplicationComponent {
     fun context() : Context
 
     fun UserPreferences() : UserPreferences
+
+    fun gson() : Gson
 }

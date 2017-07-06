@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:calendarViewShown="false"
-            android:datePickerMode="spinner"
+            android:datePickerMode="calendar"
             android:minDate="01/01/2007"
             android:paddingTop="12dp"/>
     </LinearLayout>

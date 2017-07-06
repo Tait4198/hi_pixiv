@@ -20,7 +20,7 @@ data class Illust(
         @SerializedName("height") @Expose val height : Int,
         @SerializedName("sanity_level") @Expose val sanityLevel : Int,
         @SerializedName("meta_single_page") @Expose val metaSinglePage : MetaSinglePage,
-        @SerializedName("meta_pages") @Expose val metaPages : List<ImageUrls> = ArrayList<ImageUrls>(),
+        @SerializedName("meta_pages") @Expose val metaPages : List<MetaImageUrls> = ArrayList<MetaImageUrls>(),
         @SerializedName("total_view") @Expose val view : Int,
         @SerializedName("total_bookmarks") @Expose val bookmarks : Int,
         @SerializedName("is_bookmarked") @Expose var isBookmarked : Boolean,

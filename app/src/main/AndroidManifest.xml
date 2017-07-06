@@ -52,6 +52,20 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".view.ContentActivity">
+            <intent-filter>
+                <action android:name="info.hzvtc.hipixiv.content"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.ImageActivity">
+            <intent-filter>
+                <action android:name="info.hzvtc.hipixiv.image"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

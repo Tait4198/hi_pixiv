@@ -1,17 +1,22 @@
 package info.hzvtc.hipixiv.vm.fragment
 
+import android.content.Intent
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
+import com.google.gson.Gson
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.adapter.ItemLike
-import info.hzvtc.hipixiv.adapter.OnScrollListener
+import info.hzvtc.hipixiv.adapter.events.ItemLike
+import info.hzvtc.hipixiv.adapter.events.OnScrollListener
 import info.hzvtc.hipixiv.adapter.UserAdapter
+import info.hzvtc.hipixiv.adapter.events.ItemClick
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.net.ApiService
+import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
@@ -22,7 +27,7 @@ import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class UserViewModel @Inject constructor(val apiService : ApiService) :
+class UserViewModel @Inject constructor(val apiService : ApiService,val gson: Gson) :
         BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<UserResponse> {
 
     var obsNewData : Observable<UserResponse>? = null
@@ -37,8 +42,17 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
     }
 
     override fun initViewModel() {
-        adapter = UserAdapter(mView.context)
-        adapter.setUserFollow(userFollow = object : ItemLike{
+        adapter = UserAdapter(getContext())
+        adapter.setPreviewClick(object : ItemClick{
+            override fun itemClick(illust: Illust) {
+                val intent = Intent(getString(R.string.activity_content))
+                intent.putExtra(getString(R.string.extra_json),gson.toJson(illust))
+                intent.putExtra(getString(R.string.extra_type),getString(R.string.extra_type_illust))
+                ActivityCompat.startActivity(getContext(), intent, null)
+            }
+        })
+
+        adapter.setUserFollow(userFollow = object : ItemLike {
             override fun like(id: Int, itemIndex: Int, isRank: Boolean, likeButton: LikeButton) {
                 postFollowOrUnfollow(id,itemIndex,true,likeButton)
             }
@@ -48,8 +62,8 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
             }
 
         })
-        mBind.recyclerView.layoutManager = GridLayoutManager(mView.context,1)
-        mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
+        mBind.recyclerView.layoutManager = GridLayoutManager(getContext(),1)
+        mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getData(obsNewData) })
         mBind.recyclerView.addOnScrollListener(object : OnScrollListener() {
             override fun onBottom() {
@@ -74,7 +88,7 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
                     .doOnNext({ if(obs != obsNewData) obsNewData = obs })
                     .doOnNext({ mBind.srLayout.isRefreshing = true })
                     .observeOn(Schedulers.io())
-                    .flatMap({ obs -> obs })
+                    .flatMap({ observable -> observable })
                     .doOnNext({ userResponse -> adapter.setNewData(userResponse) })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
@@ -82,6 +96,7 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
                     },{
                         error ->
                         mBind.srLayout.isRefreshing = false
+                        adapter.loadError()
                         processError(error)
                     },{
                         mBind.srLayout.isRefreshing = false
@@ -97,18 +112,18 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({ adapter.setProgress(true) })
                 .observeOn(Schedulers.io())
-                .flatMap({ account.obsToken(mView.context) })
+                .flatMap({ account.obsToken(getContext()) })
                 .flatMap({ token -> apiService.getUserNext(token,adapter.nextUrl?:"")})
                 .doOnNext({ userResponse -> adapter.addMoreData(userResponse) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({ (userPreviews) ->
                     if (userPreviews.size == 0){
-                        AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                        AppMessage.toastMessageLong(getString(R.string.no_more_data), getContext())
                     }
                 })
                 .doOnNext({ userResponse ->
                     if(userResponse.nextUrl.isNullOrEmpty()){
-                        AppMessage.toastMessageLong(mView.getString(R.string.is_last_data), mView.context)
+                        AppMessage.toastMessageLong(getString(R.string.is_last_data), getContext())
                     }
                 })
                 .subscribe({
@@ -126,8 +141,8 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
     }
 
     private fun postFollowOrUnfollow(userId : Int,position : Int,isLike : Boolean,likeButton: LikeButton){
-        account.obsToken(mView.context)
-                .filter({ AppUtil.isNetworkConnected(mView.context) })
+        account.obsToken(getContext())
+                .filter({ AppUtil.isNetworkConnected(getContext()) })
                 .flatMap({
                     token ->
                     if(isLike){
@@ -144,7 +159,7 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
                     adapter.updateFollowed(position,false)
                     likeButton.isLiked = false
                 },{
-                    if(!AppUtil.isNetworkConnected(mView.context)){
+                    if(!AppUtil.isNetworkConnected(getContext())){
                         adapter.updateFollowed(position,false)
                         likeButton.isLiked = false
                     }
@@ -153,13 +168,13 @@ class UserViewModel @Inject constructor(val apiService : ApiService) :
 
     private fun processError(error : Throwable){
         Log.e("Error",error.printStackTrace().toString())
-        if(AppUtil.isNetworkConnected(mView.context)){
+        if(AppUtil.isNetworkConnected(getContext())){
             val msg = if(error is SocketTimeoutException)
-                mView.getString(R.string.load_data_timeout)
+                getString(R.string.load_data_timeout)
             else
-                mView.getString(R.string.load_data_failed)
+                getString(R.string.load_data_failed)
             Snackbar.make(getParent()?.getRootView()?:mBind.root.rootView, msg, Snackbar.LENGTH_LONG)
-                    .setAction(mView.getString(R.string.app_dialog_ok),{
+                    .setAction(getString(R.string.app_dialog_ok),{
                         if(errorIndex == 0){
                             getData(obsNewData)
                         }else if(errorIndex == 1){

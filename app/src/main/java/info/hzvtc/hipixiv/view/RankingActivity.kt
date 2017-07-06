@@ -52,7 +52,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
         day = calendar.get(Calendar.DAY_OF_MONTH)
         today = "$year-$month-$day"
         date = today
-        val typeValue : Int = intent.getIntExtra(getString(R.string.extra_type),0)
+        val typeValue : Int = intent.getIntExtra(getString(R.string.extra_string),0)
         when(typeValue){
             RankingType.ILLUST.value ->{
                 mBinding.layoutToolbar.toolbar.title = getString(R.string.ranking_illust_title)
@@ -105,7 +105,6 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
                 modeParam = modeParamArray[position]
             }
         }
-        bind.datePicker.maxDate = AppUtil.getNowTimestamp()*1000
         bind.datePicker.init(year,month,day) { _, y, m, d ->
             year = y
             month = m

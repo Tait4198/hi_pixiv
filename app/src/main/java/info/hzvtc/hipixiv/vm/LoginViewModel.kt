@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<L
         val password = mBind.inputPassword.text.toString()
 
         progressDialog.isIndeterminate = false
-        progressDialog.setMessage(mView.getString(R.string.login_authenticate))
+        progressDialog.setMessage(getString(R.string.login_authenticate))
         progressDialog.setOnCancelListener({
             subscribe.dispose()
             if(subscribe.isDisposed)
@@ -58,17 +58,17 @@ class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<L
                     }
                 },{
                     _ -> progressDialog.dismiss()
-                    showMaterialDialog(mView.getString(R.string.app_login_failed),ERR_UNKNOWN)
+                    showMaterialDialog(getString(R.string.app_login_failed),ERR_UNKNOWN)
                 },{
                     progressDialog.dismiss()
                     if(!AppUtil.isNetworkConnected(mView))
-                        showMaterialDialog(mView.getString(R.string.app_no_network_set),ERR_NO_NETWORK)
+                        showMaterialDialog(getString(R.string.app_no_network_set),ERR_NO_NETWORK)
                     if(username.isEmpty())
-                        mBind.inputUsername.error = mView.getString(R.string.login_username_no_input)
+                        mBind.inputUsername.error = getString(R.string.login_username_no_input)
                     if(password.isEmpty())
-                        mBind.inputPassword.error = mView.getString(R.string.login_password_no_input)
+                        mBind.inputPassword.error = getString(R.string.login_password_no_input)
                     if(account.isLogin()?:false){
-                        val intent = Intent(mView.getString(R.string.activity_main))
+                        val intent = Intent(getString(R.string.activity_main))
                         ActivityCompat.startActivity(mView, intent, null)
                     }
                 })
@@ -76,11 +76,11 @@ class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<L
 
     fun showMaterialDialog(msg : String,code : Int){
         MaterialDialog.Builder(mView)
-                .title(mView.getString(R.string.login_failed))
+                .title(getString(R.string.login_failed))
                 .content(msg)
-                .positiveText(mView.getString(R.string.app_dialog_ok))
+                .positiveText(getString(R.string.app_dialog_ok))
                 .onPositive({ _,_ -> positiveEvent(code) })
-                .negativeText(mView.getString(R.string.app_dialog_cancel))
+                .negativeText(getString(R.string.app_dialog_cancel))
                 .show()
     }
 

@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.view.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.data.Account
@@ -9,6 +10,7 @@ import info.hzvtc.hipixiv.vm.fragment.PixivisionViewModel
 import io.reactivex.Observable
 import javax.inject.Inject
 
+@SuppressLint("ValidFragment")
 class PixivisionLazyFragment(val obsNewData : Observable<PixivisionResopnse>, val account : Account)
     : LazyBindingFragment<FragmentListBinding>() {
 

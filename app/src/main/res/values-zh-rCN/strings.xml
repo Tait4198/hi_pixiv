@@ -22,6 +22,7 @@
     <string name="more">更多</string>
     <string name="help">帮助</string>
     <string name="no_data">没有数据</string>
+    <string name="load_err">出错啦!</string>
     <string name="mute">已屏蔽</string>
     <string name="no_more_data">没有更多数据!</string>
     <string name="is_last_data">这是最后一组数据!</string>
@@ -32,6 +33,10 @@
     <string name="load_data_failed">发生异常,是否重新获取?</string>
     <string name="load_data_timeout">请求超时,是否重新获取?</string>
     <string name="see_more">查看更多</string>
+    <string name="content_illust">详细</string>
+    <string name="content_user">用户</string>
+
+    <string name="not_load">无法加载</string>
 
     <string name="newest_follow_illust_name">筛选</string>
     <string-array name="newest_follow_illust_items">

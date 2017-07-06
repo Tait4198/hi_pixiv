@@ -14,7 +14,7 @@ import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.BookmarkTagAdapter
 import info.hzvtc.hipixiv.adapter.IllustAdapter
 import info.hzvtc.hipixiv.adapter.SimplePagerAdapter
-import info.hzvtc.hipixiv.adapter.TagItemClick
+import info.hzvtc.hipixiv.adapter.events.TagItemClick
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.data.ViewPagerBundle
@@ -241,10 +241,10 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
 
     private fun showSingleFilterDialog(items: Array<String>, action : Action){
         val dialog = MaterialDialog.Builder(mView)
-                .title(mView.getString(R.string.newest_follow_illust_name))
+                .title(getString(R.string.newest_follow_illust_name))
                 .customView(R.layout.dialog_single_filter, true)
-                .positiveText(mView.getString(R.string.app_dialog_ok))
-                .negativeText(mView.getString(R.string.app_dialog_cancel))
+                .positiveText(getString(R.string.app_dialog_ok))
+                .negativeText(getString(R.string.app_dialog_cancel))
                 .onPositive({ _, _ -> action.doAction()})
                 .build()
         val bind = DataBindingUtil.bind<DialogSingleFilterBinding>(dialog.customView)
@@ -265,8 +265,8 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
     private fun showTagViewPagerDialog(){
         if(dialog == null){
             dialog = MaterialDialog.Builder(mView)
-                    .title(mView.getString(R.string.collect_filter_name))
-                    .negativeText(mView.getString(R.string.app_dialog_cancel))
+                    .title(getString(R.string.collect_filter_name))
+                    .negativeText(getString(R.string.app_dialog_cancel))
                     .customView(R.layout.dialog_view_pager, false)
                     .build()
             val bind = DataBindingUtil.bind<DialogViewPagerBinding>(dialog?.customView)
@@ -284,7 +284,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
             privatePage.recyclerView.layoutManager = LinearLayoutManager(mView)
             privatePage.srLayout.setColorSchemeColors(ContextCompat.getColor(mView, R.color.primary))
             privatePage.srLayout.setOnRefreshListener({ initPageData(privatePage,privatePageAdapter,false) })
-            publicPageAdapter.setTagItemClick(object : TagItemClick{
+            publicPageAdapter.setTagItemClick(object : TagItemClick {
                 override fun itemClick(position: Int,tag : String) {
                     if(!isPublicPage){
                         privatePageAdapter.updateLastPositionItem(lastPosition)
@@ -311,7 +311,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     dialog?.hide()
                 }
             })
-            privatePageAdapter.setTagItemClick(object : TagItemClick{
+            privatePageAdapter.setTagItemClick(object : TagItemClick {
                 override fun itemClick(position: Int,tag : String) {
                     if(isPublicPage){
                         publicPageAdapter.updateLastPositionItem(lastPosition)
@@ -357,7 +357,7 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
 
         val isNetConnected = AppUtil.isNetworkConnected(mView)
         Observable.just(isNetConnected)
-                .filter({ isNetConnected -> isNetConnected})
+                .filter({connected -> connected})
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({ page.srLayout.isRefreshing = true})
                 .observeOn(Schedulers.io())

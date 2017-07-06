@@ -4,12 +4,16 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.generic.RoundingParams
 import com.like.LikeButton
 import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.adapter.events.CheckDoubleClickListener
+import info.hzvtc.hipixiv.adapter.events.ItemClick
+import info.hzvtc.hipixiv.adapter.events.ItemLike
 import info.hzvtc.hipixiv.databinding.ItemRankingIllustBinding
 import info.hzvtc.hipixiv.databinding.ItemRankingMutedBinding
 import info.hzvtc.hipixiv.pojo.illust.Illust
@@ -67,8 +71,10 @@ class RankingAdapter(val context: Context) : BaseRecyclerViewAdapter(context = c
             val bind : ItemRankingIllustBinding = holder.bind as ItemRankingIllustBinding
             val illust = ranking[position]
             //View
-            bind.rootView.setOnClickListener({
-                itemClick?.itemClick(illust)
+            bind.rootView.setOnClickListener(object : CheckDoubleClickListener(){
+                override fun click(v: View?) {
+                    itemClick?.itemClick(illust)
+                }
             })
             bind.cover.setImageURI(illust.imageUrls.medium)
             bind.profile.hierarchy.roundingParams = RoundingParams.asCircle()

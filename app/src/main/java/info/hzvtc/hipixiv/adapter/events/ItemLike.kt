@@ -1,4 +1,4 @@
-package info.hzvtc.hipixiv.adapter
+package info.hzvtc.hipixiv.adapter.events
 
 import com.like.LikeButton
 

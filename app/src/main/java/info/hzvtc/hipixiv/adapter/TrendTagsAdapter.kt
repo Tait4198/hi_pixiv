@@ -4,8 +4,11 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import info.hzvtc.hipixiv.R
+import info.hzvtc.hipixiv.adapter.events.CheckDoubleClickListener
+import info.hzvtc.hipixiv.adapter.events.TrendTagItemClick
 import info.hzvtc.hipixiv.databinding.ItemTrendTagBinding
 import info.hzvtc.hipixiv.databinding.ItemTrendTagTopBinding
 import info.hzvtc.hipixiv.pojo.trend.TrendTagsResponse
@@ -82,9 +85,11 @@ class TrendTagsAdapter(val context: Context) : BaseRecyclerViewAdapter(context =
             bind.trendCover.setImageURI(trendTag.illust.imageUrls.medium)
             bind.trendTagTitle.text = trendTag.tag
         }
-        bind.root.setOnClickListener{
-            trendTagItemClick?.itemClick(trendTag.tag)
-        }
+        bind.root.setOnClickListener(object : CheckDoubleClickListener(){
+            override fun click(v: View?) {
+                trendTagItemClick?.itemClick(trendTag.tag)
+            }
+        })
     }
 
 }

@@ -1,4 +1,4 @@
-package info.hzvtc.hipixiv.adapter
+package info.hzvtc.hipixiv.adapter.events
 
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -26,11 +26,11 @@ abstract class OnScrollListener : RecyclerView.OnScrollListener() {
         }
 
         when (layoutManagerType) {
-            OnScrollListener.LAYOUT_MANAGER_TYPE.LINEAR -> lastVisibleItemPosition = (layoutManager as LinearLayoutManager)
+            LAYOUT_MANAGER_TYPE.LINEAR -> lastVisibleItemPosition = (layoutManager as LinearLayoutManager)
                     .findLastVisibleItemPosition()
-            OnScrollListener.LAYOUT_MANAGER_TYPE.GRID -> lastVisibleItemPosition = (layoutManager as GridLayoutManager)
+            LAYOUT_MANAGER_TYPE.GRID -> lastVisibleItemPosition = (layoutManager as GridLayoutManager)
                     .findLastVisibleItemPosition()
-            OnScrollListener.LAYOUT_MANAGER_TYPE.STAGGERED_GRID -> {
+            LAYOUT_MANAGER_TYPE.STAGGERED_GRID -> {
                 val staggeredGridLayoutManager = layoutManager as StaggeredGridLayoutManager
                 if (lastPositions == null) {
                     lastPositions = IntArray(staggeredGridLayoutManager.spanCount)

@@ -13,5 +13,7 @@ abstract class BaseViewModel<V : BindingActivity<T>,T : ViewDataBinding>{
         initViewModel()
     }
 
+    fun getString(resId : Int) : String = mView.getString(resId)
+
     abstract fun initViewModel()
 }

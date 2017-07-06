@@ -7,9 +7,14 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
+import com.google.gson.Gson
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.*
+import info.hzvtc.hipixiv.adapter.events.ItemClick
+import info.hzvtc.hipixiv.adapter.events.ItemLike
+import info.hzvtc.hipixiv.adapter.events.OnScrollListener
+import info.hzvtc.hipixiv.adapter.events.RankingTopClick
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.net.ApiService
@@ -24,7 +29,7 @@ import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class IllustViewModel @Inject constructor(val apiService: ApiService) :
+class IllustViewModel @Inject constructor(val apiService: ApiService,val gson: Gson) :
         BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<IllustResponse>{
 
     var contentType : IllustAdapter.Type = IllustAdapter.Type.ILLUST
@@ -52,11 +57,14 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
         adapter.setItemClick(
                 itemClick = object : ItemClick {
                     override fun itemClick(illust: Illust) {
-                        AppMessage.toastMessageShort(illust.title,mView.context)
+                        val intent = Intent(mView.getString(R.string.activity_content))
+                        intent.putExtra(mView.getString(R.string.extra_json),gson.toJson(illust))
+                        intent.putExtra(getString(R.string.extra_type),mView.getString(R.string.extra_type_illust))
+                        ActivityCompat.startActivity(mView.context, intent, null)
                     }
                 }
         )
-        adapter.setItemLike(itemLike = object : ItemLike{
+        adapter.setItemLike(itemLike = object : ItemLike {
             override fun like(id: Int, itemIndex: Int,isRank: Boolean, likeButton: LikeButton) {
                 postLikeOrUnlike(id, itemIndex,true,isRank,likeButton)
             }
@@ -95,7 +103,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                     .doOnNext({ if(obs != obsNewData) obsNewData = obs })
                     .doOnNext({ mBind.srLayout.isRefreshing = true })
                     .observeOn(Schedulers.io())
-                    .flatMap({ obs -> obs })
+                    .flatMap({ observable -> observable })
                     .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnNext({
@@ -107,6 +115,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
                     },{
                         error ->
                         mBind.srLayout.isRefreshing = false
+                        adapter.loadError()
                         processError(error)
                     },{
                         mBind.srLayout.isRefreshing = false
@@ -178,10 +187,10 @@ class IllustViewModel @Inject constructor(val apiService: ApiService) :
     }
 
     private fun rankingTopClick(){
-        adapter.setRankingTopClick(object : RankingTopClick{
+        adapter.setRankingTopClick(object : RankingTopClick {
             override fun itemClick(type: RankingType) {
                 val intent = Intent(mView.getString(R.string.activity_ranking))
-                intent.putExtra(mView.getString(R.string.extra_type),type.value)
+                intent.putExtra(mView.getString(R.string.extra_string),type.value)
                 ActivityCompat.startActivity(mView.context, intent, null)
             }
         })

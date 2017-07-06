@@ -1,14 +1,19 @@
 package info.hzvtc.hipixiv.vm
 
+import android.content.Intent
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.View
+import com.google.gson.Gson
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.*
+import info.hzvtc.hipixiv.adapter.events.ItemClick
+import info.hzvtc.hipixiv.adapter.events.ItemLike
+import info.hzvtc.hipixiv.adapter.events.OnScrollListener
 import info.hzvtc.hipixiv.data.Account
-import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.databinding.ActivityRankingBinding
 import info.hzvtc.hipixiv.net.ApiService
 import info.hzvtc.hipixiv.pojo.illust.Illust
@@ -22,7 +27,7 @@ import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class RankingViewModel @Inject constructor() : BaseViewModel<RankingActivity, ActivityRankingBinding>(){
+class RankingViewModel @Inject constructor(val gson: Gson) : BaseViewModel<RankingActivity, ActivityRankingBinding>(){
 
     var obsIllustNewData : Observable<IllustResponse>? = null
     var isIllust = true
@@ -47,7 +52,10 @@ class RankingViewModel @Inject constructor() : BaseViewModel<RankingActivity, Ac
         adapter.setItemClick(
                 itemClick = object : ItemClick {
                     override fun itemClick(illust: Illust) {
-                        AppMessage.toastMessageShort(illust.title,mView)
+                        val intent = Intent(getString(R.string.activity_content))
+                        intent.putExtra(getString(R.string.extra_json),gson.toJson(illust))
+                        intent.putExtra(getString(R.string.extra_type),getString(R.string.extra_type_illust))
+                        ActivityCompat.startActivity(mView, intent, null)
                     }
                 }
         )
@@ -79,33 +87,34 @@ class RankingViewModel @Inject constructor() : BaseViewModel<RankingActivity, Ac
     }
 
      fun getIllustData(obs : Observable<IllustResponse>?){
-        Observable.just(obs)
-                .doOnNext({ errorIndex = 0 })
-                .filter({obs -> obs != null})
-                .doOnNext({ mBind.progressBar.visibility = View.VISIBLE})
-                .doOnNext({
-                    if(obs != obsIllustNewData){
-                        mBind.recyclerView.visibility = View.GONE
-                        obsIllustNewData = obs
-                    }
-                })
-                .observeOn(Schedulers.io())
-                .flatMap({ obs -> obs })
-                .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext({ mBind.recyclerView.visibility = View.VISIBLE })
-                .doOnNext({ mBind.progressBar.visibility = View.GONE })
-                .subscribe({
-                    _ ->
-                    adapter.updateUI(true)
-                },{
-                    error ->
-                    mBind.progressBar.visibility = View.GONE
-                    mBind.recyclerView.visibility = View.VISIBLE
-                    processError(error)
-                },{
-                    //
-                })
+         if(obs != null){
+             Observable.just(obs)
+                     .doOnNext({ errorIndex = 0 })
+                     .doOnNext({ mBind.progressBar.visibility = View.VISIBLE})
+                     .doOnNext({
+                         if(obs != obsIllustNewData){
+                             mBind.recyclerView.visibility = View.GONE
+                             obsIllustNewData = obs
+                         }
+                     })
+                     .observeOn(Schedulers.io())
+                     .flatMap({ observable -> observable })
+                     .doOnNext({ illustResponse -> adapter.setNewData(illustResponse) })
+                     .observeOn(AndroidSchedulers.mainThread())
+                     .doOnNext({ mBind.recyclerView.visibility = View.VISIBLE })
+                     .doOnNext({ mBind.progressBar.visibility = View.GONE })
+                     .subscribe({
+                         _ ->
+                         adapter.updateUI(true)
+                     },{
+                         error ->
+                         mBind.progressBar.visibility = View.GONE
+                         mBind.recyclerView.visibility = View.VISIBLE
+                         processError(error)
+                     },{
+                         //
+                     })
+         }
     }
 
     fun getMoreIllustData(){
@@ -122,12 +131,12 @@ class RankingViewModel @Inject constructor() : BaseViewModel<RankingActivity, Ac
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({ (content) ->
                     if (content.size == 0) {
-                        AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView)
+                        AppMessage.toastMessageLong(getString(R.string.no_more_data), mView)
                     }
                 })
                 .doOnNext({ illustResponse ->
                     if(illustResponse.nextUrl.isNullOrEmpty()){
-                        AppMessage.toastMessageLong(mView.getString(R.string.is_last_data), mView)
+                        AppMessage.toastMessageLong(getString(R.string.is_last_data), mView)
                     }
                 })
                 .subscribe({
@@ -175,11 +184,11 @@ class RankingViewModel @Inject constructor() : BaseViewModel<RankingActivity, Ac
         Log.e("Error",error.printStackTrace().toString())
         if(AppUtil.isNetworkConnected(mView)){
             val msg = if(error is SocketTimeoutException)
-                mView.getString(R.string.load_data_timeout)
+                getString(R.string.load_data_timeout)
             else
-                mView.getString(R.string.load_data_failed)
+                getString(R.string.load_data_failed)
             Snackbar.make(mBind.rootView, msg, Snackbar.LENGTH_LONG)
-                    .setAction(mView.getString(R.string.app_dialog_ok),{
+                    .setAction(getString(R.string.app_dialog_ok),{
                         if(errorIndex == 0){
                             if(isIllust) getIllustData(obsIllustNewData)
                         }else if(errorIndex == 1){

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d7d7d7"
+            android:layout_alignParentTop="true"/>
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/user_profile"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true" />
+        <LinearLayout
+            tools:ignore="RelativeOverlap,RtlHardcoded,RtlSymmetry"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/user_profile"
+            android:paddingLeft="8dp"
+            android:layout_centerVertical="true">
+            <TextView
+                android:id="@+id/title"
+                android:textColor="@color/colorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/name"
+                android:textSize="12sp"
+                android:textColor="@color/colorTextSecond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <com.like.LikeButton
+            app:icon_size="24dp"
+            app:dots_primary_color="@color/md_blue_500"
+            app:dots_secondary_color="@color/md_green_500"
+            app:circle_start_color="@color/md_green_500"
+            app:circle_end_color="@color/md_blue_500"
+            app:like_drawable="@drawable/person_on"
+            app:unlike_drawable="@drawable/person_off"
+            android:id="@+id/like_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="6dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</layout>

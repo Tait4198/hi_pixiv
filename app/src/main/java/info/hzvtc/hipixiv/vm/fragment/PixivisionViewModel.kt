@@ -5,7 +5,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.adapter.OnScrollListener
+import info.hzvtc.hipixiv.adapter.events.OnScrollListener
 import info.hzvtc.hipixiv.adapter.PixivisionAdapter
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
@@ -35,10 +35,10 @@ class PixivisionViewModel @Inject constructor(val apiService: ApiService): BaseF
     }
 
     override fun initViewModel() {
-        val layoutManger = GridLayoutManager(mView.context,1)
+        val layoutManger = GridLayoutManager(getContext(),1)
         mBind.recyclerView.layoutManager = layoutManger
-        adapter = PixivisionAdapter(mView.context)
-        mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(mView.context, R.color.primary))
+        adapter = PixivisionAdapter(getContext())
+        mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getData(obsNewData) })
         mBind.recyclerView.addOnScrollListener(object : OnScrollListener() {
             override fun onBottom() {
@@ -86,18 +86,18 @@ class PixivisionViewModel @Inject constructor(val apiService: ApiService): BaseF
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({ adapter.setProgress(true) })
                 .observeOn(Schedulers.io())
-                .flatMap({ account.obsToken(mView.context) })
+                .flatMap({ account.obsToken(getContext()) })
                 .flatMap({ token -> apiService.getPixivisionNext(token,adapter.nextUrl?:"")})
                 .doOnNext({ response -> adapter.addMoreData(response) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext({ (content) ->
                     if (content.size == 0) {
-                        AppMessage.toastMessageLong(mView.getString(R.string.no_more_data), mView.context)
+                        AppMessage.toastMessageLong(getString(R.string.no_more_data), getContext())
                     }
                 })
                 .doOnNext({ illustResponse ->
                     if(illustResponse.nextUrl.isNullOrEmpty()){
-                        AppMessage.toastMessageLong(mView.getString(R.string.is_last_data), mView.context)
+                        AppMessage.toastMessageLong(getString(R.string.is_last_data), getContext())
                     }
                 })
                 .subscribe({
@@ -116,13 +116,13 @@ class PixivisionViewModel @Inject constructor(val apiService: ApiService): BaseF
 
     private fun processError(error : Throwable){
         Log.e("Error",error.printStackTrace().toString())
-        if(AppUtil.isNetworkConnected(mView.context)){
+        if(AppUtil.isNetworkConnected(getContext())){
             val msg = if(error is SocketTimeoutException)
-                mView.getString(R.string.load_data_timeout)
+                getString(R.string.load_data_timeout)
             else
-                mView.getString(R.string.load_data_failed)
+                getString(R.string.load_data_failed)
             Snackbar.make(getParent()?.getRootView()?:mBind.root.rootView, msg, Snackbar.LENGTH_LONG)
-                    .setAction(mView.getString(R.string.app_dialog_ok),{
+                    .setAction(getString(R.string.app_dialog_ok),{
                         if(errorIndex == 0){
                             getData(obsNewData)
                         }else if(errorIndex == 1){
