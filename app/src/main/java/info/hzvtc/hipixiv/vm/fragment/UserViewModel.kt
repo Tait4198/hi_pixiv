@@ -153,7 +153,7 @@ class UserViewModel @Inject constructor(val apiService : ApiService,val gson: Gs
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    adapter.updateFollowed(position,true)
+                    adapter.updateFollowed(position,isLike)
                 },{
                     error -> processError(error)
                     adapter.updateFollowed(position,false)

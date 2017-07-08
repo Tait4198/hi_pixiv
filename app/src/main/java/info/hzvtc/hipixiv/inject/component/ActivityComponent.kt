@@ -22,6 +22,7 @@ interface ActivityComponent {
     fun inject(searchActivity: SearchActivity)
     fun inject(contentActivity: ContentActivity)
     fun inject(imageActivity: ImageActivity)
+    fun inject(relatedActivity: RelatedActivity)
 
     @ActivityContext
     fun context() : Context
@@ -31,5 +32,4 @@ interface ActivityComponent {
     fun oAuthService() : OAuthService
 
     fun apiService() : ApiService
-
 }

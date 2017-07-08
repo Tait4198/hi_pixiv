@@ -66,6 +66,13 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".view.RelatedActivity">
+            <intent-filter>
+                <action android:name="info.hzvtc.hipixiv.related"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

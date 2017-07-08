@@ -41,8 +41,8 @@
                     android:textColor="@color/colorWhite"
                     android:background="@color/colorPageCountBg"
                     android:layout_gravity="end|top"
-                    android:text="@{@string/icon_page + listRankingIllust.pageCount}"
-                    android:visibility="@{listRankingIllust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
+                    android:text="@{@string/icon_page + listRankingIllust.metaPages.size}"
+                    android:visibility="@{listRankingIllust.metaPages.size > 1 ? View.VISIBLE : View.GONE}"/>
             </FrameLayout>
             <RelativeLayout
                 android:layout_width="match_parent"

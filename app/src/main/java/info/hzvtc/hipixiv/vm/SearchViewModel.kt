@@ -1,6 +1,8 @@
 package info.hzvtc.hipixiv.vm
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.util.Log
@@ -34,6 +36,8 @@ import javax.inject.Inject
 //todo 其他Activity Tag
 class SearchViewModel @Inject constructor(val userPref: UserPreferences,val account : Account,val apiService: ApiService,val gson: Gson)
     : BaseViewModel<SearchActivity, ActivitySearchBinding>(){
+
+    var tempTag : String? = null
 
     private lateinit var obsToken : Observable<String>
     private lateinit var vpFragment : ViewPagerFragment
@@ -76,14 +80,26 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
             }
         })
         mBind.searchView.setOnSearchListener(object : FloatingSearchView.OnSearchListener{
-            override fun onSearchAction(currentQuery: String?) {
-                doQuery(currentQuery?:"")
+            override fun onSearchAction(currentQuery: String) {
+                if(currentQuery.matches(Regex("^\\d{5,9}\$"))){
+                    val content = java.lang.String.format(getString(R.string.search_word_is_pid),currentQuery)
+                    MaterialDialog.Builder(mView)
+                            .title(R.string.search_tips)
+                            .content(content)
+                            .positiveText(R.string.app_dialog_ok)
+                            .onPositive { _, _ -> doIllustId(currentQuery) }
+                            .negativeText(R.string.app_dialog_cancel)
+                            .onNegative { _, _ -> doQuery(currentQuery)}
+                            .show()
+                }else{
+                    doQuery(currentQuery)
+                }
             }
 
             override fun onSuggestionClicked(searchSuggestion: SearchSuggestion?) {
                 mBind.searchView.setSearchText(searchSuggestion?.body)
-                mBind.searchView.clearSuggestions()
-                onSearchAction(searchSuggestion?.body)
+                //mBind.searchView.clearSuggestions()
+                //onSearchAction(searchSuggestion?.body)
             }
         })
         mBind.searchView.setOnBindSuggestionCallback { _, leftIcon, textView, item, _ ->
@@ -104,12 +120,20 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
             }
         }
 
-        vpFragment = ViewPagerFragment(mainBundle)
+        if(tempTag != null){
+            query = tempTag as String
+            mBind.searchView.setSearchText(query)
+            mView.setFabVisible(true,true)
+            mBind.fab.setOnClickListener { showSearchFilter() }
+            vpFragment = ViewPagerFragment(getSearchBundle())
+        }else{
+            vpFragment = ViewPagerFragment(mainBundle)
+        }
 
         replaceFragment(vpFragment)
     }
 
-    fun searchByTrendTag(tag : String){
+    fun searchByTag(tag : String){
         mBind.searchView.setSearchText(tag)
         doQuery(tag)
     }
@@ -162,9 +186,17 @@ class SearchViewModel @Inject constructor(val userPref: UserPreferences,val acco
         if(query != ""){
             pushNewWord(query)
             mView.setFabVisible(true,true)
-            vpFragment.updateBundle(getSearchBundle())
             mBind.fab.setOnClickListener { showSearchFilter() }
+            vpFragment.updateBundle(getSearchBundle())
         }
+    }
+
+    private fun doIllustId(currentQuery: String){
+        pushNewWord(query)
+        val intent = Intent(mView.getString(R.string.activity_content))
+        intent.putExtra(mView.getString(R.string.extra_int),currentQuery.toInt())
+        intent.putExtra(getString(R.string.extra_type),mView.getString(R.string.extra_type_illust))
+        ActivityCompat.startActivity(mView, intent, null)
     }
 
     private fun getSearchBundle(): ViewPagerBundle<BaseFragment<*>> {

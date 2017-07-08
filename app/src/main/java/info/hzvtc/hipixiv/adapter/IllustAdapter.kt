@@ -247,7 +247,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
 
     private fun showItemRanking(bind : ViewDataBinding){
         val mBind : ItemRankingBinding = bind as ItemRankingBinding
-        val adapter = RankingAdapter(context)
+        val adapter = RankingAdapter(context,RankingAdapter.Type.RANKING)
         adapter.setNewData(data.ranking)
         adapter.setItemClick(itemClick)
         adapter.setItemLike(itemLike)
@@ -315,7 +315,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
             }
         })
         //bind
-        bind.setVariable(BR.illustPageCount,illust.pageCount)
+        bind.setVariable(BR.illustPageCount,illust.metaPages.size)
     }
 
     private fun showItemManga(bind : ViewDataBinding,position: Int){

@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -101,9 +100,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),RootActivity {
                 .build()
         initDrawerHeader(drawer)
         drawer.setSelection(tempIdentifier)
-
-        Log.d("Main",userPref.accessToken.toString())
-        Log.d("Main",userPref.expires.toString())
     }
 
     private fun initDrawerHeader(drawer : Drawer){

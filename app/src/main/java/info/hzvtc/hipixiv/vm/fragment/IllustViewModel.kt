@@ -121,7 +121,6 @@ class IllustViewModel @Inject constructor(val apiService: ApiService,val gson: G
                         mBind.srLayout.isRefreshing = false
                     })
         }
-
     }
 
     override fun getMoreData(){
@@ -173,7 +172,7 @@ class IllustViewModel @Inject constructor(val apiService: ApiService,val gson: G
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    adapter.updateBookmarked(position,true,isRank)
+                    adapter.updateBookmarked(position,isLike,isRank)
                 },{
                     error -> processError(error)
                     adapter.updateBookmarked(position,false,isRank)

@@ -19,6 +19,7 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>(),RootActivity {
     override fun initView(savedInstanceState: Bundle?) {
         component.inject(this)
         mBinding.searchView.setOnHomeActionClickListener{ onBackPressed() }
+        viewModel.tempTag = intent.getStringExtra(getString(R.string.extra_search_tag))
         viewModel.setView(this)
     }
 
@@ -38,6 +39,6 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>(),RootActivity {
     }
 
     fun searchByTrendTag(tag : String){
-        viewModel.searchByTrendTag(tag)
+        viewModel.searchByTag(tag)
     }
 }

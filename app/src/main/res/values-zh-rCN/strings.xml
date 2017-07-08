@@ -35,8 +35,19 @@
     <string name="see_more">查看更多</string>
     <string name="content_illust">详细</string>
     <string name="content_user">用户</string>
+    <string name="content_related">相关作品</string>
+    <string name="no_comments">没有评论</string>
+    <string name="work_comments">作品评论</string>
 
+    <string name="save_image">保存</string>
     <string name="not_load">无法加载</string>
+
+    <!-- Search -->
+    <string name="search_tips">搜索提示</string>
+    <string name="search_word_is_pid">%s 可能是插画ID,需要直接打开吗?</string>
+
+    <!-- Time -->
+    <string name="out_format">yyyy年MM月dd HH:mm:ss</string>
 
     <string name="newest_follow_illust_name">筛选</string>
     <string-array name="newest_follow_illust_items">
@@ -152,7 +163,7 @@
     <!-- User -->
     <string name="user_name">用户</string>
     <string-array name="user_tab">
-        <item>关注者</item>
+        <item>我的关注</item>
         <item>粉丝</item>
         <item>好P友</item>
     </string-array>

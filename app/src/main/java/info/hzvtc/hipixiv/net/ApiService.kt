@@ -2,6 +2,7 @@ package info.hzvtc.hipixiv.net
 
 import info.hzvtc.hipixiv.pojo.AutoCompleteResponse
 import info.hzvtc.hipixiv.pojo.EmptyResponse
+import info.hzvtc.hipixiv.pojo.comment.CommentResponse
 import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.pojo.illust.SingleIllust
@@ -100,6 +101,12 @@ interface ApiService {
     @GET("/v1/illust/detail?filter=for_android")
     fun getIllust(@Header("Authorization") authorization: String, @Query("illust_id") illustId: Int): Observable<SingleIllust>
 
+    @GET("/v1/illust/comments")
+    fun getIllustComments(@Header("Authorization") authorization: String, @Query("illust_id") illustId: Int): Observable<CommentResponse>
+
+    @GET("/v2/illust/related?filter=for_android")
+    fun getIllustRecommended(@Header("Authorization") authorization: String, @Query("illust_id") illustId: Int): Observable<IllustResponse>
+
     @GET
     fun getIllustNext(@Header("Authorization") authorization : String,
                        @Url url : String) : Observable<IllustResponse>
@@ -111,6 +118,10 @@ interface ApiService {
     @GET
     fun getPixivisionNext(@Header("Authorization") authorization : String,
                     @Url url : String) : Observable<PixivisionResopnse>
+
+    @GET
+    fun getCommentsNext(@Header("Authorization") authorization : String,
+                          @Url url : String) : Observable<CommentResponse>
 
     @FormUrlEncoded
     @POST("/v2/illust/bookmark/add")

@@ -14,6 +14,7 @@
     <color name="colorTextLight">#B0BEC5</color>
 
     <color name="colorImageBg">#CFD8DC</color>
+    <color name="colorDividing">#d7d7d7</color>
     <color name="colorFogDark">#20000000</color>
     <color name="colorPageCountBg">#50000000</color>
     <color name="colorRankingEnd">#80000000</color>

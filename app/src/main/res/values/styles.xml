@@ -5,6 +5,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="TransparentActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base"/>
@@ -15,6 +24,11 @@
 
     <style name="TabStyle" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="TagStyle" parent="TagGroup">
+        <item name="atg_borderColor">@color/colorPrimary</item>
+        <item name="atg_textColor">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="rankingIllust"
+            type="info.hzvtc.hipixiv.pojo.illust.Illust" />
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root_view"
+        android:orientation="vertical"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:foreground="@drawable/dark_foreground"
+        android:clickable="true"
+        android:focusable="true">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cover"
+            android:background="@color/colorImageBg"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"/>
+
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:id="@+id/page_count"
+            android:padding="3dp"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:background="@color/colorPageCountBg"
+            android:layout_gravity="end|top"
+            android:text="@{@string/icon_page + rankingIllust.pageCount}"
+            android:visibility="@{rankingIllust.pageCount > 1 ? View.VISIBLE : View.GONE}"/>
+
+        <com.like.LikeButton
+            android:id="@+id/collect_button"
+            app:icon_size="24dp"
+            app:dots_primary_color="@color/md_pink_200"
+            app:dots_secondary_color="@color/md_pink_500"
+            app:circle_start_color="@color/md_pink_500"
+            app:circle_end_color="@color/md_pink_200"
+            app:like_drawable="@drawable/favorite_on"
+            app:unlike_drawable="@drawable/favorite_off"
+            android:layout_width="32dp"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="2dp"/>
+    </FrameLayout>
+</layout>

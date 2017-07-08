@@ -12,23 +12,25 @@ import javax.inject.Inject
 class ImageViewModel @Inject constructor(): BaseViewModel<ImageActivity, ActivityImageBinding>(), GalleryView.Listener {
 
     private var urls = ArrayList<String>()
+    private lateinit var galleryProvider : ImageGalleryProvider
 
     override fun initViewModel() {
         urls = mView.intent.getStringArrayListExtra(getString(R.string.extra_list))
         val nowPosition = mView.intent.getIntExtra(getString(R.string.extra_int),2)
         val edgeColorId = if (urls.size > 1) R.color.colorEdge else R.color.colorEdgeTra
-        val galleryProvider = ImageGalleryProvider(urls,mView)
+        galleryProvider = ImageGalleryProvider(urls,mView)
         val imageAdapter = SimpleAdapter(mBind.glRootView,galleryProvider)
+        imageAdapter.setShowIndex(urls.size > 1)
         val galleryView = GalleryView.Builder(mView,imageAdapter)
                 .setListener(this)
+                .setStartPage(nowPosition)
                 .setProgressColor(getColor(R.color.primary))
                 .setProgressSize(120)
                 .setEdgeColor(getColor(edgeColorId))
                 .setErrorTextSize(64)
                 .setErrorTextColor(getColor(R.color.md_red_500))
-                .setBackgroundColor(getColor(R.color.colorLight))
+                .setBackgroundColor(getColor(R.color.md_grey_850))
                 .build()
-        galleryView.setCurrentPage(nowPosition)
         mBind.glRootView.setContentPane(galleryView)
         galleryProvider.setListener(imageAdapter)
         galleryProvider.setGLRoot(mBind.glRootView)
@@ -53,4 +55,7 @@ class ImageViewModel @Inject constructor(): BaseViewModel<ImageActivity, Activit
 
     private fun getColor(resId : Int) : Int = ContextCompat.getColor(mView,resId)
 
+    fun stop(){
+        galleryProvider.stop()
+    }
 }

@@ -36,8 +36,18 @@
     <string name="see_more">See More</string>
     <string name="content_illust">Content</string>
     <string name="content_user">User</string>
+    <string name="content_related">Related works</string>
+    <string name="no_comments">No Comments</string>
+    <string name="work_comments">Works comments</string>
 
+    <string name="save_image">Save</string>
     <string name="not_load">Could not load</string>
+
+    <!-- Search -->
+    <string name="search_tips">Search Tips</string>
+    <string name="search_word_is_pid">%s may be illustrator ID, need to open directly?</string>
+
+    <string name="out_format">yyyy-MM-dd HH:mm:ss</string>
 
     <string name="newest_follow_illust_name">Filter</string>
     <string-array name="newest_follow_illust_items">
@@ -173,6 +183,7 @@
     <string name="activity_search">info.hzvtc.hipixiv.search</string>
     <string name="activity_content">info.hzvtc.hipixiv.content</string>
     <string name="activity_image">info.hzvtc.hipixiv.image</string>
+    <string name="activity_related">info.hzvtc.hipixiv.related</string>
 
 
     <string name="extra_string">String</string>
@@ -183,6 +194,8 @@
     <string name="extra_type">Type</string>
     <string name="extra_type_illust">Illust</string>
     <string name="extra_type_user">User</string>
+
+    <string name="extra_search_tag">Tag</string>
 
     <string-array name="restrict_parameters">
         <item>all</item>
@@ -251,8 +264,13 @@
     <string name="icon_trophy">{faw_trophy}&#160;</string>
     <string name="icon_chevron_right">&#160;{faw_chevron_right}</string>
     <string name="icon_page">{faw_clone}&#160;</string>
+    <string name="icon_eye">{faw_eye}&#160;</string>
 
     <string name="icon_muted">{faw_eye_slash}</string>
     <string name="icon_dissatisfied">{gmd_sentiment_dissatisfied}</string>
     <string name="icon_very_dissatisfied">{gmd_sentiment_very_dissatisfied}</string>
+    <string name="icon_satisfied_neutral">{gmd_sentiment_neutral}</string>
+    <string name="icon_tag">{faw_tag}</string>
+    <string name="icon_picture_o">{faw_picture_o}</string>
+    <string name="icon_comments">{faw_comments}</string>
 </resources>

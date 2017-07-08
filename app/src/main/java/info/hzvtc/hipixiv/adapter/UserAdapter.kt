@@ -189,9 +189,9 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
                     itemClick?.itemClick(preview.illustList[index])
                 }
             })
-            if(preview.illustList[index].pageCount > 1){
+            if(preview.illustList[index].metaPages.size > 1){
                 labels[index].visibility = View.VISIBLE
-                val count = context.getString(R.string.icon_page) + preview.illustList[index].pageCount
+                val count = context.getString(R.string.icon_page) + preview.illustList[index].metaPages.size
                 labels[index].text = count
             }
         }

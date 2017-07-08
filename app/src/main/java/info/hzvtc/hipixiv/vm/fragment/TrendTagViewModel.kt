@@ -58,7 +58,7 @@ class TrendTagViewModel @Inject constructor():
                         _ -> adapter.updateUI(true)
                     },{
                         error ->
-                        Log.d("Error",error.toString())
+                        Log.e("Error",error.toString())
                         mBind.srLayout.isRefreshing = false
                     },{
                         mBind.srLayout.isRefreshing = false
