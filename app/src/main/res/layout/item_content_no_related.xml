@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:id="@+id/root_view">
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:id="@+id/icon"
+            android:text="@string/icon_satisfied_neutral"
+            android:textSize="24sp"
+            android:textColor="@color/colorTextLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="18dp"
+            android:layout_gravity="center_horizontal|center_vertical"/>
+        <TextView
+            android:id="@+id/msg"
+            android:text="@string/no_related"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="18dp"
+            android:layout_gravity="center_horizontal|center_vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorDividing"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="bottom"/>
+    </FrameLayout>
+</layout>

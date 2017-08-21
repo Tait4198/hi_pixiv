@@ -37,6 +37,7 @@
     <string name="content_user">用户</string>
     <string name="content_related">相关作品</string>
     <string name="no_comments">没有评论</string>
+    <string name="no_related">没有相关作品</string>
     <string name="work_comments">作品评论</string>
 
     <string name="save_image">保存</string>

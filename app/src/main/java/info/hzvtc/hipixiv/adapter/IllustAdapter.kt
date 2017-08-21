@@ -23,7 +23,7 @@ import info.hzvtc.hipixiv.adapter.events.RankingTopClick
 import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
-//todo 屏蔽设定
+//todo 屏蔽设定 (长按屏蔽)
 class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerViewAdapter(context = context) {
 
     var nextUrl : String? = ""

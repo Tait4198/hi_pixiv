@@ -127,8 +127,12 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
     }
 
     fun setNewRelated(newList : MutableList<Illust>){
-        this.relatedList = newList.subList(0,if(newList.size > 8) 8 else newList.size-1)
-        typeList[relatedPosition-1] = ItemType.ITEM_CONTENT_RELATED
+        if(newList.size > 0){
+            this.relatedList = newList.subList(0,if(newList.size > 8) 8 else newList.size-1)
+            typeList[relatedPosition-1] = ItemType.ITEM_CONTENT_RELATED
+        }else{
+            typeList[relatedPosition-1] = ItemType.ITEM_CONTENT_NO_RELATED
+        }
         notifyItemChanged(relatedPosition)
     }
 
@@ -255,6 +259,10 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
             ItemType.ITEM_CONTENT_COMMENTS_TOP.value -> {
                 holder = BindingHolder<ItemContentCommentsTopBinding>(DataBindingUtil.inflate(mLayoutInflater,
                         R.layout.item_content_comments_top,parent,false),ItemType.ITEM_CONTENT_COMMENTS_TOP)
+            }
+            ItemType.ITEM_CONTENT_NO_RELATED.value -> {
+                holder = BindingHolder<ItemContentNoRelatedBinding>(DataBindingUtil.inflate(mLayoutInflater,
+                        R.layout.item_content_no_related,parent,false),ItemType.ITEM_CONTENT_NO_RELATED)
             }
         }
         return holder

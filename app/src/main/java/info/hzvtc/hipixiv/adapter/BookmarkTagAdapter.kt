@@ -16,7 +16,7 @@ import info.hzvtc.hipixiv.pojo.tag.BookmarkTag
 import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 
 
-//todo 加载更多?
+//todo 收藏标签过滤加载更多 (?)
 class BookmarkTagAdapter(context: Context) : BaseRecyclerViewAdapter(context = context) {
 
     private var tagItemClick : TagItemClick? = null

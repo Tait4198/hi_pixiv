@@ -32,8 +32,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-
-//todo 其他Activity Tag
 class SearchViewModel @Inject constructor(val userPref: UserPreferences,val account : Account,val apiService: ApiService,val gson: Gson)
     : BaseViewModel<SearchActivity, ActivitySearchBinding>(){
 

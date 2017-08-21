@@ -38,6 +38,7 @@
     <string name="content_user">User</string>
     <string name="content_related">Related works</string>
     <string name="no_comments">No Comments</string>
+    <string name="no_related">No related works</string>
     <string name="work_comments">Works comments</string>
 
     <string name="save_image">Save</string>
