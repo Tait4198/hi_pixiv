@@ -27,5 +27,12 @@ class AppUtil{
         }
 
         fun getNowTimestamp() = System.currentTimeMillis()/1000
+
+
+        fun getVersion(context: Context) : String{
+            val packageManager = context.packageManager
+            val info = packageManager.getPackageInfo(context.packageName, 0)
+            return info.versionName
+        }
     }
 }

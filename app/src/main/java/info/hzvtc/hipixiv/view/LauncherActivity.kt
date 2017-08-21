@@ -1,26 +1,20 @@
 package info.hzvtc.hipixiv.view
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.data.UserPreferences
+import info.hzvtc.hipixiv.databinding.ActivityLauncherBinding
+import info.hzvtc.hipixiv.vm.LauncherViewModel
 import javax.inject.Inject
 
-class LauncherActivity : BaseActivity() {
+class LauncherActivity : BindingActivity<ActivityLauncherBinding>() {
 
     @Inject
-    lateinit var userPreferences : UserPreferences
+    lateinit var viewModel : LauncherViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun getLayoutId(): Int = R.layout.activity_launcher
+
+    override fun initView(savedInstanceState: Bundle?) {
         component.inject(this)
-        val intent : Intent
-        if(userPreferences.isLogin?:false){
-            intent = Intent(getString(R.string.activity_main))
-        }else{
-            intent = Intent(getString(R.string.activity_login))
-        }
-        ActivityCompat.startActivity(this, intent, null)
+        viewModel.setView(this)
     }
 }

@@ -16,10 +16,7 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import info.hzvtc.hipixiv.BR
 import info.hzvtc.hipixiv.R
-import info.hzvtc.hipixiv.adapter.events.CheckDoubleClickListener
-import info.hzvtc.hipixiv.adapter.events.ItemClick
-import info.hzvtc.hipixiv.adapter.events.ItemLike
-import info.hzvtc.hipixiv.adapter.events.RankingTopClick
+import info.hzvtc.hipixiv.adapter.events.*
 import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
@@ -30,6 +27,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
 
     private lateinit var data : IllustResponse
     private var itemClick : ItemClick? = null
+    private var itemLongClick : ItemLongClick? = null
     private var itemLike : ItemLike? = null
     private var rankingTopClick : RankingTopClick? = null
     private var frontPosition = 0
@@ -129,6 +127,10 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
 
     fun setItemClick(itemClick: ItemClick){
         this.itemClick = itemClick
+    }
+
+    fun setItemLongClick(itemLongClick: ItemLongClick){
+        this.itemLongClick = itemLongClick
     }
 
     fun setItemLike(itemLike: ItemLike){
@@ -299,6 +301,10 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
                 itemClick?.itemClick(illust)
             }
         })
+        mBind.rootView.setOnLongClickListener {
+            itemLongClick?.longClick(illust)
+            true
+        }
         mBind.cover.setImageURI(illust.imageUrls.medium)
         if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
             mBind.cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,

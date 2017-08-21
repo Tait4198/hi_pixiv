@@ -11,10 +11,7 @@ import com.google.gson.Gson
 import com.like.LikeButton
 import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.*
-import info.hzvtc.hipixiv.adapter.events.ItemClick
-import info.hzvtc.hipixiv.adapter.events.ItemLike
-import info.hzvtc.hipixiv.adapter.events.OnScrollListener
-import info.hzvtc.hipixiv.adapter.events.RankingTopClick
+import info.hzvtc.hipixiv.adapter.events.*
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.net.ApiService
@@ -64,6 +61,14 @@ class IllustViewModel @Inject constructor(val apiService: ApiService,val gson: G
                     }
                 }
         )
+        adapter.setItemLongClick(
+                itemLongClick = object : ItemLongClick{
+                    override fun longClick(illust: Illust) {
+                        AppMessage.toastMessageLong("屏蔽设定待实现...",mView.context)
+                    }
+                }
+        )
+
         adapter.setItemLike(itemLike = object : ItemLike {
             override fun like(id: Int, itemIndex: Int,isRank: Boolean, likeButton: LikeButton) {
                 postLikeOrUnlike(id, itemIndex,true,isRank,likeButton)
