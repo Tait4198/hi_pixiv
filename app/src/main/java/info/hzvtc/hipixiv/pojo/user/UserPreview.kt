@@ -8,7 +8,7 @@ import info.hzvtc.hipixiv.pojo.novel.Novel
 
 data class UserPreview(
         @SerializedName("user") @Expose val user : PixivUser,
-        @SerializedName("illusts") @Expose val illustList : MutableList<Illust> = ArrayList<Illust>(),
-        @SerializedName("novels") @Expose val novelList : MutableList<Novel> = ArrayList<Novel>(),
+        @SerializedName("illusts") @Expose val illustList : MutableList<Illust> = ArrayList(),
+        @SerializedName("novels") @Expose val novelList : MutableList<Novel> = ArrayList(),
         @SerializedName("is_muted") @Expose val isMuted : Boolean
 )

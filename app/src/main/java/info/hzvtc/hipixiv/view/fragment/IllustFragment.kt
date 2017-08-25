@@ -15,7 +15,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 @SuppressLint("ValidFragment")
-class IllustFragment(val obsNewData : Observable<IllustResponse>, val account: Account, val contentType : IllustAdapter.Type)
+class IllustFragment(private val obsNewData : Observable<IllustResponse>, val account: Account, val contentType : IllustAdapter.Type)
     : BindingFragment<FragmentListBinding>() {
 
     @Inject

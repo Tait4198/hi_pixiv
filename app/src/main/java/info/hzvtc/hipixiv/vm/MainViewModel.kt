@@ -32,7 +32,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val account: Account,val apiService: ApiService)
     : BaseViewModel<MainActivity,ActivityMainBinding>() {
 
-    var nowIdentifier = -1
+    private var nowIdentifier = -1
 
     //关注者
     //restricts position

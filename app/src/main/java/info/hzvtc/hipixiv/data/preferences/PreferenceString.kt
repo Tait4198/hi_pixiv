@@ -4,7 +4,7 @@ import info.hzvtc.hipixiv.data.UserPreferences
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class PreferenceString(val defaultValue: String?) : ReadWriteProperty<UserPreferences, String?> {
+class PreferenceString(private val defaultValue: String?) : ReadWriteProperty<UserPreferences, String?> {
     override fun getValue(thisRef: UserPreferences, property: KProperty<*>): String? {
         return thisRef.preferences.getString(property.name, defaultValue)
     }

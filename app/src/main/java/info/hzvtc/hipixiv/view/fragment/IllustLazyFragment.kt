@@ -13,7 +13,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 @SuppressLint("ValidFragment")
-class IllustLazyFragment(val obsNewData : Observable<IllustResponse>, val account : Account, val contentType : IllustAdapter.Type)
+class IllustLazyFragment(private val obsNewData : Observable<IllustResponse>, val account : Account, val contentType : IllustAdapter.Type)
     : LazyBindingFragment<FragmentListBinding>(){
 
     @Inject

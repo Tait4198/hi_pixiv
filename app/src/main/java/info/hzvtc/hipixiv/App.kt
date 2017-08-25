@@ -26,7 +26,7 @@ class App : Application() {
         initFresco()
     }
 
-    fun initFresco(){
+    private fun initFresco(){
         val client = OkHttpClient.Builder()
                 .addInterceptor(ImageInterceptor())
                 .addInterceptor(LoggingInterceptor())

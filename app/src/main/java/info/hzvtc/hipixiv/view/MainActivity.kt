@@ -109,7 +109,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),RootActivity {
         profile.hierarchy.roundingParams = RoundingParams.asCircle()
         profile.setImageURI(userPref.profileUrlLarge)
         account.text = userPref.account
-        if(userPref.isPremium?:false){
+        //account.text = "12345678"
+        if(userPref.isPremium == true){
             member.text = getString(R.string.senior_member)
             member.setTextColor(ContextCompat.getColor(this,R.color.md_yellow_200))
         }else{

@@ -32,7 +32,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchViewModel @Inject constructor(val userPref: UserPreferences,val account : Account,val apiService: ApiService,val gson: Gson)
+class SearchViewModel @Inject constructor(private val userPref: UserPreferences, val account : Account, val apiService: ApiService, val gson: Gson)
     : BaseViewModel<SearchActivity, ActivitySearchBinding>(){
 
     var tempTag : String? = null

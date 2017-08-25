@@ -19,9 +19,9 @@ import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(val account: Account) : BaseViewModel<LoginActivity,ActivityLoginBinding>() {
 
-    val ERR_UNKNOWN = 0
-    val ERR_NO_NETWORK = 1
-    val ERR_SERVICE = 2
+    private val ERR_UNKNOWN = 0
+    private val ERR_NO_NETWORK = 1
+    private val ERR_SERVICE = 2
 
     private lateinit var subscribe : Disposable
     private val progressDialog : ProgressDialog by lazy {

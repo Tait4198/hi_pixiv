@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
@@ -31,9 +32,9 @@ class BookmarkTagAdapter(context: Context) : BaseRecyclerViewAdapter(context = c
         notifyItemRangeRemoved(0, typeList.size)
         typeList.clear()
         tags.clear()
-        (0..defaultTagItems.size-1).mapTo(tags) { BookmarkTag(defaultTagItems[it],0) }
+        (0 until defaultTagItems.size).mapTo(tags) { BookmarkTag(defaultTagItems[it],0) }
         if(data != null) tags.addAll(data.tags)
-        for(index in 0..tags.size-1){
+        for(index in 0 until tags.size){
             if(lastPosition == index){
                 typeList.add(ItemType.ITEM_BOOKMARK_TAG_SELECTED)
             }else{
@@ -63,7 +64,7 @@ class BookmarkTagAdapter(context: Context) : BaseRecyclerViewAdapter(context = c
         this.tagItemClick = tagItemClick
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, @SuppressLint("RecyclerView") position: Int) {
         val bind = (holder as BindingHolder<ViewDataBinding>).bind
         if(bind is ItemBookmarkTagBinding){
             bind.root.setOnClickListener(object : CheckDoubleClickListener() {

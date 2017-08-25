@@ -11,7 +11,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 @SuppressLint("ValidFragment")
-class PixivisionLazyFragment(val obsNewData : Observable<PixivisionResopnse>, val account : Account)
+class PixivisionLazyFragment(private val obsNewData : Observable<PixivisionResopnse>, val account : Account)
     : LazyBindingFragment<FragmentListBinding>() {
 
     @Inject

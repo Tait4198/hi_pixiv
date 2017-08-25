@@ -19,7 +19,7 @@ import info.hzvtc.hipixiv.R
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-class ImageGalleryProvider(val urls : List<String>,val context: Context) : GalleryProvider(),Runnable{
+class ImageGalleryProvider(private val urls : List<String>, val context: Context) : GalleryProvider(),Runnable{
 
     private lateinit var mThread: Thread
     private val mRequests = Stack<Int>()

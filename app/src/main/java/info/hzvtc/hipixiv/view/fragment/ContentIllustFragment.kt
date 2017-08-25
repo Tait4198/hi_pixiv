@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 
 @SuppressLint("ValidFragment")
-class ContentIllustFragment(val illustId : Int,val illust : Illust?) : BindingFragment<FragmentContentIllustBinding>(){
+class ContentIllustFragment(private val illustId : Int, val illust : Illust?) : BindingFragment<FragmentContentIllustBinding>(){
 
     @Inject
     lateinit var viewModel : ContentIllustViewModel

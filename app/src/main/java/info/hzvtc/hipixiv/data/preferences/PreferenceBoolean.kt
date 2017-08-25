@@ -4,7 +4,7 @@ import info.hzvtc.hipixiv.data.UserPreferences
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class PreferenceBoolean(val defaultValue: Boolean?) : ReadWriteProperty<UserPreferences, Boolean?> {
+class PreferenceBoolean(private val defaultValue: Boolean?) : ReadWriteProperty<UserPreferences, Boolean?> {
     override fun getValue(thisRef: UserPreferences, property: KProperty<*>): Boolean? {
         return thisRef.preferences.getBoolean(property.name, defaultValue ?: false)
     }

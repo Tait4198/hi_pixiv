@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import io.reactivex.schedulers.Schedulers
 
-class LauncherViewModel @Inject constructor(var userPreferences : UserPreferences): BaseViewModel<LauncherActivity, ActivityLauncherBinding>() {
+class LauncherViewModel @Inject constructor(private var userPreferences : UserPreferences): BaseViewModel<LauncherActivity, ActivityLauncherBinding>() {
     override fun initViewModel() {
         Observable.just(AppUtil.getVersion(mView))
                 .observeOn(AndroidSchedulers.mainThread())

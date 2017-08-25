@@ -10,7 +10,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 @SuppressLint("ValidFragment")
-class TrendTagLazyFragment(val obsNewData : Observable<TrendTagsResponse>) :
+class TrendTagLazyFragment(private val obsNewData : Observable<TrendTagsResponse>) :
         LazyBindingFragment<FragmentListBinding>() {
 
     @Inject

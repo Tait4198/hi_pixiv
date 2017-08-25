@@ -5,6 +5,6 @@ import com.google.gson.annotations.SerializedName
 
 
 data class PixivisionResopnse(
-        @SerializedName("spotlight_articles") @Expose val content : MutableList<Pixivision> = ArrayList<Pixivision>(),
+        @SerializedName("spotlight_articles") @Expose val content : MutableList<Pixivision> = ArrayList(),
         @SerializedName("next_url") @Expose val nextUrl : String = ""
 )

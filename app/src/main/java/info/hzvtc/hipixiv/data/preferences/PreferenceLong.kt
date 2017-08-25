@@ -4,7 +4,7 @@ import info.hzvtc.hipixiv.data.UserPreferences
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class PreferenceLong(val defaultValue: Long?) : ReadWriteProperty<UserPreferences, Long?> {
+class PreferenceLong(private val defaultValue: Long?) : ReadWriteProperty<UserPreferences, Long?> {
     override fun getValue(thisRef: UserPreferences, property: KProperty<*>): Long? {
         return thisRef.preferences.getLong(property.name, defaultValue ?: 0)
     }
