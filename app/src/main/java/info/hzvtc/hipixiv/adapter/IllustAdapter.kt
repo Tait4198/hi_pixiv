@@ -21,13 +21,13 @@ import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 
 //todo 屏蔽设定 (长按屏蔽)
-class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerViewAdapter(context = context) {
+class IllustAdapter(val context: Context, private val contentType : Type) : BaseRecyclerViewAdapter(context = context) {
 
     var nextUrl : String? = ""
 
     private lateinit var data : IllustResponse
     private var itemClick : ItemClick? = null
-    private var itemLongClick : ItemLongClick? = null
+    //private var itemLongClick : ItemLongClick? = null
     private var itemLike : ItemLike? = null
     private var rankingTopClick : RankingTopClick? = null
     private var frontPosition = 0
@@ -51,7 +51,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
         positionStart = typeList.size
         moreDataSize = 0
         //NextUrl
-        if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl else nextUrl = ""
+        nextUrl = if(!newData.nextUrl.isEmpty()) newData.nextUrl else ""
         //New Data
         //Init typeList
         if(newData.ranking.isNotEmpty() && contentType != Type.RANK){
@@ -68,6 +68,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
             if(!newData.content[index-jump].isMuted){
                 moreDataSize++
                 if(contentType == Type.RANK){
+                    //排行预览前三项大图显示
                     if(index <= 2) typeList.add(ItemType.ITEM_LIST_RANKING_ILLUST) else typeList.add(ItemType.ITEM_ILLUST)
                 }else{
                     if(contentType == Type.MANGA) typeList.add(ItemType.ITEM_MANGA) else typeList.add(ItemType.ITEM_ILLUST)
@@ -87,7 +88,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
     fun addMoreData(moreData: IllustResponse){
         positionStart = typeList.size + 1
         moreDataSize = 0
-        nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
+        nextUrl = if(!data.nextUrl.isEmpty()) moreData.nextUrl else ""
         val max = moreData.content.size-1
         var jump = 0
         for(index in 0..max){
@@ -129,9 +130,9 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
         this.itemClick = itemClick
     }
 
-    fun setItemLongClick(itemLongClick: ItemLongClick){
-        this.itemLongClick = itemLongClick
-    }
+//    fun setItemLongClick(itemLongClick: ItemLongClick){
+//        this.itemLongClick = itemLongClick
+//    }
 
     fun setItemLike(itemLike: ItemLike){
         this.itemLike = itemLike
@@ -257,7 +258,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
         mBind.illustRecycler.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
     }
 
-    fun showItemListRankingIllust(bind: ViewDataBinding,position: Int){
+    private fun showItemListRankingIllust(bind: ViewDataBinding, position: Int){
         val mBind : ItemListRankingIllustBinding = bind as ItemListRankingIllustBinding
         val illust = data.content[getRealPosition(position)]
 
@@ -301,10 +302,7 @@ class IllustAdapter(val context: Context,val contentType : Type) : BaseRecyclerV
                 itemClick?.itemClick(illust)
             }
         })
-        mBind.rootView.setOnLongClickListener {
-            itemLongClick?.longClick(illust)
-            true
-        }
+
         mBind.cover.setImageURI(illust.imageUrls.medium)
         if(context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
             mBind.cover.layoutParams.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,

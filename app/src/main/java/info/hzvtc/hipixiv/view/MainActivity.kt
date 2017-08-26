@@ -84,8 +84,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),RootActivity {
                         PrimaryDrawerItem().withName(R.string.user_name).withIcon(GoogleMaterial.Icon.gmd_account_box)
                                 .withIdentifier(Identifier.USER.value.toLong()),
                         dividerItem,
-                        PrimaryDrawerItem().withName(R.string.muted_setting).withIcon(FontAwesome.Icon.faw_eye_slash)
-                                .withIdentifier(Identifier.MUTE_SETTINGS.value.toLong()).withSelectable(false),
+//                        PrimaryDrawerItem().withName(R.string.muted_setting).withIcon(FontAwesome.Icon.faw_eye_slash)
+//                                .withIdentifier(Identifier.MUTE_SETTINGS.value.toLong()).withSelectable(false),
                         PrimaryDrawerItem().withName(R.string.setting_name).withIcon(GoogleMaterial.Icon.gmd_settings)
                                 .withIdentifier(Identifier.SETTINGS.value.toLong()).withSelectable(false)
                 )

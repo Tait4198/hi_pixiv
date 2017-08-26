@@ -26,6 +26,8 @@ import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
+
+
 class IllustViewModel @Inject constructor(val apiService: ApiService,val gson: Gson) :
         BaseFragmentViewModel<BaseFragment<FragmentListBinding>, FragmentListBinding>(),ViewModelData<IllustResponse>{
 
@@ -58,13 +60,6 @@ class IllustViewModel @Inject constructor(val apiService: ApiService,val gson: G
                         intent.putExtra(mView.getString(R.string.extra_json),gson.toJson(illust))
                         intent.putExtra(getString(R.string.extra_type),mView.getString(R.string.extra_type_illust))
                         ActivityCompat.startActivity(mView.context, intent, null)
-                    }
-                }
-        )
-        adapter.setItemLongClick(
-                itemLongClick = object : ItemLongClick{
-                    override fun longClick(illust: Illust) {
-                        AppMessage.toastMessageLong("屏蔽设定待实现...",mView.context)
                     }
                 }
         )

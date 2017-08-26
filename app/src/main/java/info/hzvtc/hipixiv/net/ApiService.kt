@@ -3,9 +3,9 @@ package info.hzvtc.hipixiv.net
 import info.hzvtc.hipixiv.pojo.AutoCompleteResponse
 import info.hzvtc.hipixiv.pojo.EmptyResponse
 import info.hzvtc.hipixiv.pojo.comment.CommentResponse
-import info.hzvtc.hipixiv.pojo.illust.Illust
 import info.hzvtc.hipixiv.pojo.illust.IllustResponse
 import info.hzvtc.hipixiv.pojo.illust.SingleIllust
+import info.hzvtc.hipixiv.pojo.mute.MuteResponse
 import info.hzvtc.hipixiv.pojo.pixivision.PixivisionResopnse
 import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 import info.hzvtc.hipixiv.pojo.trend.TrendTagsResponse
@@ -15,10 +15,6 @@ import retrofit2.http.*
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.FormUrlEncoded
-
-
-
-
 
 interface ApiService {
     @GET("/v1/illust/recommended?filter=for_android")
@@ -122,6 +118,17 @@ interface ApiService {
     @GET
     fun getCommentsNext(@Header("Authorization") authorization : String,
                           @Url url : String) : Observable<CommentResponse>
+
+    @GET("/v1/mute/list")
+    fun getMutedList(@Header("Authorization") authorization: String): Observable<MuteResponse>
+
+    @FormUrlEncoded
+    @POST("/v1/mute/edit")
+    fun postMuteSetting(@Header("Authorization") authorization : String,
+                        @Field("add_user_ids[]") addUserList : List<Int>,
+                        @Field("delete_user_ids[]") delUserList : List<Long>,
+                        @Field("add_tags[]") addTagList : List<Long>,
+                        @Field("delete_tags[]") delTagList : List<Long>) : Observable<EmptyResponse>
 
     @FormUrlEncoded
     @POST("/v2/illust/bookmark/add")

@@ -50,6 +50,9 @@
 
     <string name="out_format">yyyy-MM-dd HH:mm:ss</string>
 
+    <!-- Mute -->
+    <!--<string name="mute_title">Please select a mask item</string>-->
+
     <string name="newest_follow_illust_name">Filter</string>
     <string-array name="newest_follow_illust_items">
         <item>All</item>

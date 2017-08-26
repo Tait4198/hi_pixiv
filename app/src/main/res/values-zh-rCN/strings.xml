@@ -50,6 +50,9 @@
     <!-- Time -->
     <string name="out_format">yyyy年MM月dd HH:mm:ss</string>
 
+    <!-- Mute -->WW
+    <!--<string name="mute_title">请选择屏蔽项</string>-->
+
     <string name="newest_follow_illust_name">筛选</string>
     <string-array name="newest_follow_illust_items">
         <item>全部</item>
