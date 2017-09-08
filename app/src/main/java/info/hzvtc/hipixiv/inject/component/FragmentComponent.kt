@@ -14,4 +14,5 @@ interface FragmentComponent {
     fun inject(pixivisionLazyFragment: PixivisionLazyFragment)
     fun inject(trendTagLazyFragment: TrendTagLazyFragment)
     fun inject(contentIllustFragment: ContentIllustFragment)
+    fun inject(contentUserFragment: ContentUserFragment)
 }

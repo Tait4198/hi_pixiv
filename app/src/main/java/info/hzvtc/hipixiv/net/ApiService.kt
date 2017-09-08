@@ -9,6 +9,7 @@ import info.hzvtc.hipixiv.pojo.mute.MuteResponse
 import info.hzvtc.hipixiv.pojo.pixivision.PixivisionResopnse
 import info.hzvtc.hipixiv.pojo.tag.BookmarkTagResponse
 import info.hzvtc.hipixiv.pojo.trend.TrendTagsResponse
+import info.hzvtc.hipixiv.pojo.user.UserPreview
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -96,6 +97,13 @@ interface ApiService {
 
     @GET("/v1/illust/detail?filter=for_android")
     fun getIllust(@Header("Authorization") authorization: String, @Query("illust_id") illustId: Int): Observable<SingleIllust>
+
+    @GET("/v1/user/detail?filter=for_android")
+    fun getUser(@Header("Authorization") authorization: String, @Query("user_id") userId: Int): Observable<EmptyResponse>
+
+    @GET("/v1/user/illusts?filter=for_android")
+    fun getUserIllusts(@Header("Authorization") authorization: String, @Query("user_id") userId: Int,
+                       @Query("type") type: String): Observable<EmptyResponse>
 
     @GET("/v1/illust/comments")
     fun getIllustComments(@Header("Authorization") authorization: String, @Query("illust_id") illustId: Int): Observable<CommentResponse>

@@ -51,7 +51,7 @@ class IllustAdapter(val context: Context, private val contentType : Type) : Base
         positionStart = typeList.size
         moreDataSize = 0
         //NextUrl
-        nextUrl = if(!newData.nextUrl.isEmpty()) newData.nextUrl else ""
+        nextUrl = if(!newData.nextUrl.isNullOrEmpty()) newData.nextUrl else ""
         //New Data
         //Init typeList
         if(newData.ranking.isNotEmpty() && contentType != Type.RANK){
@@ -88,7 +88,7 @@ class IllustAdapter(val context: Context, private val contentType : Type) : Base
     fun addMoreData(moreData: IllustResponse){
         positionStart = typeList.size + 1
         moreDataSize = 0
-        nextUrl = if(!data.nextUrl.isEmpty()) moreData.nextUrl else ""
+        nextUrl = if(!data.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
         val max = moreData.content.size-1
         var jump = 0
         for(index in 0..max){

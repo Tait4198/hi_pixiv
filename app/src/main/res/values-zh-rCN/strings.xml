@@ -33,8 +33,8 @@
     <string name="load_data_failed">发生异常,是否重新获取?</string>
     <string name="load_data_timeout">请求超时,是否重新获取?</string>
     <string name="see_more">查看更多</string>
-    <string name="content_illust">详细</string>
-    <string name="content_user">用户</string>
+    <string name="content_illust">内容详情</string>
+    <string name="content_user">用户详情</string>
     <string name="content_related">相关作品</string>
     <string name="no_comments">没有评论</string>
     <string name="no_related">没有相关作品</string>

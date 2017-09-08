@@ -17,6 +17,7 @@ import info.hzvtc.hipixiv.R
 import info.hzvtc.hipixiv.adapter.events.CheckDoubleClickListener
 import info.hzvtc.hipixiv.adapter.events.ItemClick
 import info.hzvtc.hipixiv.adapter.events.ItemLike
+import info.hzvtc.hipixiv.adapter.events.UserClick
 import info.hzvtc.hipixiv.databinding.*
 import info.hzvtc.hipixiv.pojo.user.UserResponse
 
@@ -32,6 +33,7 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
     private var tempProgressIndex = 0
     private var itemClick : ItemClick? = null
     private var userFollow : ItemLike? = null
+    private var userClick : UserClick? = null
 
     init {
         setHasStableIds(true)
@@ -115,6 +117,10 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
         this.itemClick = itemClick
     }
 
+    fun setUserClick(userClick: UserClick){
+        this.userClick = userClick
+    }
+
     fun loadError(){
         if(typeList.size == 0){
             moreDataSize++
@@ -171,11 +177,21 @@ class UserAdapter(val context: Context) : BaseRecyclerViewAdapter(context = cont
             mBind.previewRoot1.layoutParams.height = height
             mBind.previewRoot1.layoutParams.height = height
         }
+        mBind.rootView.setOnClickListener(object : CheckDoubleClickListener(){
+            override fun click(v: View?) {
+                userClick?.click(preview.user.userId)
+            }
+        })
         val roundingParams = RoundingParams()
         roundingParams.setBorder(ContextCompat.getColor(context,R.color.colorTextSecond), 2f)
         roundingParams.roundAsCircle = true
         mBind.userProfile.hierarchy.roundingParams = roundingParams
         mBind.userProfile.setImageURI(preview.user.profile.medium)
+        mBind.userProfile.setOnClickListener(object : CheckDoubleClickListener() {
+            override fun click(v: View?) {
+                userClick?.click(preview.user.userId)
+            }
+        })
         val roots = arrayOf(mBind.previewRoot1,mBind.previewRoot2,mBind.previewRoot3)
         val images = arrayOf(mBind.preview1,mBind.preview2,mBind.preview3)
         val labels = arrayOf(mBind.pageCount1,mBind.pageCount2,mBind.pageCount3)

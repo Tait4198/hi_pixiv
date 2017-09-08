@@ -18,7 +18,6 @@ import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.databinding.FragmentContentIllustBinding
 import info.hzvtc.hipixiv.net.ApiService
 import info.hzvtc.hipixiv.pojo.illust.Illust
-import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.fragment.BaseFragment
 import io.reactivex.Observable
@@ -26,7 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ContentIllustViewModel @Inject constructor(val account: Account, val apiService: ApiService, val userPreferences: UserPreferences,val gson: Gson)
+class ContentIllustViewModel @Inject constructor(val account: Account, val apiService: ApiService, private val userPreferences: UserPreferences, val gson: Gson)
     : BaseFragmentViewModel<BaseFragment<FragmentContentIllustBinding>, FragmentContentIllustBinding>(){
 
     lateinit var illust : Illust

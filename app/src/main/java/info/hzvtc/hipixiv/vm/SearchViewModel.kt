@@ -190,7 +190,7 @@ class SearchViewModel @Inject constructor(private val userPref: UserPreferences,
     }
 
     private fun doIllustId(currentQuery: String){
-        pushNewWord(query)
+        pushNewWord(currentQuery)
         val intent = Intent(mView.getString(R.string.activity_content))
         intent.putExtra(mView.getString(R.string.extra_int),currentQuery.toInt())
         intent.putExtra(getString(R.string.extra_type),mView.getString(R.string.extra_type_illust))

@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.google.gson.Gson
 import com.like.LikeButton
@@ -13,6 +14,7 @@ import info.hzvtc.hipixiv.adapter.events.ItemLike
 import info.hzvtc.hipixiv.adapter.events.OnScrollListener
 import info.hzvtc.hipixiv.adapter.UserAdapter
 import info.hzvtc.hipixiv.adapter.events.ItemClick
+import info.hzvtc.hipixiv.adapter.events.UserClick
 import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.databinding.FragmentListBinding
 import info.hzvtc.hipixiv.net.ApiService
@@ -62,6 +64,16 @@ class UserViewModel @Inject constructor(val apiService : ApiService,val gson: Gs
             }
 
         })
+
+        adapter.setUserClick(object : UserClick{
+            override fun click(userId: Int) {
+                val intent = Intent(mView.getString(R.string.activity_content))
+                intent.putExtra(getString(R.string.extra_type),mView.getString(R.string.extra_type_user))
+                intent.putExtra(getString(R.string.extra_int),userId)
+                ActivityCompat.startActivity(mView.context, intent, null)
+            }
+        })
+
         mBind.recyclerView.layoutManager = GridLayoutManager(getContext(),1)
         mBind.srLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.primary))
         mBind.srLayout.setOnRefreshListener({ getData(obsNewData) })

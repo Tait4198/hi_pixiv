@@ -120,7 +120,7 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
     fun addMoreComment(moreData : CommentResponse){
         commentPosition = typeList.size + 1
         moreDataSize = 0
-        nextUrl = if(!moreData.nextUrl.isEmpty()) moreData.nextUrl else ""
+        nextUrl = if(!moreData.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
         moreData.comments.forEach {
             moreDataSize++
             typeList.add(ItemType.ITEM_CONTENT_ILLUST_COMMENT)

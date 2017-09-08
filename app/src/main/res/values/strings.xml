@@ -34,8 +34,8 @@
     <string name="load_data_failed">An error occurred,Whether to regain it?</string>
     <string name="load_data_timeout">Request timeout,Whether to regain it?</string>
     <string name="see_more">See More</string>
-    <string name="content_illust">Content</string>
-    <string name="content_user">User</string>
+    <string name="content_illust">Details</string>
+    <string name="content_user">User details</string>
     <string name="content_related">Related works</string>
     <string name="no_comments">No Comments</string>
     <string name="no_related">No related works</string>
@@ -52,6 +52,10 @@
 
     <!-- Mute -->
     <!--<string name="mute_title">Please select a mask item</string>-->
+
+    <!-- Custom Url Schema-->
+    <string name="host_pixiv">illusts</string>
+    <string name="host_user">users</string>
 
     <string name="newest_follow_illust_name">Filter</string>
     <string-array name="newest_follow_illust_items">

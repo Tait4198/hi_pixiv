@@ -65,6 +65,13 @@
 
                 <data android:scheme="pixiv" android:host="illusts"/>
             </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <data android:scheme="pixiv" android:host="users"/>
+            </intent-filter>
         </activity>
         <activity android:name=".view.ImageActivity">
             <intent-filter>
