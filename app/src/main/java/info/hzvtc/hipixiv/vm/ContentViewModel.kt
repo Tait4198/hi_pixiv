@@ -1,5 +1,6 @@
 package info.hzvtc.hipixiv.vm
 
+import android.content.ContentUris
 import android.support.v4.app.Fragment
 import com.google.gson.Gson
 import info.hzvtc.hipixiv.R
@@ -14,11 +15,16 @@ class ContentViewModel @Inject constructor(val gson: Gson) : BaseViewModel<Conte
 
     override fun initViewModel() {
         val type = mView.intent.getStringExtra(getString(R.string.extra_type))
-        if(type == getString(R.string.extra_type_illust)){
+
+        if(type == getString(R.string.extra_type_illust) || mView.intent.data != null){
             mBind.toolbar.title = getString(R.string.content_illust)
-            val illustId = mView.intent.getIntExtra(getString(R.string.extra_int),0)
+            var illustId = mView.intent.getIntExtra(getString(R.string.extra_int),0)
+            if(illustId == 0 && mView.intent.data != null){
+                illustId = ContentUris.parseId(mView.intent.data).toInt()
+            }
+
             if(illustId != 0){
-                mView.viewModel.showByIllust(illustId,null)
+                showByIllust(illustId,null)
             }else{
                 val json = mView.intent.getStringExtra(getString(R.string.extra_json))
                 if(json != null){
@@ -33,7 +39,7 @@ class ContentViewModel @Inject constructor(val gson: Gson) : BaseViewModel<Conte
         }
     }
 
-    fun showByIllust(illustId : Int,illust : Illust?){
+    private fun showByIllust(illustId : Int, illust : Illust?){
         replaceFragment(ContentIllustFragment(illustId,illust))
     }
 

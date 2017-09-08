@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecyclerViewAdapter(context) {
 
     var nextUrl : String? = null
@@ -43,6 +44,7 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
     private var userFollow : ItemLike? = null
     private var relatedItemLike : ItemLike? = null
     private var relatedTopClick : RankingTopClick? = null
+    private var urlClick : UrlClick? = null
 
     private var frontPosition = 0
     private var relatedPosition = 0
@@ -95,7 +97,7 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
     fun setNewComment(newData: CommentResponse){
         this.comments = newData.comments
         typeList.removeAt(commentPosition-1)
-        if(!newData.nextUrl.isNullOrEmpty()) nextUrl = newData.nextUrl else nextUrl = ""
+        nextUrl = if(!newData.nextUrl.isNullOrEmpty()) newData.nextUrl else ""
         commentPosition = typeList.size + 1
         moreDataSize = 0
         if(newData.comments.isNotEmpty()){
@@ -118,7 +120,7 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
     fun addMoreComment(moreData : CommentResponse){
         commentPosition = typeList.size + 1
         moreDataSize = 0
-        nextUrl = if(!moreData.nextUrl.isNullOrEmpty()) moreData.nextUrl else ""
+        nextUrl = if(!moreData.nextUrl.isEmpty()) moreData.nextUrl else ""
         moreData.comments.forEach {
             moreDataSize++
             typeList.add(ItemType.ITEM_CONTENT_ILLUST_COMMENT)
@@ -162,6 +164,10 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
 
     fun setRelatedTopClick(relatedTopClick: RankingTopClick){
         this.relatedTopClick = relatedTopClick
+    }
+
+    fun setUrlClick(urlClick: UrlClick){
+        this.urlClick = urlClick
     }
 
     fun setProgress(isShow : Boolean){
@@ -319,7 +325,10 @@ class ContentIllustAdapter(val context : Context,val type : Type) : BaseRecycler
     private fun showItemContentCaption(bind: ViewDataBinding){
         val mBind : ItemContentIllustCaptionBinding = bind as ItemContentIllustCaptionBinding
         RichText.from(illust.caption)
-                .urlClick { true }
+                .urlClick {
+                    url -> urlClick?.click(url)
+                    true
+                }
                 .into(mBind.caption)
     }
 

@@ -50,7 +50,7 @@
     <!-- Time -->
     <string name="out_format">yyyy年MM月dd HH:mm:ss</string>
 
-    <!-- Mute -->WW
+    <!-- Mute -->
     <!--<string name="mute_title">请选择屏蔽项</string>-->
 
     <string name="newest_follow_illust_name">筛选</string>

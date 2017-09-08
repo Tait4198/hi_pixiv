@@ -1,6 +1,7 @@
 package info.hzvtc.hipixiv.vm.fragment
 
 import android.content.Intent
+import android.net.Uri
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -16,9 +17,8 @@ import info.hzvtc.hipixiv.data.Account
 import info.hzvtc.hipixiv.data.UserPreferences
 import info.hzvtc.hipixiv.databinding.FragmentContentIllustBinding
 import info.hzvtc.hipixiv.net.ApiService
-import info.hzvtc.hipixiv.pojo.comment.CommentResponse
 import info.hzvtc.hipixiv.pojo.illust.Illust
-import info.hzvtc.hipixiv.pojo.illust.IllustResponse
+import info.hzvtc.hipixiv.util.AppMessage
 import info.hzvtc.hipixiv.util.AppUtil
 import info.hzvtc.hipixiv.view.fragment.BaseFragment
 import io.reactivex.Observable
@@ -94,6 +94,14 @@ class ContentIllustViewModel @Inject constructor(val account: Account, val apiSe
             }
         })
         contentAdapter.setNewData(illust)
+
+        contentAdapter.setUrlClick(object : UrlClick{
+            override fun click(url: String) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                ActivityCompat.startActivity(mView.activity, intent, null)
+            }
+        })
 
         contentAdapter.setTagClick(object : TagItemClick{
             override fun itemClick(position: Int, tag: String) {
