@@ -12,7 +12,7 @@ abstract class BindingActivity<T : ViewDataBinding> : BaseActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val rootView : View = layoutInflater.inflate(getLayoutId(),null,false)
-        mBinding = DataBindingUtil.bind(rootView)
+        mBinding = DataBindingUtil.bind(rootView)!!
         setContentView(rootView)
         initView(savedInstanceState)
     }

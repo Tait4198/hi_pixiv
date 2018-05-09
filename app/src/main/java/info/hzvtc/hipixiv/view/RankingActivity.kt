@@ -55,7 +55,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
         val typeValue : Int = intent.getIntExtra(getString(R.string.extra_string),0)
         when(typeValue){
             RankingType.ILLUST.value ->{
-                mBinding.layoutToolbar.toolbar.title = getString(R.string.ranking_illust_title)
+                mBinding.layoutToolbar?.toolbar?.title ?: getString(R.string.ranking_illust_title)
                 modeItemArray = resources.getStringArray(R.array.ranking_illust_items)
                 restrictArray = arrayOf(7,11,12)
                 modeParamArray = resources.getStringArray(R.array.ranking_illust_parameters)
@@ -63,7 +63,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
                 viewModel.obsIllustNewData = account.obsToken(this).flatMap({token -> apiService.getIllustRanking(token,modeParam)})
             }
             RankingType.MANGA.value ->{
-                mBinding.layoutToolbar.toolbar.title = getString(R.string.ranking_manga_title)
+                mBinding.layoutToolbar?.toolbar?.title ?: getString(R.string.ranking_manga_title)
                 modeItemArray = resources.getStringArray(R.array.ranking_manga_items)
                 restrictArray = arrayOf(4,6,7)
                 modeParamArray = resources.getStringArray(R.array.ranking_manga_parameters)
@@ -71,9 +71,9 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
                 viewModel.obsIllustNewData = account.obsToken(this).flatMap({token -> apiService.getIllustRanking(token,modeParam)})
             }
         }
-        setSupportActionBar(mBinding.layoutToolbar.toolbar)
+        setSupportActionBar(mBinding.layoutToolbar?.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        mBinding.layoutToolbar.toolbar.setNavigationOnClickListener({onBackPressed()})
+        mBinding.layoutToolbar?.toolbar?.setNavigationOnClickListener({onBackPressed()})
         mBinding.fab.setOnClickListener({
             showFilterDialog()
         })
@@ -90,12 +90,12 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
                 .negativeText(R.string.app_dialog_cancel)
                 .onPositive({_,_ -> choose()})
                 .build()
-        val bind = DataBindingUtil.bind<DialogRankingFilterBinding>(dialog.customView)
+        val bind = DataBindingUtil.bind<DialogRankingFilterBinding>(dialog.customView!!)
         val itemArray = Array(restrictArray[userPref.xRestrict?:0],{""})
         copy(modeItemArray,itemArray)
-        bind.mode.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemArray)
-        bind.mode.setSelection(modePosition)
-        bind.mode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        bind?.mode?.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemArray)
+        bind?.mode?.setSelection(modePosition)
+        bind?.mode?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
@@ -105,7 +105,7 @@ class RankingActivity : BindingActivity<ActivityRankingBinding>(),RootActivity {
                 modeParam = modeParamArray[position]
             }
         }
-        bind.datePicker.init(year,month,day) { _, y, m, d ->
+        bind?.datePicker?.init(year,month,day) { _, y, m, d ->
             year = y
             month = m
             day = d

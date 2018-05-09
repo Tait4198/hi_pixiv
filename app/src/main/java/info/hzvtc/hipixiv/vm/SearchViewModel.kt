@@ -231,9 +231,9 @@ class SearchViewModel @Inject constructor(private val userPref: UserPreferences,
                 .onPositive({ _, _ -> doQuery(query) })
                 .build()
 
-        val bind = DataBindingUtil.bind<DialogSearchFilterBinding>(dialog?.customView)
-        bind.sort.adapter = ArrayAdapter<String>(mView,android.R.layout.simple_list_item_1,
-                if(userPref.isPremium?:false) mView.resources.getStringArray(R.array.sort_premium_items)
+        val bind = DataBindingUtil.bind<DialogSearchFilterBinding>(dialog?.customView!!)
+        bind!!.sort.adapter = ArrayAdapter<String>(mView,android.R.layout.simple_list_item_1,
+                if(userPref.isPremium == true) mView.resources.getStringArray(R.array.sort_premium_items)
                 else mView.resources.getStringArray(R.array.sort_items))
         bind.searchTarget.adapter = ArrayAdapter<String>(mView,android.R.layout.simple_list_item_1,
                 mView.resources.getStringArray(R.array.search_target_items))

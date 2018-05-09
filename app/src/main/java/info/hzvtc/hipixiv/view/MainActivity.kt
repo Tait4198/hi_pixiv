@@ -39,8 +39,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),RootActivity {
         component.inject(this)
         viewModel.setView(this)
 
-        mBinding.layoutToolbar.toolbar.setTitle(R.string.app_name)
-        setSupportActionBar(mBinding.layoutToolbar.toolbar)
+        mBinding.layoutToolbar?.toolbar?.setTitle(R.string.app_name)
+        setSupportActionBar(mBinding.layoutToolbar?.toolbar)
 
         if(userPref.pageIdentifier == 0L) userPref.pageIdentifier = Identifier.HOME_ILLUSTRATIONS.value.toLong()
         val tempIdentifier = userPref.pageIdentifier?:Identifier.HOME_ILLUSTRATIONS.value.toLong()
@@ -51,7 +51,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),RootActivity {
         val drawer = DrawerBuilder()
                 .withActivity(this)
                 .withHeader(R.layout.layout_header)
-                .withToolbar(mBinding.layoutToolbar.toolbar)
+                .withToolbar(mBinding.layoutToolbar!!.toolbar)
                 .withActionBarDrawerToggleAnimated(true)
                 .withMultiSelect(false)
                 .addDrawerItems(
@@ -92,7 +92,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),RootActivity {
                 .withOnDrawerItemClickListener({
                     _,_,drawerItem->
                     if (drawerItem.identifier < Identifier.MUTE_SETTINGS.value && drawerItem is PrimaryDrawerItem) {
-                        mBinding.layoutToolbar.toolbar.title = getTitle(drawerItem.identifier.toInt())
+                        mBinding.layoutToolbar!!.toolbar.title = getTitle(drawerItem.identifier.toInt())
                         viewModel.switchPage(drawerItem.identifier.toInt())
                     }
                     false

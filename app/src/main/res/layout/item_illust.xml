@@ -7,7 +7,7 @@
 
         <variable
             name="illustPageCount"
-            type="Integer" />
+            type="int" />
     </data>
     <FrameLayout
         android:id="@+id/root_view"

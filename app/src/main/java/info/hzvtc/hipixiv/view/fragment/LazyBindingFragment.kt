@@ -25,7 +25,7 @@ abstract class LazyBindingFragment<T : ViewDataBinding> : BaseFragment<T>(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView : View = inflater.inflate(getLayoutId(),container,false)
-        mBinding = DataBindingUtil.bind(rootView)
+        mBinding = DataBindingUtil.bind(rootView)!!
         return mBinding.root
     }
 

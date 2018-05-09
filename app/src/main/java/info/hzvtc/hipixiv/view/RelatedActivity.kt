@@ -15,10 +15,10 @@ class RelatedActivity : BindingActivity<ActivityRelatedBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         component.inject(this)
-        mBinding.layoutToolbar.toolbar.title = getString(R.string.content_related)
-        setSupportActionBar(mBinding.layoutToolbar.toolbar)
+        mBinding.layoutToolbar?.toolbar?.title ?: getString(R.string.content_related)
+        setSupportActionBar(mBinding.layoutToolbar?.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        mBinding.layoutToolbar.toolbar.setNavigationOnClickListener({onBackPressed()})
+        mBinding.layoutToolbar?.toolbar?.setNavigationOnClickListener({onBackPressed()})
         viewModel.setView(this)
     }
 }

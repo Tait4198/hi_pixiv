@@ -247,10 +247,10 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 .negativeText(getString(R.string.app_dialog_cancel))
                 .onPositive({ _, _ -> action.doAction()})
                 .build()
-        val bind = DataBindingUtil.bind<DialogSingleFilterBinding>(dialog.customView)
-        bind.restrict.adapter = ArrayAdapter<String>(mView,android.R.layout.simple_list_item_1,items)
-        bind.restrict.setSelection(restrictPos)
-        bind.restrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        val bind = DataBindingUtil.bind<DialogSingleFilterBinding>(dialog.customView!!)
+        bind?.restrict?.adapter = ArrayAdapter<String>(mView,android.R.layout.simple_list_item_1,items)
+        bind?.restrict?.setSelection(restrictPos)
+        bind?.restrict?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 //
             }
@@ -269,10 +269,10 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                     .negativeText(getString(R.string.app_dialog_cancel))
                     .customView(R.layout.dialog_view_pager, false)
                     .build()
-            val bind = DataBindingUtil.bind<DialogViewPagerBinding>(dialog?.customView)
+            val bind = DataBindingUtil.bind<DialogViewPagerBinding>(dialog?.customView!!)
             val publicPage = DataBindingUtil.bind<FragmentListBinding>(View.inflate(mView,R.layout.fragment_list,null))
             val privatePage = DataBindingUtil.bind<FragmentListBinding>(View.inflate(mView,R.layout.fragment_list,null))
-            val adapter = SimplePagerAdapter(arrayOf(publicPage.root,privatePage.root),
+            val adapter = SimplePagerAdapter(arrayOf(publicPage!!.root,privatePage!!.root),
                     mView.resources.getStringArray(R.array.filter_items))
             val publicPageAdapter = BookmarkTagAdapter(mView)
             val privatePageAdapter = BookmarkTagAdapter(mView)
@@ -339,10 +339,10 @@ class MainViewModel @Inject constructor(val userPreferences: UserPreferences,val
                 }
             })
 
-            bind.viewPager.adapter = adapter
-            bind.viewPager.currentItem = collectRestrictPos
-            bind.tab.setupWithViewPager(bind.viewPager)
-            bind.tab.tabMode = TabLayout.MODE_FIXED
+            bind?.viewPager?.adapter = adapter
+            bind?.viewPager?.currentItem = collectRestrictPos
+            bind?.tab?.setupWithViewPager(bind.viewPager)
+            bind?.tab?.tabMode = TabLayout.MODE_FIXED
 
             initPageData(publicPage,publicPageAdapter,true)
             initPageData(privatePage,privatePageAdapter,false)
